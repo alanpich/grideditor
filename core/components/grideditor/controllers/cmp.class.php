@@ -24,8 +24,6 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         // Parse & Load json config if exists
         if($this->validConfig){
             $this->confData = $this->helper->sanitizedJSONdecode($chunk->process());
-            $this->validConfig = ($this->confData==NULL);
-            echo '<pre>'.print_r($this->confData,1).'</pre>';
         } else {
             // Log Error
         };
@@ -42,8 +40,15 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
     
     public function loadCustomCssJs() {
         //$this->addJavascript($this->helper->config['jsUrl'].'mgr/widgets/helper.grid.js');
-        //$this->addJavascript($this->helper->config['jsUrl'].'mgr/widgets/home.panel.js');
-        //$this->addLastJavascript($this->helper->config['jsUrl'].'mgr/sections/index.js');
+        $this->addJavascript($this->helper->config['jsUrl'].'sections/grideditor.panel.cmp.js');
+        $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
+        $this->addLastJavascript($this->helper->config['jsUrl'].'sections/grideditor.cmp.js');
+        
+        $this->addHtml('<script type="text/javascript">
+            Ext.onReady(function() {
+                GridEditor.config.custom = '.json_encode($this->confData).';
+            });
+        </script>');
     }
     
     /**

@@ -39,6 +39,7 @@
 			'assetsUrl' => $assets,
 			'jsUrl' => $assets.'mgr/js/',
 			'cssUrl' => $assets.'mgr/css/',
+            'connectorUrl' => $assets.'mgr/connector.php',
             
             'configChunkPrefix' => 'grideditor.config.'
 		);
