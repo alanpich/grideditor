@@ -34,11 +34,14 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
      * @return string Page Title
      */
     public function getPageTitle() { 
-        return (empty($this->confData->title)) ? $this->modx->lexicon('grideditor.cmp.pagetitle') : $this->confData->title;
+        return (empty($this->confData->title)) ? $this->modx->lexicon('grideditor.cmp.default.title') : $this->confData->title;
     }//
     
     
     public function loadCustomCssJs() {
+        // Dont load anything if there's no config
+        if( ! $this->validConfig ){ return; };
+        
         //$this->addJavascript($this->helper->config['jsUrl'].'mgr/widgets/helper.grid.js');
         $this->addJavascript($this->helper->config['jsUrl'].'sections/grideditor.panel.cmp.js');
         $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
@@ -47,6 +50,7 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         $this->addHtml('<script type="text/javascript">
             Ext.onReady(function() {
                 GridEditor.config.custom = '.json_encode($this->confData).';
+                GridEditor.custom = '.json_encode($this->helper->getExtConfig($this->confData)).';
             });
         </script>');
     }

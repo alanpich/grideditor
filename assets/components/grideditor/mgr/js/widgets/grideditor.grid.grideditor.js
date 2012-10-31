@@ -14,6 +14,7 @@ GridEditor.grid.GridEditor = function(config) {
         ,remoteSort: true
         ,anchor: '97%'
         ,autoExpandColumn: 'name'
+        ,autosave: true
         ,columns: this.getColumnsArray()
         ,fields: this.getFieldsArray()
     });
@@ -22,43 +23,53 @@ GridEditor.grid.GridEditor = function(config) {
 Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
     
     
-    // Create column model
+    /**
+     * Return array of columns for grid
+     * @return Array of Columns
+     */
     getColumnsArray: function(){
        var items = [];
        
-       // Add in the resource fields
-       for(var k=0;k<GridEditor.config.custom.fields.length;k++){
-           var field = GridEditor.config.custom.fields[k];
-           items.push({
-               header: field.title,
-               editable: field.editable,
-               sortable: true,
-               dataIndex: field.name
-           });
-       };
+        // Add in the resource fields
+        if(GridEditor.custom.fields){
+            for(var k=0;k<GridEditor.config.custom.fields.length;k++){
+                var field = GridEditor.config.custom.fields[k];
+                items.push({
+                    header: field.title,
+                    editable: field.editable,
+                    editor: {xtype: field.editor},
+                    sortable: true,
+                    dataIndex: field.name
+                });
+            };
+        };
+        
+        return items;
+        
+        // Add in any TV fields
+        if(GridEditor.config.custom.tvs){
+            for(var k=0;k<GridEditor.config.custom.tvs.length;k++){
+                var field = GridEditor.config.custom.tvs[k];
+                items.push({
+                    header: field.title,
+                    editable: field.editable,
+                    sortable: true,
+                    dataIndex: 'tv.'+field.name
+                });
+            };
+        };
        
-       // Add in any TV fields
-       for(var k=0;k<GridEditor.config.custom.tvs.length;k++){
-           var field = GridEditor.config.custom.tvs[k];
-           items.push({
-               header: field.title,
-               editable: field.editable,
-               sortable: true,
-               dataIndex: 'tv.'+field.name
-           });
-       };
-       
-       // If controls in use, add another field for them
-       if(GridEditor.config.custom.controls && GridEditor.config.custom.controls.length > 0){
+        // If controls in use, add another field for them
+        if(GridEditor.config.custom.controls && GridEditor.config.custom.controls.length > 0){
            items.push({
                header: '',
                editable: false,
                renderer: GridEditor.controlsRenderer
            })
-       }
+        };
        
-       // Create and return a column model
-       return items;
+        // Create and return a column model
+        return items;
     }//
     
     
@@ -69,14 +80,21 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
     ,getFieldsArray: function(){
         var fields = new Array();
         // Add resource fields
-        for(var k=0;k<GridEditor.config.custom.fields.length;k++){
-            var field = GridEditor.config.custom.fields[k];
-            fields.push(field.name);
+        if(GridEditor.custom.fields){
+            for(var k=0;k<GridEditor.config.custom.fields.length;k++){
+                var field = GridEditor.config.custom.fields[k];
+                fields.push(field.name);
+            };
         };
+        
+        return fields;
+        
         // Add TV fields
-        for(var k=0;k<GridEditor.config.custom.tvs.length;k++){
-            var field = GridEditor.config.custom.tvs[k];
-            fields.push('tv.'+field.name);
+        if(GridEditor.config.custom.tvs){
+            for(var k=0;k<GridEditor.config.custom.tvs.length;k++){
+                var field = GridEditor.config.custom.tvs[k];
+                fields.push('tv.'+field.name);
+            };
         };
         return fields;
     }
@@ -93,20 +111,20 @@ GridEditor.controlsRenderer = function(value, metadata, record, rowIndex, colInd
  
    // Edit button
    if( controls.indexOf('edit') > -1){
-       html+= '<button data-action="edit" data-resid="'+record.json.id+'">edit</button>'
-   }
+       html+= '<button data-action="edit" data-resid="'+record.json.id+'">edit</button>';
+   };
    
    // (un)Publish button
    if( controls.indexOf('publish') > -1){
-       var word = record.json.published? 'unpublish':'publish';
+       var word = record.json.published?  'unpublish' : 'publish';
        var action = record.json.publised? 'unpublish' : 'publish';
-       html+= '<button data-action="'+action+'" data-resid="'+record.json.id+'">'+word+'</button>'
-   }
+       html+= '<button data-action="'+action+'" data-resid="'+record.json.id+'">'+word+'</button>';
+   };
    
    // Delete button
    if( controls.indexOf('delete') > -1){
-       html+= '<button data-action="delete" data-resid="'+record.json.id+'">delete</button>'
-   }
+       html+= '<button data-action="delete" data-resid="'+record.json.id+'">delete</button>';
+   };
    
    return html;
 }

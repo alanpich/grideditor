@@ -6,11 +6,17 @@
  * @copyright Alan Pich 2012
  */
  class grideditorGetListProcessor extends modObjectGetListProcessor {
-	public $classKey = 'modResource';
+    public $classKey = 'modResource';
     public $languageTopics = array();
     public $defaultSortField = 'pagetitle';
     public $defaultSortDirection = 'ASC';
     public $objectType = 'modResource';
+    
+    /**
+     * @var $confData Custom config data (from json chunk)
+     * @access private
+     */
+    private $confData;
  
     /**
      * @param xPDOQuery $c

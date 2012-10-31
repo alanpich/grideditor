@@ -11,13 +11,9 @@ GridEditor.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-            html: '<h2>INSERT TITLE HERE</h2>'
+            html: '<h2>'+GridEditor.custom.title+'</h2>'
             ,border: false
             ,cls: 'modx-page-header'
-        },{
-            html: '<p>'+_('grideditor.management_desc')+'</p>'
-            ,border: false
-            ,bodyCssClass: 'panel-desc'
         },{
             xtype: 'grideditor-grid-grideditor'
             ,cls: 'main-wrapper'
