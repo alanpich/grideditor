@@ -51,9 +51,9 @@
                    'assetsUrl' => $assets,
                    'jsUrl' => $assets.'mgr/js/',
                    'cssUrl' => $assets.'mgr/css/',
-       'connectorUrl' => $assets.'mgr/connector.php',
+                    'connectorUrl' => $assets.'mgr/connector.php',
 
-       'configChunkPrefix' => 'grideditor.config.'
+                    'configChunkPrefix' => 'grideditor.config.'
            );
     }//
 
@@ -160,7 +160,7 @@
         $F->name = 'tv.'.$field->name;
         $F->title = isset($field->title)? $field->title : $field->name;
         $F->editable = isset($field->editable)? $field->editable : false;
-        $F->editor = $this->getTvEditor($field->name); 
+        $F->editor = $this->getTvEditor($tv); 
     }//
     
     

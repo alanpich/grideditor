@@ -17,6 +17,33 @@
      * @access private
      */
     private $confData;
+    
+    /**
+     * Helper class
+     * @access private
+     */
+    private $helper;
+    
+    
+    /**
+     * Load helper & custom config load to constructor
+     */
+    function __construct(&$modx){
+        if(!class_exists('grideditorHelper')){
+            require $this->modx->getOption('core_path').'components/grideditor/grideditorHelper.class.php';
+        };
+        $this->helper = new grideditorHelper($modx);
+        $this->loadCustomConfig();
+        return parent::__construct($this->modx);
+    }//
+    
+    
+    /**
+     * Loads json config (as specified by `config` request param
+     */
+    private function loadCustomConfig(){
+        die( print_r($this->getProperties()));
+    }//
  
     /**
      * @param xPDOQuery $c

@@ -24,6 +24,7 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         // Parse & Load json config if exists
         if($this->validConfig){
             $this->confData = $this->helper->sanitizedJSONdecode($chunk->process());
+            $this->confData->chunk = $configChunk;
         } else {
             // Log Error
         };
