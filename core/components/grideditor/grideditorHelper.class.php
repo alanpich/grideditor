@@ -29,7 +29,7 @@
 		
 		// Setup config data
 		$core = $this->modx->getOption('core_path').'components/grideditor/';
-		$assets = $modx->modx->getOption('assets_url').'components/grideditor/';
+		$assets = $this->modx->getOption('assets_url').'components/grideditor/';
 		$this->config = array(
 			'corePath' => $core,
 			'processorPath' => $core.'processors/',
@@ -38,7 +38,9 @@
 			'docsPath' => $core.'docs/',
 			'assetsUrl' => $assets,
 			'jsUrl' => $assets.'mgr/js/',
-			'cssUrl' => $assets.'mgr/css/'
+			'cssUrl' => $assets.'mgr/css/',
+            
+            'configChunkPrefix' => 'grideditor.config.'
 		);
 	 }//
 	 
@@ -49,6 +51,17 @@
 	 public function configJSON(){
 		return $this->modx->toJSON($this->config); 
 	 }//
-	 
+     
+     
+     
+     /**
+      * Sanitize json input. Removes all invalid chars & comments
+      * @param string $raw Raw JSON input
+      * @return mixed Parse JSON -> object|array etc
+      */
+     public function sanitizedJSONdecode($raw){
+         $safe = preg_replace("/[^[:print:]]/",'',$raw);
+         return json_decode($safe);        
+     }//
 	 
  };// end class grideditorHelper

@@ -10,12 +10,13 @@ require_once dirname(__FILE__) . '/grideditorHelper.class.php';
 /**
  * @abstract Manager Controller Global Setup
  */
-abstract class grideditorManagerController extends modExtraManagerController {
+abstract class GrideditorManagerController extends modExtraManagerController {
     /** @var grideditorHelper $helper */
     public $helper;
+    
     public function initialize() {
         $this->helper = new grideditorHelper($this->modx);
- 
+        
         $this->addCss($this->helper->config['cssUrl'].'mgr.css');
         $this->addJavascript($this->helper->config['jsUrl'].'index.js');
         $this->addHtml('<script type="text/javascript">
@@ -25,15 +26,18 @@ abstract class grideditorManagerController extends modExtraManagerController {
         </script>');
         return parent::initialize();
     }
+    
     public function getLanguageTopics() {
         return array('grideditor:default');
     }
+    
     public function checkPermissions() { return true;}
 }
 
 /**
  * Base CMP controller - triggers other controller through here
  */
-class ControllerManagerController extends grideditorManagerController {
+class ControllerManagerController extends GrideditorManagerController {
     public static function getDefaultController() { return 'cmp'; }
-}
+ };// end class
+ 
