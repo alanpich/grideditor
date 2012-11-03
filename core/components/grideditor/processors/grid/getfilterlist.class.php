@@ -1,17 +1,12 @@
 <?php
 /**
- * Grid List processor
+ * Grid Get Filter options
  * 
  * @package grideditor
  * @copyright Alan Pich 2012
  */
- class grideditorGetListProcessor extends modObjectGetListProcessor {
-    public $classKey = 'modResource';
-    public $languageTopics = array();
-    public $defaultSortField = 'pagetitle';
-    public $defaultSortDirection = 'ASC';
-    public $objectType = 'modResource';
-    
+ class gridFilterGetListProcessor extends modProcessor {
+
     /**
      * @var $confData Custom config data (from json chunk)
      * @access private
@@ -23,7 +18,6 @@
      * @access private
      */
     private $helper;
-    
     
     /**
      * Load helper & custom config load to constructor
@@ -45,13 +39,35 @@
     
     
     /**
-     * Only select resources that are not deleted
+     * Get list of filter options specified by config chunk
      */
-    public function prepareQueryBeforeCount( xPDOQuery $c ){
-        $c->where(array( 'deleted' => 0 ));
-        return $c;
+    public function process(){
+        // Grab all resources that match the template filters
+        $c = $this->helper->getResourceQueryWhereArray($this->confData);
+        $resources = $this->modx->getCollection('modResource',$c);
+        
+        // Grab the filter field
+        $filterField = $this->confData->filter->field;
+        $isTV = (preg_match("/^tv_/",$filterField));
+        
+        // Grab the field specified from each resource
+        $values = array(array('name' => $this->confData->filter->label, 'value'=>''));
+        foreach($resources as $res){
+            if($isTV){
+                $val = $res->getTVValue(str_replace('tv_','',$filterField));
+            } else {
+                $val = $res->get($filterField);
+            };
+            if(! in_array_r($val,$values) && !empty($val)){
+                $values[] = array(
+                    'name' => $val,
+                    'value'=> $val
+                  );
+            };
+        };
+        
+        return $this->outputArray($values);        
     }//
-    
     
     /**
      * Loads json config (as specified by `config` request param
@@ -69,29 +85,6 @@
         // Store parsed config data
         $this->confData = $this->helper->sanitizedJSONdecode($chunk->process());        
     }//
- 
-    /**
-     * Override modObjectGetListProcessor::prepareRow to add TV values to data
-     * @param xPDOObject $object
-     * @return array The row data
-     */
-    public function prepareRow(xPDOObject $resource) {
-        $data = $resource->toArray();
-        
-        // Grab names of all TVs
-        $tvs = $this->confData->tvs;
-        // Add to data array
-        foreach($tvs as $tv){
-            $tvName = $tv->name;
-            // Grab TV value (if it exists)
-            $data['tv_'.$tvName] = $resource->getTVValue($tvName);;
-            // Null => empty string
-            if(is_null($data['tv_'.$tvName])){
-                $data['tv_'.$tvName] = '';
-            };           
-        }
-        return $data;
-    }//
      
  };// end class grideditorGetListProcessor
- return 'grideditorGetListProcessor';
+ return 'gridFilterGetListProcessor';

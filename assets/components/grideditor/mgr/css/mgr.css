@@ -4,3 +4,23 @@
  * @package grideditor
  * @copyright Alan Pich 2012
  */
+
+ 
+ .grideditor-button-nostyle {
+   border: none !important;
+   background: none !important;
+   box-shadow: none;
+   -webkit-box-shadow: none;
+   -moz-box-shadow: none;
+   margin-bottom:-20px;
+   position:relative;
+   top:-10px;
+   left:-5px;
+ }
+
+ .grideditor-button-edit {
+     float:left;
+     margin-right: 6px;
+     position:relative;
+     top:-3px;
+ }

@@ -62,7 +62,8 @@
                    'assetsUrl' => $assets,
                    'jsUrl' => $assets.'mgr/js/',
                    'cssUrl' => $assets.'mgr/css/',
-                    'connectorUrl' => $assets.'mgr/connector.php',
+                   'imgUrl' => $assets.'mgr/img/',
+                   'connectorUrl' => $assets.'mgr/connector.php',
 
                     'configChunkPrefix' => 'grideditor.config.'
            );
@@ -103,6 +104,14 @@
         $C->fields = array();
         // Config chunk name
         $C->chunk = $conf->chunk;
+        // Filter field
+        if( isset($conf->filter) && isset($conf->filter->field) && !empty($conf->filter->field)){
+            $C->filter = new stdClass;
+            $C->filter->field = $conf->filter->field;
+            $C->filter->label = isset($conf->filter->label)? $conf->filter->label : 'No Filter';
+        };
+        // Search Fields
+        $C->searchFields = isset($conf->search)? $conf->search : NULL;
         
         // Add resource id field
         $idField = new stdClass;
@@ -240,5 +249,45 @@
         }
         return $params;
     }//
+    
+    
+    /**
+     * Get the XPDOQuery Where clause array for finding resources
+     * @return array The Clause array
+     */
+    public function getResourceQueryWhereArray($conf){
+       $c = $this->modx->newQuery('modResource');
+       foreach($conf->templates as $tplID){
+           // If tplID is a string, convert it to ID int
+           if( is_string($tplID)){
+               $tpl = $this->modx->getObject('modTemplate',array('name'=>$tplID));
+               if(!$tpl instanceof modTemplate){ continue; };
+               $tplID = $tpl->get('id');
+           };
+           $c->where(array(
+               'template' => $tplID
+           ));
+       }
+       return $c;
+    }//
 	 
  };// end class grideditorHelper
+
+ 
+ 
+ 
+ function in_array_r($needle, $haystack) {
+    $found = false;
+    foreach ($haystack as $item) {
+    if ($item === $needle) { 
+            $found = true; 
+            break; 
+        } elseif (is_array($item)) {
+            $found = in_array_r($needle, $item); 
+            if($found) { 
+                break; 
+            } 
+        }    
+    }
+    return $found;
+};//

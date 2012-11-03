@@ -44,9 +44,11 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         if( ! $this->validConfig ){ return; };
         
         //$this->addJavascript($this->helper->config['jsUrl'].'mgr/widgets/helper.grid.js');
+        $this->addJavascript($this->helper->config['jsUrl'].'grideditor.renderers.js');
         $this->addJavascript($this->helper->config['jsUrl'].'sections/grideditor.panel.cmp.js');
         $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
         $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.combo.tv.js');
+        $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.combo.gridfilter.js');
         $this->addLastJavascript($this->helper->config['jsUrl'].'sections/grideditor.cmp.js');
         
         $this->addHtml('<script type="text/javascript">
