@@ -20,15 +20,17 @@
     private $modx;
     
     /**
-     * @var array $resFieldRenderers Resource field Ext renderers
+     * @var array $resFieldEditors Resource field Ext editor xtypes
      * @access private
      */
-    private $resFieldRenderers = array(
+    private $resFieldEditors = array(
             'pagetitle' => 'textfield',
             'longtitle' => 'textfield',
             'introtext' => 'textfield',
             'description' => 'textarea',
-            'alias' => 'textfield'
+            'alias' => 'textfield',
+            'template' => 'modx-combo-template',
+            'hidemenu' => 'modx-combo-boolean'
         );
     
     /**
@@ -90,6 +92,8 @@
         $C->controls = isset($conf->controls)? $conf->controls : array();
         // Grid Field data
         $C->fields = array();
+        // Config chunk name
+        $C->chunk = $conf->chunk;
    
         // Add resource fields
         if(isset($conf->fields)){
@@ -108,7 +112,6 @@
                 };
             };
         };
-        
         return $C;
     }//
     
@@ -120,7 +123,7 @@
      */
     private function prepFieldForExt($field){
         // Sanity check
-        $resourceFields = array_keys($this->resFieldRenderers);
+        $resourceFields = array_keys($this->resFieldEditors);
         if(!isset($field->name) || !in_array($field->name,$resourceFields)){ return FALSE; };
         // Prepare Data
         $F = new stdClass;
@@ -128,6 +131,7 @@
         $F->title = isset($field->title)? $field->title : $field->name;
         $F->editable = isset($field->editable)? $field->editable : false;
         $F->editor = $this->getFieldEditor($field->name); 
+        $F->sortable = isset($field->sortable)? $field->sortable : true;
         // Return object
         return $F;
     }//
@@ -140,8 +144,8 @@
      */
     private function getFieldEditor($field){
         // Sanity check
-        if(!in_array($field, array_keys($this->resFieldRenderers))){ return 'textfield'; };
-        return $this->resFieldRenderers[$field];
+        if(!in_array($field, array_keys($this->resFieldEditors))){ return 'textfield'; };
+        return $this->resFieldEditors[$field];
     }//
     
     
@@ -157,10 +161,13 @@
         if( ! $tv instanceof modTemplateVar ){ return false; };
         // Prepare data
         $F = new stdClass;
-        $F->name = 'tv.'.$field->name;
+        $F->name = 'tv_'.$field->name;
         $F->title = isset($field->title)? $field->title : $field->name;
         $F->editable = isset($field->editable)? $field->editable : false;
         $F->editor = $this->getTvEditor($tv); 
+        $F->sortable = isset($field->sortable)? $field->sortable : true;
+        // Return object
+        return $F;
     }//
     
     
@@ -170,7 +177,8 @@
      * @return string Renderer function
      */
     private function getTvEditor(modTemplateVar $tv){
-        
+        // Default fallback to textfield
+        return 'textfield';
     }//
     
 	 

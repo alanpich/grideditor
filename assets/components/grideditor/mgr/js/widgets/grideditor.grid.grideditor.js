@@ -9,7 +9,10 @@ GridEditor.grid.GridEditor = function(config) {
     Ext.applyIf(config,{
         id: 'grideditor-grid-grideditor'
         ,url: GridEditor.config.connectorUrl
-        ,baseParams: { action: 'resource/getList' }
+        ,baseParams: { 
+               action: 'resource/getList'
+               ,config: GridEditor.custom.chunk
+           }
         ,paging: true
         ,remoteSort: true
         ,anchor: '97%'
@@ -32,32 +35,33 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
        
         // Add in the resource fields
         if(GridEditor.custom.fields){
-            for(var k=0;k<GridEditor.config.custom.fields.length;k++){
-                var field = GridEditor.config.custom.fields[k];
+            for(var k=0;k<GridEditor.custom.fields.length;k++){
+                var field = GridEditor.custom.fields[k];
                 items.push({
                     header: field.title,
                     editable: field.editable,
                     editor: {xtype: field.editor},
-                    sortable: true,
+                    sortable: field.sortable,
                     dataIndex: field.name
                 });
             };
         };
-        
-        return items;
-        
+                
         // Add in any TV fields
-        if(GridEditor.config.custom.tvs){
-            for(var k=0;k<GridEditor.config.custom.tvs.length;k++){
-                var field = GridEditor.config.custom.tvs[k];
+        if(GridEditor.custom.tvs){
+            for(var k=0;k<GridEditor.custom.tvs.length;k++){
+                var field = GridEditor.custom.tvs[k];
                 items.push({
                     header: field.title,
                     editable: field.editable,
-                    sortable: true,
-                    dataIndex: 'tv.'+field.name
+                    editor: {xtype: field.editor},
+                    sortable: field.sortable,
+                    dataIndex: field.name
                 });
             };
         };
+       
+  //     return items;
        
         // If controls in use, add another field for them
         if(GridEditor.config.custom.controls && GridEditor.config.custom.controls.length > 0){
@@ -84,16 +88,6 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             for(var k=0;k<GridEditor.config.custom.fields.length;k++){
                 var field = GridEditor.config.custom.fields[k];
                 fields.push(field.name);
-            };
-        };
-        
-        return fields;
-        
-        // Add TV fields
-        if(GridEditor.config.custom.tvs){
-            for(var k=0;k<GridEditor.config.custom.tvs.length;k++){
-                var field = GridEditor.config.custom.tvs[k];
-                fields.push('tv.'+field.name);
             };
         };
         return fields;

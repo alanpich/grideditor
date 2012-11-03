@@ -29,12 +29,18 @@
      * Load helper & custom config load to constructor
      */
     function __construct(&$modx){
+        parent::__construct($modx);
+        
         if(!class_exists('grideditorHelper')){
             require $this->modx->getOption('core_path').'components/grideditor/grideditorHelper.class.php';
         };
         $this->helper = new grideditorHelper($modx);
-        $this->loadCustomConfig();
-        return parent::__construct($this->modx);
+        
+        // Attempt to load config chunk
+        if(!$this->loadCustomConfig()){
+            return $this->failure('Invalid Config Chunk');
+        };
+        
     }//
     
     
@@ -42,7 +48,15 @@
      * Loads json config (as specified by `config` request param
      */
     private function loadCustomConfig(){
-        die( print_r($this->getProperties()));
+        $params =& $this->modx->request->parameters['POST'];
+        if( !isset($params['config']) || empty($params['config'])){ return false; };
+        
+        $chunkName = $params['config'];
+        // Try to load chunk
+        $chunk = $this->modx->getObject('modChunk',array(
+                'name' => $chunkName
+            ));
+        
     }//
  
     /**
