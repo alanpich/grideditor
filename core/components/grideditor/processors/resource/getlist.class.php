@@ -50,29 +50,39 @@
     private function loadCustomConfig(){
         $params =& $this->modx->request->parameters['POST'];
         if( !isset($params['config']) || empty($params['config'])){ return false; };
-        
+        // Grab config chunk
         $chunkName = $params['config'];
         // Try to load chunk
         $chunk = $this->modx->getObject('modChunk',array(
                 'name' => $chunkName
             ));
-        
+        if(! $chunk instanceof modChunk ){ return false; }
+        // Store parsed config data
+        $this->confData = $this->helper->sanitizedJSONdecode($chunk->process());        
     }//
  
     /**
-     * @param xPDOQuery $c
-     * @return \xPDOQuery
+     * Override modObjectGetListProcessor::prepareRow to add TV values to data
+     * @param xPDOObject $object
+     * @return array The row data
      */
-    public function prepareQueryBeforeCount(xPDOQuery $c) {
-  /*     $query = $this->getProperty('property');
-        if (!empty($query) && is_numeric($query)) {
-            $c->innerJoin('fdmRoomTypeProperty','RTP','fdmRoomType.id = roomtype');
-            $c->where(array(
-                'RTP.property' => (int)$query
-            ));
+    public function prepareRow(xPDOObject $resource) {
+        $data = $resource->toArray();
+        
+        // Grab names of all TVs
+        $tvs = $this->confData->tvs;
+        // Add to data array
+        foreach($tvs as $tv){
+            $tvName = $tv->name;
+            // Grab TV value (if it exists)
+            $data['tv_'.$tvName] = $resource->getTVValue($tvName);;
+            // Null => empty string
+            if(is_null($data['tv_'.$tvName])){
+                $data['tv_'.$tvName] = '';
+            };           
         }
-   */     return $c;
-    }
+        return $data;
+    }//
      
  };// end class grideditorGetListProcessor
  return 'grideditorGetListProcessor';

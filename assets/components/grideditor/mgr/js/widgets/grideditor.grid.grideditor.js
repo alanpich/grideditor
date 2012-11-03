@@ -18,6 +18,7 @@ GridEditor.grid.GridEditor = function(config) {
         ,anchor: '97%'
         ,autoExpandColumn: 'name'
         ,autosave: true
+        ,save_action: 'resource/updateFromGrid'
         ,columns: this.getColumnsArray()
         ,fields: this.getFieldsArray()
     });
@@ -37,32 +38,19 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         if(GridEditor.custom.fields){
             for(var k=0;k<GridEditor.custom.fields.length;k++){
                 var field = GridEditor.custom.fields[k];
-                items.push({
-                    header: field.title,
-                    editable: field.editable,
-                    editor: {xtype: field.editor},
-                    sortable: field.sortable,
-                    dataIndex: field.name
-                });
+                console.log(field.name,field.hidden);
+                if(!field.hidden || field.hidden!=true){
+                    items.push({
+                        header: field.title,
+                        editable: field.editable,
+                        editor: field.editor,
+                        sortable: field.sortable,
+                        dataIndex: field.name
+                    });
+                };
             };
         };
-                
-        // Add in any TV fields
-        if(GridEditor.custom.tvs){
-            for(var k=0;k<GridEditor.custom.tvs.length;k++){
-                var field = GridEditor.custom.tvs[k];
-                items.push({
-                    header: field.title,
-                    editable: field.editable,
-                    editor: {xtype: field.editor},
-                    sortable: field.sortable,
-                    dataIndex: field.name
-                });
-            };
-        };
-       
-  //     return items;
-       
+
         // If controls in use, add another field for them
         if(GridEditor.config.custom.controls && GridEditor.config.custom.controls.length > 0){
            items.push({
@@ -85,8 +73,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         var fields = new Array();
         // Add resource fields
         if(GridEditor.custom.fields){
-            for(var k=0;k<GridEditor.config.custom.fields.length;k++){
-                var field = GridEditor.config.custom.fields[k];
+            for(var k=0;k<GridEditor.custom.fields.length;k++){
+                var field = GridEditor.custom.fields[k];
                 fields.push(field.name);
             };
         };

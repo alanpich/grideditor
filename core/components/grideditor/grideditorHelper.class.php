@@ -34,6 +34,15 @@
         );
     
     /**
+     * @var array $tvEditorTypeMap TV type editor xtypes
+     * @access private
+     */
+    private $tvEditorTypeMap = array(
+            'text' => 'textfield',
+            'listbox' => 'grideditor-combo-tv'
+        );
+    
+    /**
      * Constructor - sets up config array
      * @param modX $modx Current instance of MODx
      */
@@ -94,6 +103,12 @@
         $C->fields = array();
         // Config chunk name
         $C->chunk = $conf->chunk;
+        
+        // Add resource id field
+        $idField = new stdClass;
+        $idField->name = 'id';
+        $idField->hidden = true;
+        $C->fields[] = $idField;
    
         // Add resource fields
         if(isset($conf->fields)){
@@ -145,7 +160,10 @@
     private function getFieldEditor($field){
         // Sanity check
         if(!in_array($field, array_keys($this->resFieldEditors))){ return 'textfield'; };
-        return $this->resFieldEditors[$field];
+        // Create an Ext xtype object
+        $obj = new stdClass;
+        $obj->xtype = $this->resFieldEditors[$field];
+        return $obj;
     }//
     
     
@@ -177,9 +195,50 @@
      * @return string Renderer function
      */
     private function getTvEditor(modTemplateVar $tv){
+        // Default to textfield
+        $editor = 'textfield';
+        
+        /* @var int $editorType - Type of editor modx uses */
+        $editorType = $tv->get('type');
+        
+        if( isset($this->tvEditorTypeMap[$editorType])){
+            $editor = $this->tvEditorTypeMap[$editorType];
+        }
+        
+        // Create an Ext xtype object
+        $obj = new stdClass;
+        $obj->xtype = $editor;
+        // Add config for combo boxes
+        if( $editor == 'grideditor-combo-tv'){
+           $obj->tvName = $tv->get('name');
+        };
         // Default fallback to textfield
-        return 'textfield';
+        return $obj;
     }//
     
+    
+    /**
+     * Get params for TV input (list options etc.)
+     * @param modTemplateVar $tv TV field
+     * @return array Params
+     */
+    private function getTvEditorParams( modTemplateVar $tv ){
+        switch($tv->get('type')){
+            
+            case 'listbox': $params = array();
+                            $options = explode('||',$tv->get('elements'));
+                            foreach($options as $opt){
+                                $bits = explode('==',$opt);
+                                $params[] = array(
+                                    $bits[0],
+                                    ((isset($bits[1]))? $bits[1] : $bits[0])
+                                );
+                            }
+                            break;
+                        
+            default: $params = array();
+        }
+        return $params;
+    }//
 	 
  };// end class grideditorHelper
