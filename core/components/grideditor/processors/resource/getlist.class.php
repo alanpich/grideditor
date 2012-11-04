@@ -79,7 +79,7 @@
         $data = $resource->toArray();
         
         // Grab names of all TVs
-        $tvs = $this->confData->tvs;
+        $tvs = isset($this->confData->tvs)? $this->confData->tvs : array();
         // Add to data array
         foreach($tvs as $tv){
             $tvName = $tv->name;

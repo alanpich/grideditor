@@ -1,9 +1,10 @@
 ---------------------
  Resource Grid Editor
 ---------------------
- Version:  1.0
+ Version:  {$version}
  Author:   Alan Pich <alan@alanpich.com>
  License:  GNU GPLv2
+ Date:     {$date}
 
  Note: This component was originally commissioned by
        Himmelberger Design <himmdesign.com> who has 
