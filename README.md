@@ -26,6 +26,7 @@ these guidelines:
 * No trailing commas on the property
 
 ### Example GridEditor config chunk ###
+*Remove comments before use*
 ```javascript
 {
   /** Page Title */
@@ -48,16 +49,16 @@ these guidelines:
              "field": "pagetitle",
              "label": "Product",
              "editable": true
-	},{
+         },{
              "field": "hidemenu",
              "label": "Checkbox",
              "editable": true
-        },{
+         },{
              "field": "template",
              "label": "Template",
              "editable": true,
              "editor": "modx-combo-template"
-        }],
+         }],
 
   /** Template Variable fields to include in view */
   "tvs": [{
