@@ -39,8 +39,7 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
                     ,listeners: {
                         'success':{fn:function() {
                            MODx.msg.status({
-                               title: 'Resource '+action+'ed',
-                               
+                               title: 'Resource '+action+'ed'                               
                            })
                         },scope:this}
                         ,'error':{fn:function(){
@@ -59,8 +58,8 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
 /*******************************************************************************
  * Render resource control buttons to a cell
  */
-GridEditor.controlsRenderer = function(value, metadata, record, rowIndex, colIndex, store){
-   var controls = GridEditor.config.custom.controls;
+GridEditor.renderer.resourceControls = function(value, metadata, record, rowIndex, colIndex, store){
+   var controls = GridEditor.custom.controls;
    
    var html = '';
    var items = [];

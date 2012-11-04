@@ -47,7 +47,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 var field = GridEditor.custom.fields[k];
                 if(!field.hidden || field.hidden!=true){
                     items.push({
-                        header: field.title,
+                        header: field.label,
                         editable: field.editable,
                         editor: field.editor,
                         sortable: field.sortable,
@@ -65,7 +65,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                header: '',
                editable: false,
                width: (22*total),
-               renderer: GridEditor.controlsRenderer
+               renderer: GridEditor.renderer.resourceControls
            })
         };
         

@@ -108,7 +108,7 @@
         if( isset($conf->filter) && isset($conf->filter->field) && !empty($conf->filter->field)){
             $C->filter = new stdClass;
             $C->filter->field = $conf->filter->field;
-            $C->filter->label = isset($conf->filter->label)? $conf->filter->label : 'No Filter';
+            $C->filter->label = isset($conf->filter->label)? $conf->filter->label : 'All';
         };
         // Search Fields
         $C->searchFields = isset($conf->search)? $conf->search : NULL;
@@ -118,7 +118,7 @@
         $idField->field = 'id';
         $idField->hidden = true;
         $C->fields[] = $idField;
-   
+        
         // Add resource fields
         if(isset($conf->fields)){
             foreach($conf->fields as $field){
