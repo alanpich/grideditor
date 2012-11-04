@@ -36,35 +36,35 @@ these guidelines:
 
   /** Field to filter on via dropdown */
   "filter": {
-			"field": "tv_AnotherComboTv",
-			"label": "Colour"
-		},
+             "field": "tv_AnotherComboTv",
+             "label": "Colour"
+        },
 
   /** Fields to include in text search */
   "search": ["pagetitle"],
 
   /** Resource Fields to include in view */
   "fields": [{
-			"name": "pagetitle",
-			"title": "Product",
-			"editable": true
-		},{
-			"name": "hidemenu",
-			"title": "Checkbox",
-			"editable": true
-		},{
-			"name": "template",
-			"title": "Template",
-			"editable": true,
-			"editor": "modx-combo-template"
-		}],
+             "field": "pagetitle",
+             "label": "Product",
+             "editable": true
+	},{
+             "field": "hidemenu",
+             "label": "Checkbox",
+             "editable": true
+        },{
+             "field": "template",
+             "label": "Template",
+             "editable": true,
+             "editor": "modx-combo-template"
+        }],
 
   /** Template Variable fields to include in view */
   "tvs": [{
-      "name": "MyTvName",
-      "title": "My Tv Name",
-      "editable": false
-    }],
+             "field": "MyTvName",
+             "label": "My Tv Name",
+             "editable": false
+         }],
 
   /** Resource controls to offer */
   "controls": ["publish","edit","delete"]
