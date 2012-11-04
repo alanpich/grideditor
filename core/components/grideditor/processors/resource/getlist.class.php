@@ -49,6 +49,18 @@
      */
     public function prepareQueryBeforeCount( xPDOQuery $c ){
         $c->where(array( 'deleted' => 0 ));
+        
+        foreach($this->confData->templates as $tpl){
+            if( is_string($tpl) ){
+                $tplObj = $this->modx->getObject('modTemplate',array("name" => $tpl));
+                if(! $tplObj instanceof modTemplate ){ continue; };
+                $tpl = $tplObj->get('id');
+            };
+            $c->where(array(
+                'template' => $tpl
+            ));          
+        }
+        
         return $c;
     }//
     

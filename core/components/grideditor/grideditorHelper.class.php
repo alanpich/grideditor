@@ -44,7 +44,8 @@
      */
     private $tvEditorTypeMap = array(
             'text' => 'textfield',
-            'listbox' => 'grideditor-combo-tv'
+            'listbox' => 'grideditor-combo-tv',
+            'checkbox' => 'modx-combo-boolean'
         );
     
     /**
