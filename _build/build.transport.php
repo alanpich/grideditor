@@ -3,17 +3,21 @@
  * @package grideditor
  * @author Alan Pich
  */
+header('Content-type: text/plain');
 $tstart = explode(' ', microtime());
 $tstart = $tstart[1] + $tstart[0];
 set_time_limit(0);
  
+require_once dirname(__FILE__).'/build.tools.php';
 
 /* define package names */
 define('PKG_NAME','GridEditor');
 define('PKG_NAME_LOWER','grideditor');
 define('PKG_VERSION','1.0');
 define('PKG_RELEASE','beta1');
- 
+define('PKG_COMMIT',getGitCommitId(dirname(dirname(__FILE__))));
+
+echo "Building from commit #".PKG_COMMIT."\n";
 /* define build paths */
 $root = '/var/www/modx/grideditor/';
 $build = dirname(__FILE__).'/';
@@ -30,7 +34,6 @@ $sources = array(
 );
 unset($root);
 require_once $sources['root'] . 'config.core.php';
-require_once $sources['build'] . 'build.tools.php';
 require_once MODX_CORE_PATH . 'model/modx/modx.class.php';
  
 // Set up a MODx Instance ======================================================
