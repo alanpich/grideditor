@@ -27,7 +27,7 @@
 
 	"tvs": [{
 			"field": "MyTvName",
-			"label": "Text TV"
+			"label": "Text TV",
 			"editable": false
 		},{
 			"field": "AnotherComboTv",
