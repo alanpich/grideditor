@@ -82,7 +82,7 @@
         $tvs = isset($this->confData->tvs)? $this->confData->tvs : array();
         // Add to data array
         foreach($tvs as $tv){
-            $tvName = $tv->name;
+            $tvName = $tv->field;
             // Grab TV value (if it exists)
             $data['tv_'.$tvName] = $resource->getTVValue($tvName);;
             // Null => empty string

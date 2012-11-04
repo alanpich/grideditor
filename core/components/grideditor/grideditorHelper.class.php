@@ -115,7 +115,7 @@
         
         // Add resource id field
         $idField = new stdClass;
-        $idField->name = 'id';
+        $idField->field = 'id';
         $idField->hidden = true;
         $C->fields[] = $idField;
    
@@ -148,13 +148,13 @@
     private function prepFieldForExt($field){
         // Sanity check
         $resourceFields = array_keys($this->resFieldEditors);
-        if(!isset($field->name) || !in_array($field->name,$resourceFields)){ return FALSE; };
+        if(!isset($field->field) || !in_array($field->field,$resourceFields)){ return FALSE; };
         // Prepare Data
         $F = new stdClass;
-        $F->name = $field->name;
-        $F->title = isset($field->title)? $field->title : $field->name;
+        $F->field = $field->field;
+        $F->label = isset($field->label)? $field->label : $field->field;
         $F->editable = isset($field->editable)? $field->editable : false;
-        $F->editor = $this->getFieldEditor($field->name); 
+        $F->editor = $this->getFieldEditor($field->field); 
         $F->sortable = isset($field->sortable)? $field->sortable : true;
         // Return object
         return $F;
@@ -183,13 +183,13 @@
      */
     private function prepTvForExt($field){
         // Sanity Checks
-        if(!isset($field->name) || empty($field->name)){ return false; };
-        $tv = $this->modx->getObject('modTemplateVar',array('name' => $field->name));
+        if(!isset($field->field) || empty($field->field)){ return false; };
+        $tv = $this->modx->getObject('modTemplateVar',array('name' => $field->field));
         if( ! $tv instanceof modTemplateVar ){ return false; };
         // Prepare data
         $F = new stdClass;
-        $F->name = 'tv_'.$field->name;
-        $F->title = isset($field->title)? $field->title : $field->name;
+        $F->field = 'tv_'.$field->field;
+        $F->label = isset($field->title)? $field->label : $field->field;
         $F->editable = isset($field->editable)? $field->editable : false;
         $F->editor = $this->getTvEditor($tv); 
         $F->sortable = isset($field->sortable)? $field->sortable : true;

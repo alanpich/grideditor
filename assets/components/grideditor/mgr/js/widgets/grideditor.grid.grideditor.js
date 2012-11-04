@@ -51,7 +51,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                         editable: field.editable,
                         editor: field.editor,
                         sortable: field.sortable,
-                        dataIndex: field.name
+                        dataIndex: field.field
                     });
                 };
             };
@@ -95,7 +95,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         if(GridEditor.custom.fields){
             for(var k=0;k<GridEditor.custom.fields.length;k++){
                 var field = GridEditor.custom.fields[k];
-                fields.push(field.name);
+                fields.push(field.field);
             };
         };
         return fields;
@@ -208,7 +208,6 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         var s = this.getStore();
         this.filterBox = tf;
         s.filterBy(this.recordMatchesFilter);
-      //  this.refresh();
     }
     
     /**

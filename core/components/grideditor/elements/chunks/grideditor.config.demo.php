@@ -11,18 +11,28 @@
 	"search": ["pagetitle"],
 
 	"fields": [{
-			"name": "pagetitle",
-			"title": "Product",
+			"field": "pagetitle",
+			"label": "Product",
 			"editable": true
 		},{
-			"name": "hidemenu",
-			"title": "Checkbox",
+			"field": "hidemenu",
+			"label": "Checkbox",
 			"editable": true
 		},{
-			"name": "template",
-			"title": "Template",
+			"field": "template",
+			"label": "Template",
 			"editable": true,
 			"editor": "modx-combo-template"
+		}],
+
+	"tvs": [{
+			"field": "MyTvName",
+			"label": "Text TV"
+			"editable": false
+		},{
+			"field": "AnotherComboTv",
+			"label": "Combo TV",
+			"editable": true
 		}],
 
 	"controls": ["publish","edit","delete"]
