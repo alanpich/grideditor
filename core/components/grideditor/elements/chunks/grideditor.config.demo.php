@@ -25,15 +25,5 @@
 			"editor": "modx-combo-template"
 		}],
 
-	"tvs": [{
-			"name": "MyTvName",
-			"editable": false,
-			"title": "Text TV"
-		},{
-			"name": "AnotherComboTv",
-			"title": "Combo TV",
-			"editable": true
-		}],
-
 	"controls": ["publish","edit","delete"]
 }
