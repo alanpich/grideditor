@@ -24,13 +24,18 @@
      * @access private
      */
     private $resFieldEditors = array(
+            'contentType' => 'modx-combo-content-type',            
             'pagetitle' => 'textfield',
             'longtitle' => 'textfield',
-            'introtext' => 'textfield',
             'description' => 'textarea',
             'alias' => 'textfield',
-            'template' => 'modx-combo-template',
-            'hidemenu' => 'modx-combo-boolean'
+            'link_attributes' => 'textfield',
+            'pub_date' => 'xdatetime',
+            'unpub_date' => 'xdatetime',
+            'introtext' => 'textarea',
+            'menuindex' => 'textfield',
+            'menutitle' => 'textfield',
+            'template' => 'modx-combo-template'
         );
     
     /**
@@ -64,6 +69,7 @@
                    'cssUrl' => $assets.'mgr/css/',
                    'imgUrl' => $assets.'mgr/img/',
                    'connectorUrl' => $assets.'mgr/connector.php',
+                   'managerUrl' => $this->modx->getOption('manager_url'),
 
                     'configChunkPrefix' => 'grideditor.config.'
            );

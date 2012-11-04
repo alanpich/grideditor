@@ -18,6 +18,7 @@ abstract class GrideditorManagerController extends modExtraManagerController {
         $this->helper = new grideditorHelper($this->modx);
         
         $this->addCss($this->helper->config['cssUrl'].'mgr.css');
+        $this->addJavascript($this->helper->config['managerUrl'].'assets/modext/util/datetime.js');
         $this->addJavascript($this->helper->config['jsUrl'].'grideditor.js');
         $this->addJavascript($this->helper->config['jsUrl'].'grideditor.functions.js');
         $this->addJavascript($this->helper->config['jsUrl'].'grideditor.renderers.js');
