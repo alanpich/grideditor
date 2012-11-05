@@ -4,11 +4,9 @@
 	"templates": ["BaseTemplate"],
 
 	"filter": {
-			"field": "tv_AnotherComboTv",
+			"field": "template",
 			"label": "Colour"
 		},
-                
-        "grouping": "AnotherComboTv",
 
 	"search": ["pagetitle"],
 
@@ -17,24 +15,14 @@
 			"label": "Product",
 			"editable": true
 		},{
-			"field": "hidemenu",
-			"label": "Checkbox",
+			"field": "alias",
+			"label": "URL Alias",
 			"editable": true
 		},{
 			"field": "template",
 			"label": "Template",
 			"editable": true,
 			"editor": "modx-combo-template"
-		}],
-
-	"tvs": [{
-			"field": "MyTvName",
-			"label": "Text TV",
-			"editable": false
-		},{
-			"field": "AnotherComboTv",
-			"label": "Combo TV",
-			"editable": true
 		}],
 
 	"controls": ["publish","edit","delete"]
