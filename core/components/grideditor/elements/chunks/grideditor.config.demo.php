@@ -7,6 +7,8 @@
 			"field": "tv_AnotherComboTv",
 			"label": "Colour"
 		},
+                
+        "grouping": "AnotherComboTv",
 
 	"search": ["pagetitle"],
 
