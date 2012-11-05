@@ -111,6 +111,8 @@
         $C->fields = array();
         // Config chunk name
         $C->chunk = $conf->chunk;
+        // Grouping Field
+        $C->grouping = $this->getGroupingField($conf);
         // Filter field
         if( isset($conf->filter) && isset($conf->filter->field) && !empty($conf->filter->field)){
             $C->filter = new stdClass;
@@ -146,6 +148,21 @@
         return $C;
     }//
     
+    
+    /**
+     * Get the Ext field name for grouping (if set)
+     * @return string Field Name
+     */
+    private function getGroupingField($conf){
+       if(!isset($conf->grouping)){ return ''; };
+       if( in_array($conf->grouping,array_keys($this->resFieldEditors))){
+           // Looks like a resource field
+           return $conf->grouping;
+       } else {
+           // Guess it must be a tv then...
+           return 'tv_'.$conf->grouping;
+       }
+    }//
     
     /**
      * Prepare resource field data for Ext use
@@ -196,7 +213,7 @@
         // Prepare data
         $F = new stdClass;
         $F->field = 'tv_'.$field->field;
-        $F->label = isset($field->title)? $field->label : $field->field;
+        $F->label = isset($field->label)? $field->label : $field->field;
         $F->editable = isset($field->editable)? $field->editable : false;
         $F->editor = $this->getTvEditor($tv); 
         $F->sortable = isset($field->sortable)? $field->sortable : true;

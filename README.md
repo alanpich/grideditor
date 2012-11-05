@@ -50,6 +50,9 @@ these guidelines:
   /** Templates to restrict view to */
   "templates": ["BaseTemplate"],
 
+  /** Field to group by */
+  "grouping": "MyTvField",
+
   /** Field to filter on via dropdown */
   "filter": {
              "field": "tv_AnotherComboTv",
@@ -103,6 +106,15 @@ An array of template names (string) or IDs (int) to restrict displayed resources
 {
   /* ... */
   "templates": ["BaseTemplate",2]
+}
+```
+
+### Resource Grouping `grouping`
+Group resources by value of a specific field
+```javascript
+{
+  /* ... */
+  "grouping": "MyTvField"
 }
 ```
 

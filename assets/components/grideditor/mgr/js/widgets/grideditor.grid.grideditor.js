@@ -27,6 +27,10 @@ GridEditor.grid.GridEditor = function(config) {
         ,tbar:this.getToolbar()
         ,searchBox: false
         ,filterBox: false
+        ,grouping: (GridEditor.custom.grouping!=null&&GridEditor.custom.grouping!='')
+        ,groupBy: (GridEditor.custom.grouping!=null)? GridEditor.custom.grouping : null
+        ,singleText: (GridEditor.custom.grouping!=null)? 'item':''
+        ,pluralText: (GridEditor.custom.grouping!=null)? 'items':''
 
     });
     GridEditor.grid.GridEditor.superclass.constructor.call(this,config)
@@ -137,7 +141,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             items.push({
                 text: _('delete'),
                 handler: function(){
-                    GridEditor.deleteResource( this.menu.record.id, this )
+                    GridEditor.fn.deleteResource( this.menu.record.id, this )
                 }
             })
         };
