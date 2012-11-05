@@ -119,8 +119,16 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             var action = this.menu.record.published? 'Unpublish' : 'Publish';
             items.push({
                 text: action,
-                handler: function(){
-                    alert('TODO: toggle publish state');
+                resId: this.menu.record.id,
+                isPublished: this.menu.record.published,
+                handler: function(menu){
+                    if(menu.options.isPublished){
+                        // Unpublish resource
+                        GridEditor.fn.unpublishResource(menu.options.resId);
+                    } else {
+                        // Publish resource
+                        GridEditor.fn.publishResource(menu.options.resId);
+                    }
                 }
             })
         }

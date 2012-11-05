@@ -20,5 +20,78 @@ GridEditor.fn.deleteResource = function(resourceId, grid){
     })
 };//
 
+/**
+ * Publish a resource by id
+ * @param int $resID Resource ID
+ */
+GridEditor.fn.publishResource = function(resId){
+   MODx.Ajax.request({
+        url: MODx.config.connectors_url+'resource/index.php'
+        ,params: { 
+            action: 'publish',
+            id: record.json.id
+        }
+        ,listeners: {
+            'success':{fn:function() {
+               MODx.msg.status({
+                   title: 'Resource published'                               
+               })
+            },scope:this}
+            ,'error':{fn:function(){
+                alert('Error: failed to publish resource');
+            },scope: this}
+        }
+    }); 
+}//
+
+
+/**
+ * Publish a resource by id
+ * @param int $resID Resource ID
+ */
+GridEditor.fn.publishResource = function(resId){
+   MODx.Ajax.request({
+        url: MODx.config.connectors_url+'resource/index.php'
+        ,params: { 
+            action: 'publish',
+            id: resId
+        }
+        ,listeners: {
+            'success':{fn:function() {
+               MODx.msg.status({
+                   title: 'Resource published'                               
+               })
+            },scope:this}
+            ,'error':{fn:function(){
+                alert('Error: failed to publish resource');
+            },scope: this}
+        }
+    }); 
+}//
+
+
+/**
+ * Unpublish a resource by id
+ * @param int $resID Resource ID
+ */
+GridEditor.fn.unpublishResource = function(resId){
+   MODx.Ajax.request({
+        url: MODx.config.connectors_url+'resource/index.php'
+        ,params: { 
+            action: 'unpublish',
+            id: resId
+        }
+        ,listeners: {
+            'success':{fn:function() {
+               MODx.msg.status({
+                   title: 'Resource unpublished'                               
+               })
+            },scope:this}
+            ,'error':{fn:function(){
+                alert('Error: failed to unpublish resource');
+            },scope: this}
+        }
+    }); 
+}//
 
 
