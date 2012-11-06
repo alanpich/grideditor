@@ -5,7 +5,7 @@
  * @package grideditor
  * @copyright Alan Pich 2012
  */
- class grideditorHelper {
+class grideditorHelper {
 	 
     /**
      * @var array $config Useful paths etc
@@ -64,6 +64,7 @@
                    'processorPath' => $core.'processors/',
                    'controllerPath' => $core.'controllers/',
                    'templatePath' => $core.'templates/',
+                   'libPath' => $core.'lib/',
                    'docsPath' => $core.'docs/',
                    'assetsUrl' => $assets,
                    'jsUrl' => $assets.'mgr/js/',
@@ -74,6 +75,9 @@
 
                     'configChunkPrefix' => 'grideditor.config.'
            );
+                   
+           // Load up helper libs
+           require_once $this->config['libPath'].'minify.json.php'; // JSON cleaner
     }//
 
     
@@ -91,8 +95,8 @@
      * @param string $raw Raw JSON input
      * @return mixed Parse JSON -> object|array etc
      */
-    public function sanitizedJSONdecode($raw){
-        $safe = preg_replace("/[^[:print:]]/",'',$raw);
+    public function sanitizedJSONdecode($json){
+        $safe = json_minify($json);
         return json_decode($safe);        
     }//
     
