@@ -11,7 +11,6 @@ A quick and easy grid view for resources, with support for inline-editing and se
 ## Roadmap ##
 Several additions are planned to extend the functionality of this component. As an overview:
 * Extend TV editor detection & implementation
-* Using an advanced JSON decoder class to allow more flexibility for handling invalid json config
 * Ability to specify pluggable field renderers
 * Configurable sort order for fields
 
@@ -37,11 +36,9 @@ add a more stable and capable json decoder in future versions, but for the momen
 these guidelines:
 * All field names should be enclosed with double quotation marks `"`
 * All strings should be enclosed with double quotation marks `"`
-* __No comments of any kind__ (Use MODx comments - these will be stripped out before parsing)
 * No trailing commas on the property
 
 ### Example GridEditor config chunk ###
-*Remove comments before use*
 ```javascript
 {
   /** Page Title */
