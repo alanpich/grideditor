@@ -82,6 +82,15 @@ class grideditorHelper {
 
     
     /**
+     * Load configuration from a chunk
+     * @param string $chunkName Name of chunk to use
+     * @return reference to $this->custom
+     */
+    public function loadCustomizationConfig( $chunkName ){
+        $this->custom = GridEditorConfiguration::fromChunk($this->modx);
+    }//
+    
+    /**
      * Get config array as JSON string (for javascript insert)
      * @return string JSON encoded self::$config array
      */
