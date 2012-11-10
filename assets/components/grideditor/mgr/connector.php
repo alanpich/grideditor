@@ -13,6 +13,11 @@ $corePath = $modx->getOption('core_path').'components/grideditor/';
 
 // Include the helper class (for processors to initialize)
 require_once $corePath.'grideditorHelper.class.php';
+
+        
+// Start up the GridEditor service
+$path = $modx->getOption('core_path').'components/grideditor/';
+$modx->getService('grideditor','GridEditor',$path,array('modx' => &$modx));
  
 // Load up some lexiconzzzz
 $modx->lexicon->load('grideditor:default');

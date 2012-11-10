@@ -34,7 +34,7 @@ class GridEditorConfiguration{
      * Fields to use for text search
      * @var array of string $fields
      */
-    public $search = array();
+    public $searchFields = array();
     
     /**
      * Field to group resources by
@@ -46,7 +46,7 @@ class GridEditorConfiguration{
      * Resource Controls to display
      * @var array of string $controls
      */
-    public $controls = array();
+    public $controls = array('publish','edit','delete');
     
     /**
      * Fields to show in grid
@@ -54,6 +54,17 @@ class GridEditorConfiguration{
      */
     public $fields = array();
     
+    /**
+     * Array of field names for quick reference
+     * @var array of string Field Names
+     */
+    public $fieldList = array();
+    
+    /**
+     * Config Chunk suffix (name)
+     * @var string
+     */
+    public $chunk = 'demo';
     
     /**
      * Reference to a MODx instance
@@ -66,9 +77,10 @@ class GridEditorConfiguration{
      * @static Create an istance populated from a config chunk
      * @param string $chunkName Name of chunk to use
      * @param modX $modx Modx Instance
+     * @param string $chunkPrefix. System prefix of chunk name.
      * @return GridEditorConfiguration instance
      */
-    public static function fromChunk( $chunkName, modX &$modx ){
+    public static function fromChunk( $chunkName, modX &$modx, $chunkPrefix = '' ){
         // Create a new instance
         $config = new self($modx);
         // Try to grab the chunk
@@ -86,6 +98,8 @@ class GridEditorConfiguration{
         };
         // Populate config from JSON string
         $config->fromJSON($chunk,$modx);
+        // Save the chunk name
+        $config->chunk = str_replace($chunkPrefix,'',$chunkName);
         // Return the config object
         return $config;
     }//
@@ -126,9 +140,24 @@ class GridEditorConfiguration{
             $this->title = $data->title;
         };
         
+        // Add resource ID as a hidden resource field
+        $id = new stdClass;
+        $id->field = 'id';
+        $id->hidden = true;
+        $id->sortable = false;
+        array_unshift($data->fields,$id);
+        
         // Prepare Fields
-        $this->prepareResourceFields();
-        $this->prepareTvFields();
+        $this->prepareResourceFields($data->fields);
+        $this->prepareTvFields($data->tvs);
+        
+        // Prepare searching & filtering
+        $this->prepareSearchFields($data->search);
+        $this->prepareFilterInfo($data->filter);
+        $this->prepareGroupingField($data->grouping);
+        
+        // Prepare control object
+        $this->prepareGridControls($data->controls);
         
         // Parse and prepare templates array
         if(!is_null($data->templates) && !is_array($data->templates)){
@@ -138,10 +167,6 @@ class GridEditorConfiguration{
             // Parse and sanitize templates array
             if(!$this->prepareTemplates($data->templates)){ /* return false; */ };
         };
-        
-        
-        
-        
     }//
     
     
@@ -167,7 +192,7 @@ class GridEditorConfiguration{
                $this->templates[] = $tpl;
            } else {
                // Use as template name
-               $modTpl = $this->modx->getObject('modTemplate',array('name'=>$tpl));
+               $modTpl = $this->modx->getObject('modTemplate',array('templatename'=>$tpl));
                // Bail out & warn if template doesnt exist
                if(!$modTpl instanceof modTemplate){
                    $this->warning('Invalid item in property `templates` - ['.$tpl.'] is not a valid Template name');
@@ -177,6 +202,90 @@ class GridEditorConfiguration{
            };
            
        } 
+    }//
+    
+    
+    private function prepareResourceFields($fields){
+        if(is_null($fields) || count($fields)<1){ return $this->warning('No resource fields specified'); };
+        foreach($fields as $field){
+            $fieldObj = new GridEditorResourceField($field,$this->modx);
+            if(!$fieldObj->isValid){
+                $this->warning('Invalid resource field `'.$field->field.'` - Skipping');
+                continue;
+            };
+            $this->fields[$fieldObj->field] = $fieldObj;
+            $this->fieldList[] = $fieldObj->field;
+        }
+    }//
+    
+    private function prepareTvFields($fields){
+        if(is_null($fields) || count($fields)<1){ return $this->warning('No TV fields specified'); };
+        foreach($fields as $field){
+            $fieldObj = new GridEditorTvField($field,$this->modx);
+            if(!$fieldObj->isValid){
+                $this->warning('Invalid TV field `'.$field->field.'` - Skipping');
+                continue;
+            };
+            $this->fields[$fieldObj->field] = $fieldObj;
+            $this->fieldList[] = $fieldObj->field;
+        }
+    }//
+   
+    
+    
+    // Prepare controls
+    private function prepareGridControls($data){
+        $controls = array();
+        foreach($this->controls as $key => $val){
+            if(in_array($val,$data)){
+                $controls[] = $val;
+            }            
+        };
+        $this->controls = $controls;
+    }//
+    
+    
+    /**
+     * Check all listed search fields are valid. Only add valid ones. Warn others.
+     * @param array $fields
+     * @return bool
+     */
+    private function prepareSearchFields($fields){
+       foreach($fields as $field){
+           if(!in_array($field,$this->fieldList)){ 
+               return $this->warning('Ignoring search field ['.$field.'] as not listed in fields or tvs list');
+           }
+           $this->searchFields[] = $field;
+       } 
+       return true;
+    }//
+    
+    /**
+     * Check filter field is valid
+     * @param object $info
+     * @return boolean
+     */
+    private function prepareFilterInfo( $info ){
+        if(is_null($info)){ return false; };
+        if(!isset($info->field) || empty($info->field)){ return $this->warning('No filter field specified'); };
+        if(!in_array($info->field,$this->fieldList)){ return $this->warning('Ignoring filter field ['.$info->field.'] as does not appear in resource or tv list'); };        
+        $this->filter = new stdClass;
+        $this->filter->field = $info->field;
+        $this->filter->label = isset($info->label)? $info->label : $info->field;
+    }//    
+    
+    /**
+     * Check the selected grouping field is valid, and set it
+     * @param object $info
+     * @return boolean
+     */
+    private function prepareGroupingField($info){
+        if(is_null($info)){ return false; };
+        if(!isset($info->field) || empty($info->field)){ return $this->warning('No grouping field specified'); };
+        if(!in_array($info->field,$this->fieldList)){ return $this->warning('Ignoring grouping field ['.$info->field.'] as does not appear in resource or tv list'); };        
+        $this->grouping = new stdClass;
+        $this->grouping->field = $info->field;
+        $this->grouping->label = isset($info->label)? $info->label : 'Filter results';
     }//
     
     

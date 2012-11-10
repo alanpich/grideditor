@@ -58,26 +58,31 @@ abstract class GridEditorField {
      * @var boolean Can sort on this field?
      */
     public  $sortable = true;
-            
-    
     
     /**
-     * Resource fields allowed
-     * @var array of string
+     * Sort order for grid columns
+     * @var int
      */
-    private static $allowedFields = array(
-            'contentType','pagetitle',
-            'description','alias',
-            'link_attributes',' pub_date', 
-            'unpub_date','introtext',
-            'menutitle','menuindex',
-            'template','id'
-        );
+    public $order = 0;
     
+    /**
+     * Is this field hidden from the grid?
+     * @var boolean
+     */
+    public $hidden = false;
+    
+    /**
+     * Width (in pixels) that the grid column should aim for
+     * @var int
+     */
+    public $width = false;
+             
+    
+    protected $modx;
     
     /**
      * Factory Loader - parses input data
-     * @param object $data
+     * @param object $data Field data
      * @return GridEditorHelper Instance
      */
     public static function fromInputData( $data ){
@@ -87,21 +92,51 @@ abstract class GridEditorField {
     
     
     
-    public function __construct($data){
+    public function __construct($data, modX &$modx){
+        // Reference modX class
+        $this->modx =& $modx;
+        
         // Check field name is valid
-        if(! $this->_is_valid_field($data)){return; /* WARN */ };   
+        if(! $this->is_valid_field($data)){$this->isValid = false; return; /* WARN */ };
         
-        // Field Name
-        
+        // Field name
+        $this->field = $data->field;        
+        // Get label settings
+        $this->_get_field_label($data);
         // Get editor config
-        $this->get_editor_settings($data);
+        $this->_get_editor_settings($data);
         // Get editor renderer (TODO);
-        $this->get_renderer_settings($data);
-        // 
+        $this->_get_renderer_settings($data);
+        // Sort Order
+        $this->order = isset($data->order)? (int) $data->order : $this->order;
+        // Hidden
+        $this->hidden = isset($data->hidden)? $data->hidden : $this->hidden;
+        // Sortable column
+        $this->sortable = isset($data->sortable)? $data->sortable : $this->sortable;
+        // Column width
+        $this->width = isset($data->width)? (int) $data->width : $this->width;
+        
+        // Kill off modx reference
+        unset($this->modx);
     }//
     
     
     
+    /**
+     * Set the field label to an appropriate value
+     * @param object $data Field data input
+     */
+    protected final function _get_field_label($data){
+       $this->label = $this->get_field_label($data);
+    }// 
+    
+    /**
+     * Get a label for this field
+     */
+    protected function get_field_label($data){
+       if(isset($data->label) && !empty($data->label)){ return $data->label; };
+       return $data->field;
+    }//
     
     /**
      * Baseline behavior method for checking if a field is allowed.
@@ -109,7 +144,7 @@ abstract class GridEditorField {
      * @param data $fieldName Name of field
      * @return boolean Is field name valid?
      */
-    private function _is_valid_field($data){
+    protected function is_valid_field($data){
        return true; 
     }//
     
@@ -117,13 +152,17 @@ abstract class GridEditorField {
      * Sets self::editable self::editor appropriately
      * @param type $data
      */
-    private function get_editor_settings($data){
+    protected final function _get_editor_settings($data){
         // If no property in data, default to current value
         if(!isset($data->editable)){ $data->editable = $this->editable; }; 
         if($data->editable){
             // Field is editable
             $this->editable = true;
-            $this->editor = $this->_get_editor_xtype($data);            
+            $this->editor = $this->get_editor_xtype($data);           
+        } else {
+            // Field is not editable
+            $this->editable = false;
+            $this->editor = NULL;
         }
     }//
     
@@ -132,13 +171,13 @@ abstract class GridEditorField {
      * Defaults to false, for no renderer
      * @param string name of js renderer function
      */
-    private function get_renderer_settings($data){
+    protected final function _get_renderer_settings($data){
         // If no property set, default to current value
         if(!isset($data->renderer)){ $data->renderer = $this->renderer; };
         // Ensure renderer input is a string
         if(!is_string($data->renderer)){ $this->renderer = false; };
         // Returns an xtype (or false if an error
-        $this->renderer = $this->_get_renderer_xtype($data);
+        $this->renderer = $this->get_renderer_xtype($data);
     }
     
     
@@ -146,11 +185,13 @@ abstract class GridEditorField {
      * Baseline behavior method for getting a field's editor type. 
      * Override this in extended classes
      * @param type $data
-     * @return string
+     * @return object
      */
-    private function _get_editor_xtype($data){
+    protected function get_editor_xtype($data){
         // Baseline all fields are text fields
-       return 'textfield'; 
+       $obj = new stdClass;
+       $obj->xtype = 'textfield'; 
+       return $obj;
     }//
 
     /**
@@ -159,7 +200,7 @@ abstract class GridEditorField {
      * @param type $data
      * @return string|false Renderer Function name (js) or false for default
      */
-    private function _get_renderer_xtype($data){
+    protected function get_renderer_xtype($data){
         // Baseline all fields are text fields
        return false; 
     }//

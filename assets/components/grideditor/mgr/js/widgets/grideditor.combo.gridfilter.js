@@ -4,7 +4,7 @@ GridEditor.combo.GridFilter = function(config) {
         url: GridEditor.config.connectorUrl
         ,baseParams: {
                 action: 'grid/getFilterList',
-                config: GridEditor.custom.chunk
+                chunk: config.configChunk
             }
         ,fields: ['name','value']
         ,displayField: 'name'

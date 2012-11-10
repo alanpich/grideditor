@@ -11,13 +11,11 @@ GridEditor.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-            html: '<h2>'+GridEditor.custom.title+'</h2>'
+            html: '<h2>TITLE TO GO HERE</h2>'// '<h2>'+GridEditor.custom.title+'</h2>'
             ,border: false
             ,cls: 'modx-page-header'
         },{
-            xtype: 'grideditor-grid-grideditor'
-            ,cls: 'main-wrapper'
-            ,preventRender: true
+            html: '<div id="grideditor-cmp-grid-div"></div>'
         }]
     });
     GridEditor.panel.Home.superclass.constructor.call(this,config);

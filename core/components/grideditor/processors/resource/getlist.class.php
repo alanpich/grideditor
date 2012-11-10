@@ -25,24 +25,23 @@
     private $helper;
     
     
-    /**
-     * Load helper & custom config load to constructor
-     */
-    function __construct(&$modx){
-        parent::__construct($modx);
+    
+    public function process(){
         
-        if(!class_exists('grideditorHelper')){
-            require $this->modx->getOption('core_path').'components/grideditor/grideditorHelper.class.php';
+        // Grab the name of config chunk
+        $params =& $this->modx->request->parameters['POST'];
+        if( !isset($params['chunk']) || empty($params['chunk'])){ 
+            return $this->failure("No config chunk specified");
         };
-        $this->helper = new grideditorHelper($modx);
-        
+        $chunkName = $params['chunk'];
+
         // Attempt to load config chunk
-        if(!$this->loadCustomConfig()){
+        if(!$this->confData = $this->modx->grideditor->loadConfigChunk($chunkName)){
             return $this->failure('Invalid Config Chunk');
         };
         
+        return parent::process();
     }//
-    
     
     /**
      * Only select resources that are not deleted
@@ -51,11 +50,6 @@
         $c->where(array( 'deleted' => 0 ));
         
         foreach($this->confData->templates as $tpl){
-            if( is_string($tpl) ){
-                $tplObj = $this->modx->getObject('modTemplate',array("name" => $tpl));
-                if(! $tplObj instanceof modTemplate ){ continue; };
-                $tpl = $tplObj->get('id');
-            };
             $c->where(array(
                 'template' => $tpl
             ));          
@@ -64,24 +58,6 @@
         return $c;
     }//
     
-    
-    /**
-     * Loads json config (as specified by `config` request param
-     */
-    private function loadCustomConfig(){
-        $params =& $this->modx->request->parameters['POST'];
-        if( !isset($params['config']) || empty($params['config'])){ return false; };
-        // Grab config chunk
-        $chunkName = $params['config'];
-        // Try to load chunk
-        $chunk = $this->modx->getObject('modChunk',array(
-                'name' => $chunkName
-            ));
-        if(! $chunk instanceof modChunk ){ return false; }
-        // Store parsed config data
-        $this->confData = $this->helper->sanitizedJSONdecode($chunk->process());        
-    }//
- 
     /**
      * Override modObjectGetListProcessor::prepareRow to add TV values to data
      * @param xPDOObject $object
@@ -90,16 +66,16 @@
     public function prepareRow(xPDOObject $resource) {
         $data = $resource->toArray();
         
-        // Grab names of all TVs
-        $tvs = isset($this->confData->tvs)? $this->confData->tvs : array();
         // Add to data array
-        foreach($tvs as $tv){
+        foreach($this->confData->fields as $tv){
+            if($tv->type !== 'tv'){ continue; };
+            
             $tvName = $tv->field;
             // Grab TV value (if it exists)
-            $data['tv_'.$tvName] = $resource->getTVValue($tvName);;
+            $data[$tvName] = $resource->getTVValue($tvName);;
             // Null => empty string
-            if(is_null($data['tv_'.$tvName])){
-                $data['tv_'.$tvName] = '';
+            if(is_null($data[$tvName])){
+                $data[$tvName] = '';
             };           
         }
         return $data;

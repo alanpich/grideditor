@@ -6,12 +6,14 @@
  */
 GridEditor.grid.GridEditor = function(config) {
     config = config || {};
+    this.grideditor = config.grideditor;
     Ext.applyIf(config,{
         id: 'grideditor-grid-grideditor'
+        ,renderTo: config.renderTo
         ,url: GridEditor.config.connectorUrl
         ,baseParams: { 
                action: 'resource/getList'
-               ,config: GridEditor.custom.chunk
+               ,chunk: this.grideditor.chunk
            }
         ,paging: false
         ,remoteSort: false
@@ -27,16 +29,15 @@ GridEditor.grid.GridEditor = function(config) {
         ,tbar:this.getToolbar()
         ,searchBox: false
         ,filterBox: false
-        ,grouping: (GridEditor.custom.grouping!=null&&GridEditor.custom.grouping!='')
-        ,groupBy: (GridEditor.custom.grouping!=null)? GridEditor.custom.grouping : null
-        ,singleText: (GridEditor.custom.grouping!=null)? 'item':''
-        ,pluralText: (GridEditor.custom.grouping!=null)? 'items':''
+        ,grouping: (this.grideditor.grouping!=null&&this.grideditor.grouping!='')
+        ,groupBy: (this.grideditor.grouping!=null)? this.grideditor.grouping.field : null
+        ,singleText: (this.grideditor.grouping!=null)? 'item':''
+        ,pluralText: (this.grideditor.grouping!=null)? 'items':''
 
     });
     GridEditor.grid.GridEditor.superclass.constructor.call(this,config)
 };
 Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
-    
     
     /**
      * Return array of columns for grid
@@ -44,12 +45,11 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     getColumnsArray: function(){
        var items = [];
-       
         // Add in the resource fields
-        if(GridEditor.custom.fields){
-            for(var k=0;k<GridEditor.custom.fields.length;k++){
-                var field = GridEditor.custom.fields[k];
-                if(!field.hidden || field.hidden!=true){
+        if(this.grideditor.fields){
+            for(var k in this.grideditor.fields){
+                var field = this.grideditor.fields[k];
+                if(field.hidden!==true){
                     items.push({
                         header: field.label,
                         editable: field.editable,
@@ -62,9 +62,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         };
 
         // If controls in use, add another field for them
-        var min = (GridEditor.custom.controls&&GridEditor.custom.controls.indexOf('publish')>-1)? 1 : 0;
-        var total = GridEditor.custom.controls.length - min;
-        if(GridEditor.custom.controls && GridEditor.custom.controls.length > min){
+        var min = (this.grideditor.controls&&this.grideditor.controls.indexOf('publish')>-1)? 1 : 0;
+        var total = this.grideditor.controls.length - min;
+        if(this.grideditor.controls && this.grideditor.controls > min){
            items.push({
                header: '',
                editable: false,
@@ -74,7 +74,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         };
         
         // If publish is a control, add it's own columns at the beginning
-        if(GridEditor.custom.controls.indexOf('publish')>-1){
+        if(this.grideditor.controls.indexOf('publish')>-1){
             items.unshift({
                 header:'',
                 editable: false,
@@ -96,10 +96,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
     ,getFieldsArray: function(){
         var fields = new Array('published');
         // Add resource fields
-        if(GridEditor.custom.fields){
-            for(var k=0;k<GridEditor.custom.fields.length;k++){
-                var field = GridEditor.custom.fields[k];
-                fields.push(field.field);
+        if(this.grideditor.fieldList){
+            for(var k=0;k<this.grideditor.fieldList.length;k++){
+                fields.push(this.grideditor.fieldList[k]);
             };
         };
         return fields;
@@ -112,10 +111,10 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     ,getMenu: function(){
         var items = [];
-        if(!GridEditor.custom.controls){ return items; };
+        if(!this.grideditor.controls){ return items; };
         
         // Publish state toggler
-        if(GridEditor.custom.controls.indexOf('publish')>-1){
+        if(this.grideditor.controls.indexOf('publish')>-1){
             var action = this.menu.record.published? 'Unpublish' : 'Publish';
             items.push({
                 text: action,
@@ -134,7 +133,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         }
                 
         // Edit resource link
-        if(GridEditor.custom.controls.indexOf('edit')>-1){
+        if(this.grideditor.controls.indexOf('edit')>-1){
             items.push({
                 text: 'Edit',
                 handler: function(){
@@ -145,7 +144,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         };
  
          // Delete resource link
-        if(GridEditor.custom.controls.indexOf('delete')>-1){
+        if(this.grideditor.controls.indexOf('delete')>-1){
             items.push({
                 text: _('delete'),
                 handler: function(){
@@ -187,16 +186,17 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         });
         
         // If filter is set, show a filterbar
-        if(GridEditor.custom.filter && GridEditor.custom.filter.field != ''){
+        if(this.grideditor.filter && this.grideditor.filter.field != ''){
             items.push({
-            xtype: 'grideditor-combo-gridfilter'
-            ,emptyText: GridEditor.custom.filter.label
-            ,title: GridEditor.custom.filter.label
-            ,listeners: {
-                'select': {fn:this.filter,scope:this}
-            }
-        })
-        }
+                xtype: 'grideditor-combo-gridfilter'
+                ,emptyText: this.grideditor.filter.label
+                ,title: this.grideditor.filter.label
+                ,configChunk: this.grideditor.chunk
+                ,listeners: {
+                    'select': {fn:this.filter,scope:this}
+                }
+            })
+        };
         
         return items;
     }//
@@ -238,8 +238,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             // Generate RegExp pattern from search string
             var pattern = new RegExp(str,'gim');
             // Test all search fields 
-            for(var k=0; k< GridEditor.custom.searchFields.length; k++){
-                var searchField = GridEditor.custom.searchFields[k];
+            for(var k=0; k< grid.grideditor.searchFields.length; k++){
+                var searchField = grid.grideditor.searchFields[k];
                 if( pattern.test( fields[searchField] ) ){
                     points++;
                 };
@@ -253,7 +253,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         // Do filter search
         var filterValue = grid.filterBox? grid.filterBox.getValue() : '';
         if(grid.filterBox && filterValue != ''){
-            var filterField = GridEditor.custom.filter.field;
+            var filterField = grid.grideditor.filter.field;
             var filterPattern = new RegExp(filterValue,'gim');
             return filterPattern.test(fields[filterField]);
         };

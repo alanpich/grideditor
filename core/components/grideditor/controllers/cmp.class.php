@@ -8,25 +8,29 @@
 class GrideditorCmpManagerController extends GrideditorManagerController {
     
     /** bool $validConfig Is there a valid config file? */
-    private $validConfig = false;
+    private $validConfig = true;
     
     /**
      * Checks config file is valid
      * @param array $scriptProperties
      */
     public function process(array $scriptProperties = array()) {
-        // Config chunk is prefix.name
+        // Require the necessary classes
+        $path = $this->modx->getOption('core_path').'components/grideditor/';
+        $this->modx->getService('grideditor','GridEditor',$path,array('modx' => &$modx));
+        
+        $this->validConfig = true;
+        
+        // Check service loaded ok
         $configName = isset($scriptProperties['config'])? $scriptProperties['config'] : '';
-        $configChunk = $this->helper->config['configChunkPrefix'].$configName;
-        // Check chunk exists
-        $chunk = $this->modx->getObject('modChunk',array('name' => $configChunk));
-        $this->validConfig = ($chunk instanceof modChunk);
-        // Parse & Load json config if exists
-        if($this->validConfig){
-            $this->confData = $this->helper->sanitizedJSONdecode($chunk->process());
-            $this->confData->chunk = $configChunk;
-        } else {
-            // Log Error
+        if(! $conf = $this->modx->grideditor->loadConfigChunk('demo')){
+            echo 'Failed to load config';
+            $this->validConfig = false;
+        };
+        
+        // Now prepare output for Ext Gridness
+        if(! $this->Ext = $this->modx->grideditor->generateExtJavascript($conf,'grideditor-cmp-grid-div')){
+            $this->validConfig = false;
         };
     }//
     
@@ -50,11 +54,7 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.combo.gridfilter.js');
         $this->addLastJavascript($this->helper->config['jsUrl'].'sections/grideditor.cmp.js');
         
-        $this->addHtml('<script type="text/javascript">
-            Ext.onReady(function() {
-                GridEditor.custom = '.json_encode($this->helper->getExtConfig($this->confData)).';
-            });
-        </script>');
+        $this->addHtml($this->Ext);
     }
     
     /**
