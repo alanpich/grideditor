@@ -145,7 +145,18 @@ class GridEditorConfiguration{
         $id->field = 'id';
         $id->hidden = true;
         $id->sortable = false;
-        array_unshift($data->fields,$id);
+        $id->type = 'resource';
+        $this->fields['id'] = $id;
+        $this->fieldList[] = 'id';
+        
+        // Add published status as a hidden resource field
+        $published = new stdClass;
+        $published->field = 'published';
+        $published->hidden = true;
+        $published->sortable = false;
+        $published->type = 'resource';
+        $this->fields['published'] = $published;
+        $this->fieldList[] = 'published';
         
         // Prepare Fields
         $this->prepareResourceFields($data->fields);

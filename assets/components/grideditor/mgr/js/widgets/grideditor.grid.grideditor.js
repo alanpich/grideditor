@@ -21,6 +21,9 @@ GridEditor.grid.GridEditor = function(config) {
         ,autoExpandColumn: 'name'
         ,autosave: true
         ,save_action: 'resource/updateFromGrid'
+        ,saveParams: {
+            chunk: this.grideditor.chunk
+        }
         ,columns: this.getColumnsArray()
         ,fields: this.getFieldsArray()
         ,css: {

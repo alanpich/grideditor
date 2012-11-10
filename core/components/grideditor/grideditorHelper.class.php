@@ -19,34 +19,7 @@ class grideditorHelper {
      */
     private $modx;
     
-    /**
-     * @var array $resFieldEditors Resource field Ext editor xtypes
-     * @access private
-     */
-    private $resFieldEditors = array(
-            'contentType' => 'modx-combo-content-type',            
-            'pagetitle' => 'textfield',
-            'longtitle' => 'textfield',
-            'description' => 'textarea',
-            'alias' => 'textfield',
-            'link_attributes' => 'textfield',
-            'pub_date' => 'xdatetime',
-            'unpub_date' => 'xdatetime',
-            'introtext' => 'textarea',
-            'menuindex' => 'textfield',
-            'menutitle' => 'textfield',
-            'template' => 'modx-combo-template'
-        );
-    
-    /**
-     * @var array $tvEditorTypeMap TV type editor xtypes
-     * @access private
-     */
-    private $tvEditorTypeMap = array(
-            'text' => 'textfield',
-            'listbox' => 'grideditor-combo-tv',
-            'checkbox' => 'modx-combo-boolean'
-        );
+  
     
     /**
      * Constructor - sets up config array

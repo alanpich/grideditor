@@ -8,32 +8,6 @@
  class gridFilterGetListProcessor extends modProcessor {
 
     /**
-     * @var $confData Custom config data (from json chunk)
-     * @access private
-     */
-    private $confData;
-    
-    /**
-     * Helper class
-     * @access private
-     */
-    private $helper;
-    
-    /**
-     * Load helper & custom config load to constructor
-     */
-    function __construct(&$modx){
-        parent::__construct($modx);
-        
-        if(!class_exists('grideditorHelper')){
-            require $this->modx->getOption('core_path').'components/grideditor/grideditorHelper.class.php';
-        };
-        $this->helper = new grideditorHelper($modx);
-        
-    }//
-    
-    
-    /**
      * Get list of filter options specified by config chunk
      */
     public function process(){
