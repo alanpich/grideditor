@@ -46,7 +46,7 @@ class GridEditorConfiguration{
      * Resource Controls to display
      * @var array of string $controls
      */
-    public $controls = array('publish','edit','delete');
+    public $controls = array('publish','edit','delete','new');
     
     /**
      * Fields to show in grid
@@ -244,7 +244,10 @@ class GridEditorConfiguration{
    
     
     
-    // Prepare controls
+    /**
+     * Sanitize controls input to legitimate control names
+     * @param type $data
+     */
     private function prepareGridControls($data){
         $controls = array();
         foreach($this->controls as $key => $val){

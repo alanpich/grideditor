@@ -201,6 +201,19 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             })
         };
         
+        // If 'new' is specified, show a 'Create Resource' button
+        if(this.grideditor.controls.indexOf('new')!== -1){
+            items.push('->');
+            items.push({
+                xtype: 'button'
+                ,text: 'Create Resource'
+                ,handler: function(){
+                    document.location.href = MODx.config.manager_url+'?a=55'
+                }
+            })
+        };
+        
+        
         return items;
     }//
     
