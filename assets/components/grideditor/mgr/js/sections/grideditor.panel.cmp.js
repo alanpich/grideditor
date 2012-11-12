@@ -11,7 +11,7 @@ GridEditor.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-            html: '<h2>TITLE TO GO HERE</h2>'// '<h2>'+GridEditor.custom.title+'</h2>'
+            html: '<h2 id="grideditor-page-title-h2"></h2>'
             ,border: false
             ,cls: 'modx-page-header'
         },{

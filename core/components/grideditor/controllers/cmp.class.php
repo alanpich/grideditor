@@ -26,7 +26,9 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         if(! $conf = $this->modx->grideditor->loadConfigChunk('demo')){
             echo 'Failed to load config';
             $this->validConfig = false;
-        };
+        } else {
+            $this->confData =& $conf;
+        }
         
         // Now prepare output for Ext Gridness
         if(! $this->Ext = $this->modx->grideditor->generateExtJavascript($conf,'grideditor-cmp-grid-div')){
@@ -43,6 +45,9 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
     }//
     
     
+    /**
+     * Add all nescesary JS to page
+     */
     public function loadCustomCssJs() {
         // Dont load anything if there's no config
         if( ! $this->validConfig ){ return; };
@@ -55,7 +60,10 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         $this->addLastJavascript($this->helper->config['jsUrl'].'sections/grideditor.cmp.js');
         
         $this->addHtml($this->Ext);
-    }
+        
+        // Add custom title to CMP page
+        $this->addHtml($this->getPageTitleExt());
+    }//
     
     /**
      * Check config file exists, either return cmp tpl or error message
@@ -64,6 +72,16 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
     public function getTemplateFile() {
         $tpl = $this->validConfig ? 'cmp.tpl' : 'invalidconfig.tpl';
         return $this->helper->config['templatePath'].$tpl;
+    }//
+    
+    /**
+     * Add some javascript to set the custom page title to the page
+     */
+    private function getPageTitleExt(){
+        $title = $this->confData->title;
+        $tpl = $this->modx->grideditor->config['templatePath'].'cmp.pagetitle.tpl';
+        $this->modx->smarty->assign('grideditorpagetitle',$title);
+        return $this->modx->smarty->fetch($tpl);
     }//
 
     
