@@ -159,16 +159,16 @@ class GridEditorConfiguration{
         $this->fieldList[] = 'published';
         
         // Prepare Fields
-        $this->prepareResourceFields($data->fields);
-        $this->prepareTvFields($data->tvs);
+        $this->prepareResourceFields($data);
+        $this->prepareTvFields($data);
         
         // Prepare searching & filtering
-        $this->prepareSearchFields($data->search);
-        $this->prepareFilterInfo($data->filter);
-        $this->prepareGroupingField($data->grouping);
+        $this->prepareSearchFields($data);
+        $this->prepareFilterInfo($data);
+        $this->prepareGroupingField($data);
         
         // Prepare control object
-        $this->prepareGridControls($data->controls);
+        $this->prepareGridControls($data);
         
         // Parse and prepare templates array
         if(!is_null($data->templates) && !is_array($data->templates)){
@@ -217,7 +217,8 @@ class GridEditorConfiguration{
     
     
     private function prepareResourceFields($fields){
-        if(is_null($fields) || count($fields)<1){ return $this->warning('No resource fields specified'); };
+        if(!isset($fields->fields) || count($fields->fields)<1){ return $this->warning('No resource fields specified'); };
+        $fields = $fields->fields;
         foreach($fields as $field){
             $fieldObj = new GridEditorResourceField($field,$this->modx);
             if(!$fieldObj->isValid){
@@ -230,7 +231,8 @@ class GridEditorConfiguration{
     }//
     
     private function prepareTvFields($fields){
-        if(is_null($fields) || count($fields)<1){ return $this->warning('No TV fields specified'); };
+        if(!isset($fields->tvs) || count($fields->tvs)<1){ return $this->warning('No TV fields specified'); };
+        $fields = $fields->tvs;
         foreach($fields as $field){
             $fieldObj = new GridEditorTvField($field,$this->modx);
             if(!$fieldObj->isValid){
@@ -249,6 +251,8 @@ class GridEditorConfiguration{
      * @param type $data
      */
     private function prepareGridControls($data){
+        if(!isset($data->controls) || count($data->controls)<1){ return; };
+        $data = $data->controls;
         $controls = array();
         foreach($this->controls as $key => $val){
             if(in_array($val,$data)){
@@ -265,6 +269,8 @@ class GridEditorConfiguration{
      * @return bool
      */
     private function prepareSearchFields($fields){
+       if(!isset($fields->search) || count($fields->search)<1){ return; };
+       $fields = $fields->search;
        foreach($fields as $field){
            if(!in_array($field,$this->fieldList)){ 
                return $this->warning('Ignoring search field ['.$field.'] as not listed in fields or tvs list');
@@ -280,7 +286,8 @@ class GridEditorConfiguration{
      * @return boolean
      */
     private function prepareFilterInfo( $info ){
-        if(is_null($info)){ return false; };
+        if(!isset($info->filter)){ return; };
+        $info = $info->filter;
         if(!isset($info->field) || empty($info->field)){ return $this->warning('No filter field specified'); };
         if(!in_array($info->field,$this->fieldList)){ return $this->warning('Ignoring filter field ['.$info->field.'] as does not appear in resource or tv list'); };        
         $this->filter = new stdClass;
@@ -294,7 +301,8 @@ class GridEditorConfiguration{
      * @return boolean
      */
     private function prepareGroupingField($info){
-        if(is_null($info)){ return false; };
+        if(!isset($info->grouping)){ return; };
+        $info = $info->grouping;
         if(!isset($info->field) || empty($info->field)){ return $this->warning('No grouping field specified'); };
         if(!in_array($info->field,$this->fieldList)){ return $this->warning('Ignoring grouping field ['.$info->field.'] as does not appear in resource or tv list'); };        
         $this->grouping = new stdClass;
