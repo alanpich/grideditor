@@ -1,2 +1,10 @@
 GridEditor Changelog
 --------------------
+
+Version 0.9
+-----------
+# Complete refactoring of codebase to prepare for multi-use cases
+  and non-cmp deployment (thinking of dashboard widgets or custom 
+  resource classes in the future)
+
+# Added a 'Create Resource' control option for toolbar
