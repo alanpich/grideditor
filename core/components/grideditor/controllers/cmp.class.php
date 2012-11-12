@@ -15,9 +15,7 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
      * @param array $scriptProperties
      */
     public function process(array $scriptProperties = array()) {
-        // Require the necessary classes
-        $path = $this->modx->getOption('core_path').'components/grideditor/';
-        $this->modx->getService('grideditor','GridEditor',$path,array('modx' => &$modx));
+       
         
         $this->validConfig = true;
         
@@ -52,17 +50,15 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         // Dont load anything if there's no config
         if( ! $this->validConfig ){ return; };
         
-        //$this->addJavascript($this->helper->config['jsUrl'].'mgr/widgets/helper.grid.js');
-        $this->addJavascript($this->helper->config['jsUrl'].'sections/grideditor.panel.cmp.js');
-        $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
-        $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.combo.tv.js');
-        $this->addJavascript($this->helper->config['jsUrl'].'widgets/grideditor.combo.gridfilter.js');
-        $this->addLastJavascript($this->helper->config['jsUrl'].'sections/grideditor.cmp.js');
+        //$this->addJavascript($this->modx->grideditor->config['jsUrl'].'mgr/widgets/helper.grid.js');
+        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'sections/grideditor.panel.cmp.js');
+        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
+        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.combo.tv.js');
+        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.combo.gridfilter.js');
+        $this->addLastJavascript($this->modx->grideditor->config['jsUrl'].'sections/grideditor.cmp.js');
         
         $this->addHtml($this->Ext);
         
-        // Add custom title to CMP page
-        $this->addHtml($this->getPageTitleExt());
     }//
     
     /**
@@ -71,7 +67,7 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
      */
     public function getTemplateFile() {
         $tpl = $this->validConfig ? 'cmp.tpl' : 'invalidconfig.tpl';
-        return $this->helper->config['templatePath'].$tpl;
+        return $this->modx->grideditor->config['templatePath'].$tpl;
     }//
     
     /**

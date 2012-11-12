@@ -30,6 +30,14 @@ GridEditor.grid.GridEditor = function(config) {
             verticalAlign: 'middle'
         }
         ,tbar:this.getToolbar()
+        ,tbarCfg: {
+            padding: 10
+            ,css: { marginLeft: '30px' }
+        }
+
+        ,header: true
+        ,headerAsText: true
+        ,title: this.grideditor.title
         ,searchBox: false
         ,filterBox: false
         ,grouping: (this.grideditor.grouping!=null&&this.grideditor.grouping!='')
@@ -171,7 +179,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         items.push({
             xtype: 'textfield'
             ,id: 'grideditor-search-filter'
-            ,emptyText: 'Search'//_('grideditor.search...')
+            ,margin: 10
+            ,emptyText: 'Search...'//_('grideditor.search...')
             ,listeners: {
                 'change': {fn:this.search,scope:this}
                 ,'render': {fn: function(cmp) {

@@ -1,7 +1,7 @@
 <?php
 $here = dirname(__FILE__).'/';
 require_once $here.'/lib/minify.json.php';
-require_once $here.'grideditor.config.class.php';
+require_once $here.'grideditor.configuration.class.php';
 require_once $here.'grideditor.field.abstract.php';
 require_once $here.'grideditor.resourcefield.class.php';
 require_once $here.'grideditor.tvfield.class.php';
@@ -95,3 +95,14 @@ class GridEditor {
     }//
 
 };// end class GridEditor
+
+// Handy function - In Array for multidimensional arrays
+function in_array_r($needle, $haystack, $strict = true) {
+    foreach ($haystack as $item) {
+        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
+            return true;
+        }
+    }
+
+    return false;
+}

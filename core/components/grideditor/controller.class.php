@@ -5,7 +5,6 @@
  * @package grideditor
  * @copyright Alan Pich 2012
  */
-require_once dirname(__FILE__) . '/grideditorHelper.class.php';
 
 /**
  * @abstract Manager Controller Global Setup
@@ -15,16 +14,18 @@ abstract class GrideditorManagerController extends modExtraManagerController {
     public $helper;
     
     public function initialize() {
-        $this->helper = new grideditorHelper($this->modx);
+        // Require the grideditor service
+        $path = $this->modx->getOption('core_path').'components/grideditor/';
+        $this->modx->getService('grideditor','GridEditor',$path,array('modx' => &$modx));
         
-        $this->addCss($this->helper->config['cssUrl'].'mgr.css');
-        $this->addJavascript($this->helper->config['managerUrl'].'assets/modext/util/datetime.js');
-        $this->addJavascript($this->helper->config['jsUrl'].'grideditor.js');
-        $this->addJavascript($this->helper->config['jsUrl'].'grideditor.functions.js');
-        $this->addJavascript($this->helper->config['jsUrl'].'grideditor.renderers.js');
+        $this->addCss($this->modx->grideditor->config['cssUrl'].'mgr.css');
+        $this->addJavascript($this->modx->grideditor->config['managerUrl'].'assets/modext/util/datetime.js');
+        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'grideditor.js');
+        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'grideditor.functions.js');
+        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'grideditor.renderers.js');
         $this->addHtml('<script type="text/javascript">
         Ext.onReady(function() {
-            GridEditor.config = '.$this->helper->configJSON().';
+            GridEditor.config = '.json_encode($this->modx->grideditor->config).';
         });
         </script>');
         return parent::initialize();

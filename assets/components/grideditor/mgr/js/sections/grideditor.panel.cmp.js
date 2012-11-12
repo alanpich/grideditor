@@ -11,10 +11,6 @@ GridEditor.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-            html: '<h2 id="grideditor-page-title-h2"></h2>'
-            ,border: false
-            ,cls: 'modx-page-header'
-        },{
             html: '<div id="grideditor-cmp-grid-div"></div>'
         }]
     });
