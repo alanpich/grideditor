@@ -55,6 +55,12 @@ class GridEditorConfiguration{
     public $fields = array();
     
     /**
+     * Parent resource id to use when creating new resource
+     * @var int Resource Id
+     */
+    public $parentResourceId = 0;
+    
+    /**
      * Array of field names for quick reference
      * @var array of string Field Names
      */
@@ -167,6 +173,9 @@ class GridEditorConfiguration{
         
         // Prepare control object
         $this->prepareGridControls($data);
+        
+        // Add 'new' resource parent
+        $this->prepareNewResourceParent($data);
         
         // Parse and prepare templates array
         if(!is_null($data->templates) && !is_array($data->templates)){
@@ -334,6 +343,25 @@ class GridEditorConfiguration{
         $this->grouping->field = $info->field;
         $this->grouping->label = isset($info->label)? $info->label : 'Filter results';
     }//
+    
+    /**
+     * Allow config to specify a parent for new resources
+     * @param object $data config info
+     */
+    private function prepareNewResourceParent($data){
+        if(!isset($data->newResourceParent)){return;};
+        $pId = $data->newResourceParent;
+        // Check is integer
+        if(!is_integer($data->newResourceParent)){
+            return $this->warning('Resource Parent ID of type ['.gettype($pId).'] is not of type integer. Ignoring...');
+        };
+        // Check is existing resource
+        $res = $this->modx->getObject('modResource',$pId);
+        if(!$res instanceof modResource){
+            return $this->warning('Invalid parent resource id ['.$pId.']');
+        };
+        $this->parentResourceId = $pId;
+    }
     
     
 };// end class GridEditorConfiguration

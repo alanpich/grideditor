@@ -220,7 +220,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 xtype: 'button'
                 ,text: 'Create Resource'
                 ,handler: function(){
-                    document.location.href = MODx.config.manager_url+'?a=55'
+                    // &a=55&class_key=modDocument&parent=38&context_key=web
+                    document.location.href = MODx.config.manager_url+'?a=55&class_key=modDocument&parent='+this.grideditor.parentResourceId+'&context_key=web'
                 }
             })
         };

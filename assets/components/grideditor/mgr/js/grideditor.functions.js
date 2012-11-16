@@ -20,30 +20,6 @@ GridEditor.fn.deleteResource = function(resourceId, grid){
     })
 };//
 
-/**
- * Publish a resource by id
- * @param int $resID Resource ID
- */
-GridEditor.fn.publishResource = function(resId){
-   MODx.Ajax.request({
-        url: MODx.config.connectors_url+'resource/index.php'
-        ,params: { 
-            action: 'publish',
-            id: record.json.id
-        }
-        ,listeners: {
-            'success':{fn:function() {
-               MODx.msg.status({
-                   title: 'Resource published'                               
-               })
-            },scope:this}
-            ,'error':{fn:function(){
-                alert('Error: failed to publish resource');
-            },scope: this}
-        }
-    }); 
-}//
-
 
 /**
  * Publish a resource by id
