@@ -140,27 +140,25 @@ class GridEditorConfiguration{
             $this->title = $data->title;
         };
         
+        // Prepare Fields
+        $this->prepareResourceFields($data);
+        $this->prepareTvFields($data);
+        $this->prepareFieldOrder();
+        
         // Add resource ID as a hidden resource field
         $id = new stdClass;
         $id->field = 'id';
         $id->hidden = true;
-        $id->sortable = false;
-        $id->type = 'resource';
-        $this->fields['id'] = $id;
+        $this->fields['id'] = new GridEditorResourceField($id,$this->modx);
         $this->fieldList[] = 'id';
         
         // Add published status as a hidden resource field
         $published = new stdClass;
         $published->field = 'published';
         $published->hidden = true;
-        $published->sortable = false;
-        $published->type = 'resource';
-        $this->fields['published'] = $published;
+        $published->label = 'Hide ME!!!!!!!!';
+        $this->fields['published'] = new GridEditorResourceField($published,$this->modx);
         $this->fieldList[] = 'published';
-        
-        // Prepare Fields
-        $this->prepareResourceFields($data);
-        $this->prepareTvFields($data);
         
         // Prepare searching & filtering
         $this->prepareSearchFields($data);
@@ -222,7 +220,12 @@ class GridEditorConfiguration{
         foreach($fields as $field){
             $fieldObj = new GridEditorResourceField($field,$this->modx);
             if(!$fieldObj->isValid){
-                $this->warning('Invalid resource field `'.$field->field.'` - Skipping');
+                $this->warning(array(
+                        'key' => 'invalid_resource_field'
+                        ,'data' => array(
+                            'field' => $field->field
+                        )
+                    ));
                 continue;
             };
             $this->fields[$fieldObj->field] = $fieldObj;
@@ -236,13 +239,29 @@ class GridEditorConfiguration{
         foreach($fields as $field){
             $fieldObj = new GridEditorTvField($field,$this->modx);
             if(!$fieldObj->isValid){
-                $this->warning('Invalid TV field `'.$field->field.'` - Skipping');
+                $this->warning(array(
+                        'key' => 'invalid_tv_field'
+                        ,'data' => array(
+                            'field' => $field->field
+                        )
+                    ));
                 continue;
             };
             $this->fields[$fieldObj->field] = $fieldObj;
             $this->fieldList[] = $fieldObj->field;
         }
     }//
+    
+    /**
+     * Sort all fields according to $order param. Not set defaults to zero
+     */
+    private function prepareFieldOrder(){
+        $sorts = array();
+        foreach($this->fields as $key => $field){
+            $sorts[$key] = $field->order;
+        };
+        array_multisort($sorts,$this->fields);  
+    }
    
     
     
@@ -273,7 +292,13 @@ class GridEditorConfiguration{
        $fields = $fields->search;
        foreach($fields as $field){
            if(!in_array($field,$this->fieldList)){ 
-               return $this->warning('Ignoring search field ['.$field.'] as not listed in fields or tvs list');
+               $this->warning(array(
+                        'key' => 'invalid_search_field'
+                        ,'data' => array(
+                            'field' => $field
+                        )
+                    ));
+               continue;
            }
            $this->searchFields[] = $field;
        } 

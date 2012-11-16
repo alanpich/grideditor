@@ -24,3 +24,32 @@
      position:relative;
      top:-3px;
  }
+ 
+ 
+ .grideditor-warnings-intro {
+     padding:10px;
+ }
+ .grideditor-warnings-list {
+     margin-top:10px;
+ }
+ 
+ .grideditor-warnings-list li {
+     list-style:inside;
+     vertical-align:top;
+     border-bottom:1px solid #ccc;
+     padding:.3em 10px;
+ }
+ 
+ .grideditor-warnings-list li:first-child {
+     border-top:0px;
+ }
+ 
+ .grideditor-warnings-list li:nth-child(even){
+     background-color:#f0f0ff;
+ }
+ 
+ 
+ 
+ .x-tool-grideditor-warning {background-image: url(../../../../../manager/templates/default/images/modx-theme/shared/warning.gif) }
+ .x-tool-grideditor-help {background-image: url(../../../../../manager/templates/default/images/style/info.png) }
+                             

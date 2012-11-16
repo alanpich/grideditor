@@ -40,6 +40,8 @@ GridEditor.grid.GridEditor = function(config) {
         ,title: this.grideditor.title
         ,searchBox: false
         ,filterBox: false
+        ,tools: this.getTools()
+    
         ,grouping: (this.grideditor.grouping!=null&&this.grideditor.grouping!='')
         ,groupBy: (this.grideditor.grouping!=null)? this.grideditor.grouping.field : null
         ,singleText: (this.grideditor.grouping!=null)? 'item':''
@@ -66,7 +68,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                         editable: field.editable,
                         editor: field.editor,
                         sortable: field.sortable,
-                        dataIndex: field.field
+                        dataIndex: field.field,
+                        width: (field.width==false)? null : field.width
                     });
                 };
             };
@@ -222,10 +225,42 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             })
         };
         
-        
         return items;
     }//
     
+    
+    /**
+     * Get header tool buttons
+     */
+    ,getTools: function(){
+        var items = [];
+        
+        // Add warnings button (if there are warnings)
+        if(this.grideditor.warnings.length > 0){
+            items.push({
+                id: 'grideditor-warning'
+                ,qtip: _('grideditor.warnings.total',{total:this.grideditor.warnings.length})
+                ,handler: function(){
+                    var Win = MODx.load({
+                        xtype: 'grideditor-window-warnings'
+                        ,warnings: this.grideditor.warnings
+                    });
+                    Win.show();
+                }
+                ,scope: this
+            });
+        };
+        
+        // Add help link
+        items.push({
+            id: 'grideditor-help'
+            ,qtip: _('grideditor.documentation')
+            ,handler: function(){}
+            ,scope: this
+        })
+        
+        return items;
+    }//
    
     /**
      * Filter by search field
@@ -285,6 +320,18 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         
         // Default to false
         return true;
+    }//
+    
+    
+    /**
+     * Show configuration warnings window
+     */
+    ,showWarnings: function(){
+      var Win = MODx.load({
+            xtype: 'grideditor-window-warnings'
+            ,warnings: this.grideditor.warnings
+        });
+        Win.show();  
     }//
     
     
