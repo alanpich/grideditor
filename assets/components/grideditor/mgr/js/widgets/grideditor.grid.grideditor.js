@@ -30,6 +30,7 @@ GridEditor.grid.GridEditor = function(config) {
         ,css: {
             verticalAlign: 'middle'
         }
+        ,cls: 'grideditor-grid'
         ,tbar:this.getToolbar()
         ,tbarCfg: {
             padding: 10
@@ -70,7 +71,10 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                         editor: field.editor,
                         sortable: field.sortable,
                         dataIndex: field.field,
-                        renderer: field.renderer,
+                        renderer: {
+                            fn: eval(field.renderer),
+                            scope: this
+                        },
                         width: (field.width==false)? null : field.width
                     });
                 };
@@ -260,7 +264,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             /** Link to documentation */
             id: 'grideditor-help'
             ,qtip: _('grideditor.documentation')
-            ,handler: function(){}
+            ,handler: function(){
+                window.open(GridEditor.config.documentationUrl);
+            }
             ,scope: this
         },{
             /** Refresh the view */
@@ -355,6 +361,28 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         Win.show();  
     }//
     
+    
+    
+    ,renderer: {
+        /**
+         * Checkbox renderer - offer a one-click toggle checkbox
+         */
+        checkbox: function(value, metadata, record, rowIndex, colIndex, store){
+              var elemID = 'grideditor-resource-'+record.json.id+"-"+colIndex+"-checkbox";
+              var dataIndex = this.getColumnModel().getDataIndex(colIndex);
+              GridEditor.renderer._checkbox.defer(1, null, [elemID, record, this, dataIndex]);
+              return '<div id="'+elemID+'" class="grideditor-renderer-checkbox"></div>';
+           }//
+           
+        ,image: function(value, metadata, record, rowIndex, colIndex, store){
+                if(value==''){return;};
+                var elemID = 'grideditor-resource-'+record.get('id')+"-"+colIndex+"-thumb";
+                var dataIndex = this.getColumnModel().getDataIndex(colIndex);
+                var width = this.grideditor.fields[dataIndex].width || 50;
+                GridEditor.renderer._image.defer(1, this, [elemID, value, width]);
+                return '<div id="'+elemID+'"></div>';
+            }//
+    }
     
 });
 Ext.reg('grideditor-grid-grideditor',GridEditor.grid.GridEditor);

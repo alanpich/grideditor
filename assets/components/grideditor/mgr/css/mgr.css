@@ -14,7 +14,7 @@
    -moz-box-shadow: none;
    margin-bottom:-20px;
    position:relative;
-   top:-10px;
+   top:-9px;
    left:-5px;
  }
 
@@ -54,4 +54,19 @@
  .x-tool-grideditor-help {background-image: url(../../../../../manager/templates/default/images/style/info.png) }
  .x-tool-grideditor-refresh {background-image: url(../img/icons/refresh_small.png) }
  .x-tool-grideditor-config {background-image: url(../img/icons/cog.png) }
-                             
+ 
+ 
+ .grideditor-renderer-checkbox {
+     text-align:center;
+     margin:0;
+     padding:0;
+     position:relative;
+     top:-2px;
+    
+ }
+                   
+ 
+ 
+ .grideditor-grid .x-panel-body .x-grid3-body table td {
+     vertical-align:middle;
+ }

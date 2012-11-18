@@ -82,15 +82,58 @@ GridEditor.renderer._deleteResourceButton = function(elemid, record, args) {
  /**
   * Checkbox renderer - offer a one-click toggle checkbox
   */
- GridEditor.renderer.checkbox = function(value, metadata, record, rowIndex, colIndex, store){
-        return (value)? 'ON' : 'OFF';
+    GridEditor.renderer._checkbox = function(elemID,record,grid,dataIndex){
+        MODx.load({
+            xtype: 'grideditor-checkbox'
+            ,renderTo: elemID
+            ,record: record
+            ,grid: grid
+            ,dataIndex: dataIndex
+        })
     }//
     
     
+ /**
+  * Date renderer - format a date according to Modx manager_date_format
+  */
+ GridEditor.renderer.date = function(value, metadata, record, rowIndex, colIndex, store){
+        return Ext.util.Format.date(value,MODx.config.manager_date_format);
+    }//    
     
+ 
+ /**
+  * Image Renderer - display an image using phpthumb
+  */
+/*
+    GridEditor.renderer._image = function( elemID, resId, tvName ){
+            console.log('Getting thumbnail for res #'+resId);
+            MODx.Ajax.request({
+                url: GridEditor.config.connectorUrl
+                ,params: { 
+                    action: 'tv/getImageThumb',
+                    resId: resId,
+                    tvName: tvName
+                }
+                ,listeners: {
+                    'success':{fn:function(img) {
+                        // Create image
+                        var img = document.createElement('img');
+                            img.src = img
+                            document.getElementById(elemID).appendChild(img);
+                    },scope:this}
+                }
+            });
+       }//
+ */      
+       GridEditor.renderer._image = function( elemID, imgSrc, width ){
+            var src = MODx.config.connectors_url+'system/phpthumb.php?w='+width+'&zc=1&src='+imgSrc;
+            var img = document.createElement('img');
+                img.src = src;
+            document.getElementById(elemID).appendChild(img);
+       }//
     
     
     
 String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-}
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    }//

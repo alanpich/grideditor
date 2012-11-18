@@ -33,7 +33,8 @@ class GridEditor {
                    'cssUrl' => $assets.'mgr/css/',
                    'imgUrl' => $assets.'mgr/img/',
                    'connectorUrl' => $assets.'mgr/connector.php',
-                   'managerUrl' => $this->modx->getOption('manager_url')
+                   'managerUrl' => $this->modx->getOption('manager_url'),
+                   'documentationUrl' => 'http://github.com/alanpich/grideditor/'
            );
        
        // Allow overriding the chunk prefix using a system setting

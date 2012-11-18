@@ -22,7 +22,9 @@ class GridEditorTvField extends GridEditorField {
         );
     
     private static $defaultRenderers = array(
-            'checkbox' => 'GridEditor.renderer.checkbox'
+            'checkbox' => 'this.renderer.checkbox',
+            'date' => 'GridEditor.renderer.date',
+            'image' => 'this.renderer.image'
         );
         
    
@@ -93,7 +95,10 @@ class GridEditorTvField extends GridEditorField {
                 $renderer = self::$defaultRenderers[$tvType];
             };
         };       
-        return $renderer;        
+        return $renderer;
+        $obj = new stdClass();
+        $obj->fn = $renderer;
+        return $obj    ;
     }//
     
     

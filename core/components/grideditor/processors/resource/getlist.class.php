@@ -72,13 +72,42 @@
             
             $tvName = $tv->field;
             // Grab TV value (if it exists)
-            $data[$tvName] = $resource->getTVValue($tvName);;
+            $data[$tvName] = $this->getTVValue($resource, $tvName);
             // Null => empty string
             if(is_null($data[$tvName])){
                 $data[$tvName] = '';
             };           
         }
         return $data;
+    }//
+    
+    
+    /**
+     * Get TV Value by name, with typecasting
+     * @param modResource $resource
+     * @param string $tvName
+     * @return mixed value
+     */
+    private function getTVValue($resource,$tvName){
+        // Grab TV Value
+        $value = $resource->getTVValue($tvName);
+        // Grab TV type
+        switch($this->getTVtype($tvName)){
+            case 'checkbox' : $value = (bool) $value; break;
+        };
+        // Return the correctly typecast value
+        return $value;
+    }//
+    
+    
+    /**
+     * Get TV input type
+     * @param string $tvName
+     * @return string type
+     */
+    private function getTVtype($tvName){
+       $tv = $this->modx->getObject('modTemplateVar',array('name'=>$tvName));
+       return $tv->get('type');
     }//
      
  };// end class grideditorGetListProcessor
