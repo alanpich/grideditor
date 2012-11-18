@@ -19,6 +19,8 @@
  
  $_lang['grideditor.refresh'] = 'Refresh View';
  $_lang['grideditor.edit_config'] = 'Edit Configuration';
+ $_lang['grideditor.click_to_publish'] = 'Click to Publish';
+ $_lang['grideditor.click_to_unpublish'] = 'Click to Unpublish';
 
  
  /* Warning Messages **************************************************/

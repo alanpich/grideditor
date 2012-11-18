@@ -10,9 +10,9 @@ GridEditor.renderer.publishToggle = function(value, metadata, record, rowIndex, 
 GridEditor.renderer._publishToggleButton = function(elemid, record) {
         var action = record.json.published? 'unpublish' : 'publish';
         new Ext.Button({
-           text: '<img src="'+GridEditor.config.imgUrl+'icons/'+action+'.png'+'" width="16" height="16" />',
-           onText: '<img src="'+GridEditor.config.imgUrl+'icons/unpublish.png'+'" width="16" height="16" />',
-           offText: '<img src="'+GridEditor.config.imgUrl+'icons/publish.png'+'" width="16" height="16" />',
+           text: '<img src="'+GridEditor.config.imgUrl+'icons/'+action+'.png'+'" width="16" height="16" title="'+_('grideditor.click_to_'+action)+'" />',
+           onText: '<img src="'+GridEditor.config.imgUrl+'icons/unpublish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_unpublish')+'" />',
+           offText: '<img src="'+GridEditor.config.imgUrl+'icons/publish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_publish')+'" />',
            enableToggle: true,
            scale: 'small',
            cls: 'grideditor-button-nostyle',
