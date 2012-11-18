@@ -20,6 +20,7 @@ class GridEditorTvField extends GridEditorField {
             'file' => 'textfield',
             'number' => 'textfield'
         );
+
         
    
     /**

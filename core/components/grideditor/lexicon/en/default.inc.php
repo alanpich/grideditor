@@ -16,6 +16,9 @@
  $_lang['grideditor.cmp.menu.title'] = 'GridEditor Menu Title';
  $_lang['grideditor.cmp.menu.desc']  = 'A grid editing view for resources';
  $_lang['grideditor.documentation'] = 'View Documentation';
+ 
+ $_lang['grideditor.refresh'] = 'Refresh View';
+ $_lang['grideditor.edit_config'] = 'Edit Configuration';
 
  
  /* Warning Messages **************************************************/

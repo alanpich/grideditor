@@ -71,6 +71,7 @@ class GridEditorConfiguration{
      * @var string
      */
     public $chunk = 'demo';
+    public $chunkId = false;
     
     /**
      * Reference to a MODx instance
@@ -96,16 +97,17 @@ class GridEditorConfiguration{
             $config->warning('Specified configuration chunk does not exist');
             return $config;
         };
-        $chunk = $chunk->process();
+        $chunkValue = $chunk->process();
         // If chunk is empty, bail out and record warning
-        if(empty($chunk)){
+        if(empty($chunkValue)){
             $config->warning('Specified configuration chunk is empty');
             return $config;
         };
         // Populate config from JSON string
-        $config->fromJSON($chunk,$modx);
+        $config->fromJSON($chunkValue,$modx);
         // Save the chunk name
         $config->chunk = str_replace($chunkPrefix,'',$chunkName);
+        $config->chunkId = $chunk->get('id');
         // Return the config object
         return $config;
     }//

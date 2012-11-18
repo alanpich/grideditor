@@ -17,6 +17,7 @@ GridEditor.grid.GridEditor = function(config) {
            }
         ,paging: false
         ,remoteSort: false
+        ,collapsible: false
         ,anchor: '97%'
         ,autoExpandColumn: 'name'
         ,autosave: true
@@ -242,21 +243,39 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 id: 'grideditor-warning'
                 ,qtip: _('grideditor.warnings.total',{total:this.grideditor.warnings.length})
                 ,handler: function(){
-                    var Win = MODx.load({
-                        xtype: 'grideditor-window-warnings'
-                        ,warnings: this.grideditor.warnings
-                    });
-                    Win.show();
+                    if(!this.WarningsWindow){
+                        this.WarningsWindow = MODx.load({
+                            xtype: 'grideditor-window-warnings'
+                            ,warnings: this.grideditor.warnings
+                        });
+                    };
+                    this.WarningsWindow.show();
                 }
                 ,scope: this
             });
         };
         
-        // Add help link
         items.push({
+            /** Link to documentation */
             id: 'grideditor-help'
             ,qtip: _('grideditor.documentation')
             ,handler: function(){}
+            ,scope: this
+        },{
+            /** Refresh the view */
+            id:'grideditor-refresh'
+            ,qtip: _('grideditor.refresh')
+            ,handler: function(){
+                this.refresh();
+            }
+            ,scope: this        
+        },{
+            /** Link to config chunk editor */
+            id:'grideditor-config'
+            ,qtip: _('grideditor.edit_config')
+            ,handler: function(){
+                document.location.href = 'http://localhost/modx/grideditor/manager/?a=10&id='+this.grideditor.chunkId
+            }
             ,scope: this
         })
         
