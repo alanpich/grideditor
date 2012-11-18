@@ -65,7 +65,6 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             for(var k in this.grideditor.fields){
                 var field = this.grideditor.fields[k];
                 if(field.hidden!==true && field.field!=''){
-                    console.log(field);
                     items.push({
                         header: field.label,
                         editable: field.editable,
