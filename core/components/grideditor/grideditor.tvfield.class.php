@@ -80,7 +80,7 @@ class GridEditorTvField extends GridEditorField {
      * @param type $data
      * @return string|false Renderer Function name (js) or false for default
      */
-    protected function get_renderer_xtype($data){
+    protected function get_renderer_function($data){
         $renderer = false;
        
         // Has config explicitly set a renderer?

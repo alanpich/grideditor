@@ -34,7 +34,9 @@ class GridEditor {
                    'imgUrl' => $assets.'mgr/img/',
                    'connectorUrl' => $assets.'mgr/connector.php',
                    'managerUrl' => $this->modx->getOption('manager_url'),
-                   'documentationUrl' => 'http://github.com/alanpich/grideditor/'
+                   'documentationUrl' => 'http://github.com/alanpich/grideditor/',
+                   
+                   'templateMap' => $this->getTemplateMap()
            );
        
        // Allow overriding the chunk prefix using a system setting
@@ -94,6 +96,20 @@ class GridEditor {
         };
         return $c;
     }//
+    
+    /**
+     * Get an array template map
+     * returned as ID => Name
+     * @return array
+     */
+    private function getTemplateMap(){
+        $tpls = $this->modx->getCollection('modTemplate');
+        $map = array();
+        foreach($tpls as $tpl){
+            $map[$tpl->get('id')] = $tpl->get('templatename');
+        };
+        return $map;
+    }
 
 };// end class GridEditor
 

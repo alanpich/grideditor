@@ -100,37 +100,22 @@ GridEditor.renderer._deleteResourceButton = function(elemid, record, args) {
         return Ext.util.Format.date(value,MODx.config.manager_date_format);
     }//    
     
- 
- /**
-  * Image Renderer - display an image using phpthumb
-  */
-/*
-    GridEditor.renderer._image = function( elemID, resId, tvName ){
-            console.log('Getting thumbnail for res #'+resId);
-            MODx.Ajax.request({
-                url: GridEditor.config.connectorUrl
-                ,params: { 
-                    action: 'tv/getImageThumb',
-                    resId: resId,
-                    tvName: tvName
-                }
-                ,listeners: {
-                    'success':{fn:function(img) {
-                        // Create image
-                        var img = document.createElement('img');
-                            img.src = img
-                            document.getElementById(elemID).appendChild(img);
-                    },scope:this}
-                }
-            });
-       }//
- */      
-       GridEditor.renderer._image = function( elemID, imgSrc, width ){
-            var src = MODx.config.connectors_url+'system/phpthumb.php?w='+width+'&zc=1&src='+imgSrc;
-            var img = document.createElement('img');
-                img.src = src;
-            document.getElementById(elemID).appendChild(img);
-       }//
+    /**
+     * Image TV renderer (deferred)
+     */
+    GridEditor.renderer._image = function( elemID, imgSrc, width ){
+         var src = MODx.config.connectors_url+'system/phpthumb.php?w='+width+'&zc=1&src='+imgSrc;
+         var img = document.createElement('img');
+             img.src = src;
+         document.getElementById(elemID).appendChild(img);
+    }//
+    
+    /**
+     * Template renderer
+     */
+    GridEditor.renderer.template = function(value, metadata, record, rowIndex, colIndex, store){
+        return GridEditor.config['templateMap'][value];
+    }
     
     
     

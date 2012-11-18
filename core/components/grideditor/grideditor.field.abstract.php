@@ -177,7 +177,7 @@ abstract class GridEditorField {
         // Ensure renderer input is a string
         if(!is_string($data->renderer) || empty($data->renderer)){ $this->renderer = false; };
         // Returns an xtype (or false if an error
-        $this->renderer = $this->get_renderer_xtype($data);
+        $this->renderer = $this->get_renderer_function($data);
     }
     
     
@@ -200,8 +200,8 @@ abstract class GridEditorField {
      * @param type $data
      * @return string|false Renderer Function name (js) or false for default
      */
-    protected function get_renderer_xtype($data){
-        // Baseline all fields are text fields
+    protected function get_renderer_function($data){
+        // Baseline display raw value
        return false; 
     }//
 

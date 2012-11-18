@@ -35,6 +35,10 @@ class GridEditorResourceField extends GridEditorField {
             'template' => 'modx-combo-template'
         );
     
+    private static $defaultRenderers = array(
+            'template' => 'GridEditor.renderer.template'
+        );
+    
     /**
      * Is this field a valid resource field?
      * Checks for existance in $this->allowedFields array
@@ -64,6 +68,25 @@ class GridEditorResourceField extends GridEditorField {
         $obj->xtype = $xtype;
         return $obj;
     }//
+    
+    /**
+     * Get field's renderer ext function name. 
+     * @param type $data
+     * @return string|false Renderer Function name (js) or false for default
+     */
+    protected function get_renderer_function($data){
+        $renderer = false;
+        // Has config explicitly set a renderer?
+        if(isset($data->renderer) && is_string($data->renderer) && !empty($data->renderer)){
+            $renderer = $data->renderer;
+        } else {     
+            if(isset(self::$defaultRenderers[$data->field])){
+                $renderer = self::$defaultRenderers[$data->field];
+            };
+        };
+        return $renderer;
+    }//
+
     
     
     
