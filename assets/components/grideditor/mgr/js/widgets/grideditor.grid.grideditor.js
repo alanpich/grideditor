@@ -70,6 +70,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                         editor: field.editor,
                         sortable: field.sortable,
                         dataIndex: field.field,
+                        renderer: field.renderer,
                         width: (field.width==false)? null : field.width
                     });
                 };

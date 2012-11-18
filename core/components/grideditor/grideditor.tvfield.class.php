@@ -20,7 +20,10 @@ class GridEditorTvField extends GridEditorField {
             'file' => 'textfield',
             'number' => 'textfield'
         );
-
+    
+    private static $defaultRenderers = array(
+            'checkbox' => 'GridEditor.renderer.checkbox'
+        );
         
    
     /**
@@ -67,6 +70,30 @@ class GridEditorTvField extends GridEditorField {
         }
         
         return $obj;
+    }//
+    
+    
+    /**
+     * Get Field's renderer ext function name. 
+     * @param type $data
+     * @return string|false Renderer Function name (js) or false for default
+     */
+    protected function get_renderer_xtype($data){
+        $renderer = false;
+       
+        // Has config explicitly set a renderer?
+        if(isset($data->renderer) && is_string($data->renderer) && !empty($data->renderer)){
+            $renderer = $data->renderer;
+        } else {        
+        // Otherwise try and figure it out using TV's input type
+            $tv = $this->modx->getObject('modTemplateVar',array('name'=>$data->field));
+            $tvType = $tv->get('type');
+            // Check against defaults array
+            if(isset(self::$defaultRenderers[$tvType])){
+                $renderer = self::$defaultRenderers[$tvType];
+            };
+        };       
+        return $renderer;        
     }//
     
     

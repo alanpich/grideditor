@@ -79,6 +79,17 @@ GridEditor.renderer._deleteResourceButton = function(elemid, record, args) {
     }//
     
     
+ /**
+  * Checkbox renderer - offer a one-click toggle checkbox
+  */
+ GridEditor.renderer.checkbox = function(value, metadata, record, rowIndex, colIndex, store){
+        return (value)? 'ON' : 'OFF';
+    }//
+    
+    
+    
+    
+    
     
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);

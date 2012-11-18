@@ -162,7 +162,7 @@ abstract class GridEditorField {
         } else {
             // Field is not editable
             $this->editable = false;
-            $this->editor = NULL;
+            $this->editor = new stdClass();
         }
     }//
     
@@ -175,7 +175,7 @@ abstract class GridEditorField {
         // If no property set, default to current value
         if(!isset($data->renderer)){ $data->renderer = $this->renderer; };
         // Ensure renderer input is a string
-        if(!is_string($data->renderer)){ $this->renderer = false; };
+        if(!is_string($data->renderer) || empty($data->renderer)){ $this->renderer = false; };
         // Returns an xtype (or false if an error
         $this->renderer = $this->get_renderer_xtype($data);
     }
