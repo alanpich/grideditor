@@ -1,29 +1,33 @@
 {
-	"title": "My First GridEditor",
+  /** Page Title */
+  "title": "My First GridEditor",
 
-	"templates": ["BaseTemplate"],
+  /** Templates to restrict view to */
+  "templates": ["BaseTemplate"],
 
-	"filter": {
-			"field": "template",
-			"label": "Colour"
-		},
+  /** Fields to include in text search */
+  "search": ["pagetitle","introtext"],
 
-	"search": ["pagetitle"],
+  /** Resource Fields to include in view */
+  "fields": [{
+             "field": "pagetitle",
+             "label": "Page Title",
+             "editable": true,
+	     "order": 0,
+             "width": 400
+         },{
+             "field": "alias",
+             "label": "URL Alias",
+             "editable": true,
+	     "order": 3
+         },{
+             "field": "introtext",
+             "label": "Summary  ",
+             "editable": true,
+	     "order": 2
+         }],
 
-	"fields": [{
-			"field": "pagetitle",
-			"label": "Product",
-			"editable": true
-		},{
-			"field": "alias",
-			"label": "URL Alias",
-			"editable": true
-		},{
-			"field": "template",
-			"label": "Template",
-			"editable": true,
-			"editor": "modx-combo-template"
-		}],
 
-	"controls": ["publish","edit","delete"]
+  /** Resource controls to offer */
+  "controls": ["publish","edit","delete","new"]
 }

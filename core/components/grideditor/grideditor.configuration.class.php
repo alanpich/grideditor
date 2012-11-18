@@ -254,7 +254,7 @@ class GridEditorConfiguration{
     }//
     
     private function prepareTvFields($fields){
-        if(!isset($fields->tvs) || count($fields->tvs)<1){ return $this->warning('No TV fields specified'); };
+        if(!isset($fields->tvs) || count($fields->tvs)<1){ return; };
         $fields = $fields->tvs;
         foreach($fields as $field){
             $fieldObj = new GridEditorTvField($field,$this->modx);
