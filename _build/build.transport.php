@@ -13,8 +13,8 @@ require_once dirname(__FILE__).'/build.tools.php';
 /* define package names */
 define('PKG_NAME','GridEditor');
 define('PKG_NAME_LOWER','grideditor');
-define('PKG_VERSION','0.9');
-define('PKG_RELEASE','beta1');
+define('PKG_VERSION','1.0');
+define('PKG_RELEASE','rc1');
 define('PKG_COMMIT',getGitCommitId(dirname(dirname(__FILE__))));
 
 echo "Building from commit #".PKG_COMMIT."\n";
