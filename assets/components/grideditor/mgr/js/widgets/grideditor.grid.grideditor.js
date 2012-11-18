@@ -64,7 +64,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         if(this.grideditor.fields){
             for(var k in this.grideditor.fields){
                 var field = this.grideditor.fields[k];
-                if(field.hidden!==true){
+                if(field.hidden!==true && field.field!=''){
+                    console.log(field);
                     items.push({
                         header: field.label,
                         editable: field.editable,
@@ -84,12 +85,15 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         // If controls in use, add another field for them
         var min = (this.grideditor.controls&&this.grideditor.controls.indexOf('publish')>-1)? 1 : 0;
         var total = this.grideditor.controls.length - min;
-        if(this.grideditor.controls && this.grideditor.controls > min){
+        if(this.grideditor.controls && this.grideditor.controls.length > min){
            items.push({
                header: '',
                editable: false,
-               width: (22*total),
-               renderer: GridEditor.renderer.resourceControls
+               width: (28*total),
+               renderer: {
+                    fn: GridEditor.renderer.resourceControls,
+                    scope: this
+               }
            })
         };
         

@@ -25,6 +25,19 @@
      top:-3px;
  }
  
+ .grideditor-button-delete {
+     float:left;
+     opacity: 0.4;
+     transition: opacity .5s;
+     -webkit-transition: opacity .5s;
+     -moz-transition: opacity: .5s;
+ }
+ .grideditor-button-delete:hover {
+     opacity: 1;
+ }
+ 
+ 
+ 
  
  .grideditor-warnings-intro {
      padding:10px;

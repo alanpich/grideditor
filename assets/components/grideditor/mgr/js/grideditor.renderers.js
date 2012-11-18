@@ -42,7 +42,7 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
  * Render resource control buttons to a cell
  */
 GridEditor.renderer.resourceControls = function(value, metadata, record, rowIndex, colIndex, store){
-   var controls = GridEditor.custom.controls;
+   var controls = this.grideditor.controls;
    
    var html = '';
    var items = [];
@@ -50,14 +50,14 @@ GridEditor.renderer.resourceControls = function(value, metadata, record, rowInde
    // Edit button
    if( controls.indexOf('edit') > -1){
        var mgrUrl = MODx.config.manager_url+'?a=30&id='+record.json.id;
-       html+= '<a class="grideditor-button-edit" href="'+mgrUrl+'"><img src="'+GridEditor.config.imgUrl+'icons/edit.png'+'" width="20" height="20" alt="edit icon" title="Edit this resource" /></a>';
+       html+= '<a class="grideditor-button-edit" href="'+mgrUrl+'"><img src="'+GridEditor.config.imgUrl+'icons/edit.png'+'" width="16" height="16" alt="edit icon" title="Edit this resource" /></a>';
     };
    
    // Delete button#
    if( controls.indexOf('delete') > -1){
      var elemID = 'grideditor-resource-'+record.json.id+"-delete-resource";
      GridEditor.renderer._deleteResourceButton.defer(1, this, [elemID, record, arguments]);
-     html+= '<div id="'+elemID+'" title="Delete this resource"></div>';
+     html+= '<div class="grideditor-button-delete" id="'+elemID+'" title="Delete this resource"></div>';
    };
     
     // Return HTML to grid
@@ -65,9 +65,9 @@ GridEditor.renderer.resourceControls = function(value, metadata, record, rowInde
    }//
 GridEditor.renderer._deleteResourceButton = function(elemid, record, args) {
         new Ext.Button({
-           text: '<img src="'+GridEditor.config.imgUrl+'icons/delete.png'+'" width="20" height="20" />',
+           text: '<img src="'+GridEditor.config.imgUrl+'icons/delete.png'+'" width="16" height="16" title="Delete this resource" />',
            scale: 'small',
-           cls: 'grideditor-button-nostyle',
+           cls: 'grideditor-button-nostyle grideditor-button-delete',
            style: {
                float: 'left'
            },
