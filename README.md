@@ -8,12 +8,6 @@ A quick and easy grid view for resources, with support for inline-editing and se
        consented that this code remain open-source 
        and publicly licensed.
 
-## Roadmap ##
-Several additions are planned to extend the functionality of this component. As an overview:
-* Extend TV editor detection & implementation
-* Ability to specify pluggable field renderers
-* Configurable sort order for fields
-
 
 ## Usage ##
 You can create as many different GridView pages as you like by creating manager 'Menu' items through 
@@ -41,25 +35,45 @@ these guidelines:
 ### Example GridEditor config chunk ###
 ```javascript
 {
-  /** Page Title */
+  /** 
+   * Page Title
+   * @var string
+   */
   "title": "My First GridEditor",
 
-  /** Templates to restrict view to */
+  /** 
+   * Templates to restrict view to
+   *  Can either be template Name (string) or ID (integer)
+   * @var array of (string|int)
+   */
   "templates": ["BaseTemplate"],
 
-  /** Field to group by */
+  /** 
+   * Name of field to group resources by 
+   *  Field must also appear in either Fields or Tvs arrays
+   * @var string Field Name
+   */
   "grouping": "MyTvField",
 
-  /** Field to filter on via dropdown */
+  /** 
+   * Field to filter on via dropdown
+   * @var object
+   */
   "filter": {
              "field": "tv_AnotherComboTv",
              "label": "Colour"
         },
 
-  /** Fields to include in text search */
+  /**
+   * Fields to include in text search 
+   * @var array of string
+   */
   "search": ["pagetitle"],
 
-  /** Resource Fields to include in view */
+  /** 
+   * Resource Fields to include in grid
+   * @var array of object
+   */
   "fields": [{
              "field": "pagetitle",
              "label": "Product",
@@ -75,15 +89,39 @@ these guidelines:
              "editor": "modx-combo-template"
          }],
 
-  /** Template Variable fields to include in view */
+  /**
+   * Template Variable fields to include in view 
+   * @var array of object
+   */
   "tvs": [{
              "field": "MyTvName",
              "label": "My Tv Name",
              "editable": false
          }],
 
-  /** Resource controls to offer */
-  "controls": ["publish","edit","delete"]
+  /** 
+   * Resource controls to offer
+   * @var array of string
+   */
+  "controls": ["publish","edit","delete","new"],
+
+  /**
+   * Default parent id for new resources created via the 'new' button
+   * @var int Resource ID
+   */
+  "newResourceParent": 2
+
+  /**
+   * Additional Javascript files to include on pageload
+   *  Useful for loading custom renderer functions
+   * @var array of string
+   */
+  "javascripts": [
+              "/assets/js/my-custom-js-file.js"
+          ]
+
+
+
 }
 ```
 ## Configuration Options
@@ -107,7 +145,7 @@ An array of template names (string) or IDs (int) to restrict displayed resources
 ```
 
 ### Resource Grouping `grouping`
-Group resources by value of a specific field
+Group resources by value of a specific field. Specified field must be listed in either the `fields` or `tvs` arrays.
 ```javascript
 {
   /* ... */
@@ -117,7 +155,8 @@ Group resources by value of a specific field
 
 ### Filter Field `filter`
 If specified, will create a dropdown selector of every unique value of the specified `name` field so that results can
-be filtered accordingly. Optional `label` attribute will set a label on the dropdown
+be filtered accordingly. Optional `label` attribute will set a label on the dropdown. Specified field must be listed 
+in either the `fields` or `tvs` arrays.
 ```javascript
 {
   /* ... */
@@ -130,7 +169,7 @@ be filtered accordingly. Optional `label` attribute will set a label on the drop
 
 ### Search Fields `search`
 Array of field names to include in text-search. If one or more fields are specified, a text-search box will be 
-shown with the grid.
+shown with the grid. Specified fields must be listed in either the `fields` or `tvs` arrays.
 ```javascript
 {
   /* ... */
@@ -143,11 +182,35 @@ An array of optional controls to offer on resources. Options are:
 * `publish` - Enable toggling of publish state from grid
 * `edit` - Provide a link to the resource editing page
 * `delete` - Provide a button that will delete the resource
+* `new` - Provide a 'Create New Resource' button in the toolbar. If property `newResourceParent` is specified, 
+  resource will be created as it's child, otherwise resources will be created in site root.
 
 ```javascript
 {
   /* ... */
-  "controls": ["publish","edit","delete"]
+  "controls": ["publish","edit","delete","new"]
+}
+```
+
+### New Resource parent `newResourceParent`
+The ID of a resource to use as parent when creating new resources via the 'new' control
+
+```javascript
+{
+  /* ... */
+  "newResourceParent": 2
+}
+```
+
+### Additional Javascripts `javascripts`
+Array of additional javascripts to include on pageload. Useful for loading custom renderer functions.
+
+```javascript
+{
+  /* ... */
+  "javascripts": [
+                "/assets/js/my-custom-js-file.js"
+             ]
 }
 ```
 
@@ -162,6 +225,9 @@ Fields can be configured using several parameters to customize their behaviour:
 * `sortable`: [optional] Can this column be sorted? Defaults to false
 * `editable`: [optional] Can this field be edited? Defaults to false
 * `editor`: [optional] Override the default editor xtype
+* `renderer`: [optional] Override the default javascript renderer function
+* `order`: [optional] Numeric value to sort fields by before display
+* `width`: [optional] Explicitely set column width
 * `hidden`: [optional] Allows a field to be used for search/filtering but not appear in grid. Defaults to false
 
 ```javascript
@@ -199,6 +265,9 @@ Fields can be configured using several parameters to customize their behaviour:
 * `sortable`: [optional] Can this column be sorted? Defaults to false
 * `editable`: [optional] Can this field be edited? Defaults to false
 * `editor`: [optional] Override the default editor xtype
+* `renderer`: [optional] Override the default javascript renderer function
+* `order`: [optional] Numeric value to sort fields by before display
+* `width`: [optional] Explicitely set column width
 * `hidden`: [optional] Allows a field to be used for search/filtering but not appear in grid. Defaults to false
 
 
