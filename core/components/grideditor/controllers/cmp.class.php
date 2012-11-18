@@ -58,9 +58,12 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.checkbox.js');
         $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.window.warnings.js');
         $this->addLastJavascript($this->modx->grideditor->config['jsUrl'].'sections/grideditor.cmp.js');
-        
         $this->addHtml($this->Ext);
-        
+
+        // Add additional javascripts specified in config
+        foreach($this->confData->javascripts as $src){
+            $this->addJavascript($src);
+        };
     }//
     
     /**

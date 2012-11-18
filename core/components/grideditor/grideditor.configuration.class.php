@@ -74,6 +74,12 @@ class GridEditorConfiguration{
     public $chunkId = false;
     
     /**
+     * Extra javascript files to load into cmp
+     * @var array
+     */
+    public $javascripts = array();
+    
+    /**
      * Reference to a MODx instance
      * @private modX $modx
      */
@@ -178,6 +184,9 @@ class GridEditorConfiguration{
         
         // Add 'new' resource parent
         $this->prepareNewResourceParent($data);
+        
+        // Add extra JS files
+        $this->prepareAdditionalJavascripts($data);
         
         // Parse and prepare templates array
         if(!is_null($data->templates) && !is_array($data->templates)){
@@ -363,6 +372,28 @@ class GridEditorConfiguration{
             return $this->warning('Invalid parent resource id ['.$pId.']');
         };
         $this->parentResourceId = $pId;
+    }//
+    
+    
+    /**
+     * Additional javascripts to be loaded
+     * @param object $data config info
+     */
+    private function prepareAdditionalJavascripts($data){#
+        if(!isset($data->javascripts)){ return; };
+        // Ensure is array
+        if(!is_array($data->javascripts)){ 
+            return $this->warning('Property [javascripts] should be of type `array`. Type `'.gettype($data->javascripts).'` supplied.');
+        };
+        foreach($data->javascripts as $js){
+            // Allow inclusion from grideditor js folder using ~/ prefix
+            if(substr($js,0,2)=='~/'){
+                $prefix = $this->modx->getOption('assets_url').'components/grideditor/mgr/js/';
+                $js = $prefix.substr($js,2);
+            };
+            // Add src to javascripts array
+            $this->javascripts[] = $js;            
+        };
     }
     
     
