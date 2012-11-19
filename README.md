@@ -8,6 +8,12 @@ A quick and easy grid view for resources, with support for inline-editing and se
        consented that this code remain open-source 
        and publicly licensed.
 
+## Current Version ##
+A transport package for v1.0-rc1 is available for download 
+[here](https://github.com/downloads/alanpich/grideditor/grideditor-1.0-rc1.transport.zip).
+This release candidate is still not finalised, and some TV input types may behave unpredictably. 
+Please log any bugs on the github [issue tracker](https://github.com/alanpich/grideditor/issues)
+
 
 ## Usage ##
 You can create as many different GridView pages as you like by creating manager 'Menu' items through 
@@ -258,6 +264,8 @@ Editor inputs are automatically detected from TV input type unless overridden in
 **Note:** At this time only text, textarea and single-select listboxes are fully supported by default. All 
           other TV input types will default to a textfield editor unless an alternative editor is explicitely 
           specified in the config file.
+          Default renderers exist for checkboxes and image TVs.
+          Checkbox TVs are only implemented with a single checkbox at this point
 
 Fields can be configured using several parameters to customize their behaviour:
 * `field`: [required] Name of the TV
