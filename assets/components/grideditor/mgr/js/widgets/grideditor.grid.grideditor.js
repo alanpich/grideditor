@@ -284,7 +284,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             id:'grideditor-config'
             ,qtip: _('grideditor.edit_config')
             ,handler: function(){
-                document.location.href = 'http://localhost/modx/grideditor/manager/?a=10&id='+this.grideditor.chunkId
+                document.location.href = MODx.config.manager_url+'?a=10&id='+this.grideditor.chunkId
             }
             ,scope: this
         })
