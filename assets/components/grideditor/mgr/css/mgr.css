@@ -13,8 +13,8 @@
    -webkit-box-shadow: none;
    -moz-box-shadow: none;
    margin-left:-5px;
-   margin-bottom:-20px;
-   margin-top:-16px;
+   position: absolute;
+   top: 30%;
  }
 
  .grideditor-button-edit {
