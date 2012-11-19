@@ -6,7 +6,7 @@
  */
 
  
- .grideditor-button-nostyle {
+ .grideditor-button-publish {
    border: none !important;
    background: none !important;
    box-shadow: none;
@@ -17,20 +17,15 @@
    top: 30%;
  }
 
- .grideditor-button-edit {
-     float:left;
-     margin-right: 6px;
-     position:relative;
-     top:-3px;
+ .grideditor-action-button {
+     margin-right: 10px;
  }
  
  .grideditor-button-delete {
-     float:left;
      opacity: 0.4;
      transition: opacity .3s;
      -webkit-transition: opacity .5s;
      -moz-transition: opacity: .5s;
-     margin-top:-10px;
  }
  .grideditor-button-delete:hover {
      opacity: 1;

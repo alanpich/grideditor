@@ -82,18 +82,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         };
 
         // If controls in use, add another field for them
-        var min = (this.grideditor.controls&&this.grideditor.controls.indexOf('publish')>-1)? 1 : 0;
-        var total = this.grideditor.controls.length - min;
-        if(this.grideditor.controls && this.grideditor.controls.length > min){
-           items.push({
-               header: '',
-               editable: false,
-               width: (28*total),
-               renderer: {
-                    fn: GridEditor.renderer.resourceControls,
-                    scope: this
-               }
-           })
+        if(this.grideditor.controls){
+           items.push(this.getControlButtons())
         };
         
         // If publish is a control, add it's own columns at the beginning
@@ -154,29 +144,10 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 }
             })
         }
+        
+        // Add control buttons
+        items = items.concat(this.getControlButtons());
                 
-        // Edit resource link
-        if(this.grideditor.controls.indexOf('edit')>-1){
-            items.push({
-                text: 'Edit',
-                handler: function(){
-                    var url = MODx.config.manager_url+'?a=30&id='+this.menu.record.id;
-                    document.location.href = url;
-                }
-            })
-        };
- 
-         // Delete resource link
-        if(this.grideditor.controls.indexOf('delete')>-1){
-            items.push({
-                text: _('delete'),
-                handler: function(){
-                    GridEditor.fn.deleteResource( this.menu.record.id, this )
-                }
-            })
-        };
-
- 
         return items;
     }//
     
@@ -291,12 +262,55 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         
         return items;
     }//
+    
+    /**
+     * Get required resource controls
+     */
+    ,getControlButtons: function(){
+        var items = [];
+        var total = 0;
+        
+        // Edit Resource link
+        if(this.grideditor.controls.indexOf('edit')>-1){
+            items.push({
+                icon: GridEditor.config.imgUrl+'icons/edit.png',
+                tooltip: 'Edit this resource',
+                cls: 'grideditor-action-button',
+                handler: function(grid,row,col){
+                    var resId = grid.getStore().getAt(row).get('id');
+                    document.location.href = MODx.config.manager_url+'?a=30&id='+resId;
+                }
+            });
+            total++;
+        };
+        
+         // Edit Resource link
+        if(this.grideditor.controls.indexOf('delete')>-1){
+            items.push({
+                icon: GridEditor.config.imgUrl+'icons/delete.png',
+                tooltip: 'Delete this resource',
+                cls: 'grideditor-action-button',
+                handler: function(grid,row,col){
+                    var resId = grid.getStore().getAt(row).get('id');
+                    GridEditor.fn.deleteResource(resId,grid);
+                }
+            });
+            total++;
+        };
+        
+        return {
+               xtype: 'actioncolumn',
+               header: '',
+               editable: false,
+               width: (28*total)+20,
+               items: items
+           };
+    }//
    
     /**
      * Filter by search field
      */
-    ,
-    search: function(tf,nv,ov) {
+    ,search: function(tf,nv,ov) {
         var s = this.getStore();
         this.searchBox = tf;
         s.filterBy(this.recordMatchesFilter)

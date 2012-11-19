@@ -15,7 +15,7 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
            offText: '<img src="'+GridEditor.config.imgUrl+'icons/publish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_publish')+'" />',
            enableToggle: true,
            scale: 'small',
-           cls: 'grideditor-button-nostyle',
+           cls: 'grideditor-button-publish',
            pressed: record.json.published? true : false,
            toggleHandler: function(btn,turnOff){
              //  console.log('Was '+state+', now change to '+(!state));
@@ -34,49 +34,6 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
        }).render(document.body,elemid);
         
     }
-    
-    
-    
-    
-/*******************************************************************************
- * Render resource control buttons to a cell
- */
-GridEditor.renderer.resourceControls = function(value, metadata, record, rowIndex, colIndex, store){
-   var controls = this.grideditor.controls;
-   
-   var html = '';
-   var items = [];
- 
-   // Edit button
-   if( controls.indexOf('edit') > -1){
-       var mgrUrl = MODx.config.manager_url+'?a=30&id='+record.json.id;
-       html+= '<a class="grideditor-button-edit" href="'+mgrUrl+'"><img src="'+GridEditor.config.imgUrl+'icons/edit.png'+'" width="16" height="16" alt="edit icon" title="Edit this resource" /></a>';
-    };
-   
-   // Delete button#
-   if( controls.indexOf('delete') > -1){
-     var elemID = 'grideditor-resource-'+record.json.id+"-delete-resource";
-     GridEditor.renderer._deleteResourceButton.defer(1, this, [elemID, record, arguments]);
-     html+= '<div class="grideditor-button-delete" id="'+elemID+'" title="Delete this resource"></div>';
-   };
-    
-    // Return HTML to grid
-    return html;
-   }//
-GridEditor.renderer._deleteResourceButton = function(elemid, record, args) {
-        new Ext.Button({
-           text: '<img src="'+GridEditor.config.imgUrl+'icons/delete.png'+'" width="16" height="16" title="Delete this resource" />',
-           scale: 'small',
-           cls: 'grideditor-button-nostyle grideditor-button-delete',
-           style: {
-               float: 'left'
-           },
-           handler: function(){
-               GridEditor.fn.deleteResource(record.data.id, Ext.getCmp('grideditor-grid-grideditor'));
-           }
-        }).render(document.body,elemid);
-        
-    }//
     
     
  /**
