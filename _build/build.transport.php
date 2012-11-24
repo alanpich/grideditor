@@ -130,4 +130,3 @@ $tend= explode(" ", microtime());
 $tend= $tend[1] + $tend[0];
 $totalTime= sprintf("%2.4f s",($tend - $tstart));
 $modx->log(modX::LOG_LEVEL_INFO,"\n<br />Package Built.<br />\nExecution time: {$totalTime}\n");
-exit ();
