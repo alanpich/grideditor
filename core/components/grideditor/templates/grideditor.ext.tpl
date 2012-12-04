@@ -1,6 +1,5 @@
 {literal}
 <script type="text/javascript">
-    
     Ext.onReady(function() {
         (function(){
             MODx.load({ {/literal}

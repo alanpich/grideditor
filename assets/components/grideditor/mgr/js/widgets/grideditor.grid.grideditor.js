@@ -298,6 +298,15 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             total++;
         };
         
+        items.push({
+            icon: GridEditor.config.imgUrl+'icons/publish.png',
+            tooltip: 'Unpublish this resource',
+            isPublishButton: true,
+            handler: function(){
+                console.log(this,arguments);
+            }
+        })
+        
         return {
                xtype: 'actioncolumn',
                header: '',
