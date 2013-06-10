@@ -19,14 +19,12 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
      * @param array $scriptProperties
      */
     public function process(array $scriptProperties = array()) {
-       
-        
+
         $this->validConfig = true;
         
         // Check service loaded ok
-        $configName = isset($scriptProperties['config'])? $scriptProperties['config'] : '';
-        if(! $conf = $this->grideditor->loadConfigChunk('demo')){
-            echo 'Failed to load config';
+        $configName = isset($scriptProperties['config'])? $scriptProperties['config'] : 'demo';
+        if(! $conf = $this->grideditor->loadConfigChunk($configName)){
             $this->validConfig = false;
         } else {
             $this->gridConfig =& $conf;
@@ -50,7 +48,6 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         // Dont load anything if there's no config
         if( ! $this->validConfig ){ return; };
         
-        //$this->addJavascript($this->grideditor->config['jsUrl'].'mgr/widgets/helper.grid.js');
         $this->addJavascript($this->grideditor->config['jsUrl'].'sections/grideditor.panel.cmp.js');
         $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
         $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.combo.tv.js');
@@ -58,7 +55,7 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.checkbox.js');
         $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.window.warnings.js');
         $this->addLastJavascript($this->grideditor->config['jsUrl'].'sections/grideditor.cmp.js');
-//        $this->addHtml($this->Ext);
+ #       die('<pre>'.print_r($this->gridConfig,1).'</pre>');
 
         // Add additional javascripts specified in config
         foreach($this->gridConfig->javascripts as $src){

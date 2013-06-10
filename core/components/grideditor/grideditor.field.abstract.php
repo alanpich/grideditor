@@ -79,14 +79,15 @@ abstract class GridEditorField {
              
     
     protected $modx;
-    
+
     /**
      * Factory Loader - parses input data
      * @param object $data Field data
-     * @return GridEditorHelper Instance
+     * @param modX $modx
+     * @return static Instance
      */
-    public static function fromInputData( $data ){
-        $self = new self($data);
+    public static function fromInputData( $data, \modX $modx ){
+        $self = new static($data,$modx);
         return $self;
     }//
     
@@ -97,7 +98,11 @@ abstract class GridEditorField {
         $this->modx =& $modx;
         
         // Check field name is valid
-        if(! $this->is_valid_field($data)){$this->isValid = false; return; /* WARN */ };
+        if(! $this->is_valid_field($data)){
+            $this->isValid = false;
+            unset($this->modx);
+            return false; /* WARN */
+        };
         
         // Field name
         $this->field = $data->field;        

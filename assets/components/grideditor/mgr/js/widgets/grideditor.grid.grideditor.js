@@ -200,9 +200,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 xtype: 'button'
                 ,text: 'Create Resource'
                 ,handler: function(){
-                    // &a=55&class_key=modDocument&parent=38&context_key=web
-                    document.location.href = MODx.config.manager_url+'?a=55&class_key=modDocument&parent='+this.grideditor.parentResourceId+'&context_key=web'
+                    this.createResource()
                 }
+                ,scope: this
             })
         };
         
@@ -408,6 +408,117 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 GridEditor.renderer._image.defer(1, this, [elemID, value, width]);
                 return '<div id="'+elemID+'"></div>';
             }//
+    }
+
+
+    /**
+     * Create a new resource
+     */
+    ,createResource: function(){
+
+        // Hold data params and field items
+        var data = {};
+        var items = [];
+
+        for(var key in this.grideditor.newResourceDefaults){
+            var value = this.grideditor.newResourceDefaults[key];
+
+            // If parent has been specified, and is an array
+            if(key === 'parent' && Ext.isObject(value)){
+                items.push({
+                     xtype: 'modx-combo'
+                    ,fieldLabel: value.label || 'Select Parent resource'
+                    ,url: GridEditor.config.connectorUrl
+                    ,baseParams: {
+                        action: 'resource/getlistbyid',
+                        ids: value.data.join(',')
+                    }
+                    ,fields: ['id','pagetitle']
+                    ,displayField: 'pagetitle'
+                    ,forceSelection: true
+                    ,value: value.data.shift()
+                    ,valueField: 'id'
+                    ,name: 'parent'
+                    ,anchor: '100%'
+                })
+            } else {
+                data[key] = value;
+            }
+
+        }
+
+        if(items.length >= 1){
+            this._showNewResourceOptionWindow(data,items);
+        } else {
+            console.log(data,items);
+            return;
+            this._goToCreateResource(data);
+        }
+    }
+
+
+    /**
+     * Displays a modal window to
+     */
+    ,_showNewResourceOptionWindow: function(data,items){
+
+        this._tmp_createResource_data = data;
+
+        var newResourceParamsWindow = Ext.create({
+            xtype: 'modx-window',
+            title: 'Options',
+            fields: items,
+            modal: true,
+            collapsible: false,
+            resizable: false,
+            buttons: [{
+                text: 'Create'
+                ,handler: function(btn){
+                    this._onCreateFormSubmit(btn.ownerCt.ownerCt.fp.getForm());
+                }
+                ,scope: this
+            },{
+                text: 'Cancel'
+                ,handler: function(btn){
+                    btn.ownerCt.ownerCt.destroy();
+                }
+            }]
+        }).show()
+
+    }
+
+
+    /**
+     * Redirect user to resource/create action
+     */
+    ,_redirectCreateResource: function( params ){
+
+        // Create url string
+        var action = MODx.action['resource/create'];
+        var url = Ext.urlAppend(MODx.config.manager_url,'a='+action);
+
+        // Add default params
+        for( key in params ){
+
+            // Convert booleans
+            var value = (Ext.isBoolean(params[key])) ? params[key] === true ? 1 : 0 : params[key];
+
+            url = Ext.urlAppend(url,key+'='+value);
+        }
+
+        // Do the redirect
+        document.location.href = url;
+    }
+
+
+
+    ,_onCreateFormSubmit: function(form){
+        console.log(form.getFieldValues())
+
+        var data = this._tmp_createResource_data;
+        Ext.apply(data,form.getFieldValues());
+
+        this._redirectCreateResource(data);
     }
     
 });

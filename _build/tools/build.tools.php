@@ -100,5 +100,12 @@ class Tools {
 
 
 
+    public static function getPhpFileContent($path){
+        if(!is_readable($path)){
+            throw new Exception("Invalid file path $path");
+        }
+        return file_get_contents($path);
+    }
+
 
 }

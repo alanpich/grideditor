@@ -39,7 +39,7 @@ $builder->registerNamespace(PKG_NAMESPACE, false, true, '{core_path}components/'
 
 // Add Action and Menu Item ====================================================
 $modx->log(modX::LOG_LEVEL_INFO,'Packaging in menu...');
-$menu = include $sources['data'].'transport.menu.php';
+$menu = include PKG_BUILD.'data/transport.menu.php';
 if (empty($menu)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in menu.');
 $vehicle= $builder->createVehicle($menu,array (
     xPDOTransport::PRESERVE_KEYS => true,
@@ -62,20 +62,6 @@ unset($vehicle,$menu);
 $category= $modx->newObject('modCategory');
 $category->set('id',1);
 $category->set('category',PKG_NAME);
-$attr = array(
-        xPDOTransport::UNIQUE_KEY => 'category',
-        xPDOTransport::PRESERVE_KEYS => false,
-        xPDOTransport::UPDATE_OBJECT => true,
-        xPDOTransport::RELATED_OBJECTS => true,
-        xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-            'Chunks' => array(
-                xPDOTransport::PRESERVE_KEYS => false,
-                xPDOTransport::UPDATE_OBJECT => true,
-                xPDOTransport::UNIQUE_KEY => 'name',
-            ),
-        ),
-    );
-
 
 
 // Add in demo config chunk ====================================================
@@ -83,13 +69,25 @@ $modx->log(modX::LOG_LEVEL_INFO,'Packaging in demo config chunk..');
 $chunks = array($modx->newObject('modChunk',array(
         'name' => 'grideditor.config.demo',
         'description' => 'Demo configuration file for GridEditor',
-        'snippet' => getSnippetContent($sources['elements'].'chunks/grideditor.config.demo.php')
+        'snippet' => Tools::getPhpFileContent(PKG_CORE.'elements/chunks/grideditor.config.demo.php')
     )));
 $category->addMany($chunks);
 
 
 // Create Vehicle & add to package =============================================
-$vehicle = $builder->createVehicle($category,$attr);
+$vehicle = $builder->createVehicle($category,array(
+    xPDOTransport::UNIQUE_KEY => 'category',
+    xPDOTransport::PRESERVE_KEYS => false,
+    xPDOTransport::UPDATE_OBJECT => true,
+    xPDOTransport::RELATED_OBJECTS => true,
+    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
+        'Chunks' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY => 'name',
+        ),
+    ),
+));
 
 
 // Add in file resolvers =======================================================
@@ -107,13 +105,15 @@ $builder->putVehicle($vehicle);
 
 // Add documentation ===========================================================
 $modx->log(modX::LOG_LEVEL_INFO, 'Adding documentation...');
+$docs = PKG_CORE.'docs/';
 $builder->setPackageAttributes(
     array(
-        'license' => file_get_contents($sources['docs'] . 'license.txt'),
-        'readme' => Tools::parseReadmeTpl($sources['docs'] . 'readme.tpl'),
-        'changelog' => file_get_contents($sources['docs'] . 'changelog.txt'),
+        'license' => file_get_contents($docs . 'license.txt'),
+        'readme' => Tools::parseReadmeTpl($docs . 'readme.tpl'),
+        'changelog' => file_get_contents($docs . 'changelog.txt'),
     )
 );
+unset($docs);
 
 // Create transport package -----------------------------------------------------------------------
 $modx->log(modX::LOG_LEVEL_INFO, 'Packing component for transport...');

@@ -2,11 +2,11 @@
 $action= $modx->newObject('modAction');
 $action->fromArray(array(
     'id' => 1,
-    'namespace' => PKG_NAME_LOWER,
+    'namespace' => PKG_NAMESPACE,
     'parent' => 0,
     'controller' => 'controller',
     'haslayout' => true,
-    'lang_topics' => PKG_NAME_LOWER.':default',
+    'lang_topics' => PKG_NAMESPACE.':default',
     'assets' => '',
 ),'',true,true);
  

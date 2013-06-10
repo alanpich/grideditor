@@ -41,8 +41,8 @@ class GridEditor {
        // Allow overriding the chunk prefix using a system setting
        $this->chunkPrefix = $this->modx->getOption('grideditor.configChunkPrefix',null,$this->chunkPrefix,true); 
     }//
-    
-    
+
+
     /**
      * Load a configuration chunk and prepare data
      * @param string $chunkName Suffix for config chunk
@@ -55,7 +55,7 @@ class GridEditor {
         if(!$chunk instanceof modChunk){ return false; };
         
         // Translate insto a GridEditorConfig object
-        $conf = GridEditorConfiguration::fromChunk($chunkName,&$this->modx,$this->chunkPrefix);
+        $conf = GridEditorConfiguration::fromChunk($chunkName,$this->modx,$this->chunkPrefix);
         
         return $conf;   
     }//
