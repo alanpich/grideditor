@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ISI\com_isiblog" default="help" basedir="." description="Joomla 2.5 Blogging component for ISI Academy">
+
+
+    <property name="dir.build" value="${project.basedir}/_build" />
+    <property name="dir.vagrant" value="${dir.build}/vagrant" />
+
+
+    <target name="help">
+        <exec command="phing -l -q" passthru="true" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!--   TARGET: Build transport package                                  -->
+    <!-- ================================================================== -->
+    <target name="build" description="Build source into Transport Package">
+        <echo msg="Building transport package..." />
+        <exec command="php ${dir.build}/build.transport.php"
+              passthru="true" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!--   TARGET: Bring vagrant box up online                              -->
+    <!-- ================================================================== -->
+    <target name="vagrant/up" description="Bring vagrant box up">
+        <echo msg="Bringing vagrant online..." />
+        <exec command="vagrant up"
+              dir="${dir.vagrant}"
+              passthru="true" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!--   TARGET: Halt the vagrant                                         -->
+    <!-- ================================================================== -->
+    <target name="vagrant/halt" description="Halt vagrant box">
+        <echo msg="Halting the vagrant..." />
+        <exec command="vagrant halt"
+              dir="${dir.vagrant}"
+              passthru="true" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!--   TARGET: SSH into the vagrant box                                 -->
+    <!-- ================================================================== -->
+    <target name="vagrant/ssh" description="SSH into vagrant box">
+        <echo msg="Connecting to vagrant..." />
+        <exec command="vagrant ssh"
+              dir="${dir.vagrant}"
+              passthru="true" />
+    </target>
+
+</project>
