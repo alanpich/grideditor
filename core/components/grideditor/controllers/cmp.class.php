@@ -9,7 +9,11 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
     
     /** bool $validConfig Is there a valid config file? */
     private $validConfig = true;
-    
+
+    public $renderTo = 'grideditor-cmp';
+
+    public $gridConfig;
+
     /**
      * Checks config file is valid
      * @param array $scriptProperties
@@ -21,17 +25,13 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         
         // Check service loaded ok
         $configName = isset($scriptProperties['config'])? $scriptProperties['config'] : '';
-        if(! $conf = $this->modx->grideditor->loadConfigChunk('demo')){
+        if(! $conf = $this->grideditor->loadConfigChunk('demo')){
             echo 'Failed to load config';
             $this->validConfig = false;
         } else {
-            $this->confData =& $conf;
+            $this->gridConfig =& $conf;
         }
-        
-        // Now prepare output for Ext Gridness
-        if(! $this->Ext = $this->modx->grideditor->generateExtJavascript($conf,'grideditor-cmp-grid-div')){
-            $this->validConfig = false;
-        };
+
     }//
     
     /**
@@ -39,7 +39,7 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
      * @return string Page Title
      */
     public function getPageTitle() { 
-        return (empty($this->confData->title)) ? $this->modx->lexicon('grideditor.cmp.default.title') : $this->confData->title;
+        return (empty($this->gridConfig->title)) ? $this->modx->lexicon('grideditor.cmp.default.title') : $this->gridConfig->title;
     }//
     
     
@@ -50,18 +50,18 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         // Dont load anything if there's no config
         if( ! $this->validConfig ){ return; };
         
-        //$this->addJavascript($this->modx->grideditor->config['jsUrl'].'mgr/widgets/helper.grid.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'sections/grideditor.panel.cmp.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.combo.tv.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.combo.gridfilter.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.checkbox.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'widgets/grideditor.window.warnings.js');
-        $this->addLastJavascript($this->modx->grideditor->config['jsUrl'].'sections/grideditor.cmp.js');
-        $this->addHtml($this->Ext);
+        //$this->addJavascript($this->grideditor->config['jsUrl'].'mgr/widgets/helper.grid.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'sections/grideditor.panel.cmp.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.combo.tv.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.combo.gridfilter.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.checkbox.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.window.warnings.js');
+        $this->addLastJavascript($this->grideditor->config['jsUrl'].'sections/grideditor.cmp.js');
+//        $this->addHtml($this->Ext);
 
         // Add additional javascripts specified in config
-        foreach($this->confData->javascripts as $src){
+        foreach($this->gridConfig->javascripts as $src){
             $this->addJavascript($src);
         };
     }//
@@ -71,16 +71,22 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
      * @return string Path to smarty template
      */
     public function getTemplateFile() {
-        $tpl = $this->validConfig ? 'cmp.tpl' : 'invalidconfig.tpl';
-        return $this->modx->grideditor->config['templatePath'].$tpl;
+
+        // Add the smarty data
+        $this->modx->getService('smarty','smarty.modSmarty');
+        $this->modx->smarty->assign('grideditor',$this);
+
+
+        $tpl = $this->validConfig ? 'grideditor.ext.tpl' : 'invalidconfig.tpl';
+        return $this->grideditor->config['templatePath'].$tpl;
     }//
     
     /**
      * Add some javascript to set the custom page title to the page
      */
     private function getPageTitleExt(){
-        $title = $this->confData->title;
-        $tpl = $this->modx->grideditor->config['templatePath'].'cmp.pagetitle.tpl';
+        $title = $this->gridConfig->title;
+        $tpl = $this->grideditor->config['templatePath'].'cmp.pagetitle.tpl';
         $this->modx->smarty->assign('grideditorpagetitle',$title);
         return $this->modx->smarty->fetch($tpl);
     }//

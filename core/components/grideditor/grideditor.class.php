@@ -35,7 +35,6 @@ class GridEditor {
                    'connectorUrl' => $assets.'mgr/connector.php',
                    'managerUrl' => $this->modx->getOption('manager_url'),
                    'documentationUrl' => 'http://github.com/alanpich/grideditor/',
-                   
                    'templateMap' => $this->getTemplateMap()
            );
        
@@ -60,27 +59,7 @@ class GridEditor {
         
         return $conf;   
     }//
-    
-    
-    /**
-     * Take a configuration object and turn it into Javascript for an Ext Grid
-     * @param GridEditorConfiguration $conf
-     * @param string $renderTarget DOM element ID to render grid component to
-     * @return string HTML/Javascript
-     */
-    public function generateExtJavascript( GridEditorConfiguration $conf, $renderTarget ){
-        // Load smarty service
-        $this->modx->getService('smarty','smarty.modSmarty');
-        // Prepare data for smarty
-        $smartyData = new stdClass;
-        $smartyData->conf = json_encode($conf);
-        $smartyData->renderTo = $renderTarget;
-        $this->modx->smarty->assign('grideditor',$smartyData);
-        // Load Template
-        $tplPath = $this->config['templatePath'].'grideditor.ext.tpl';
-        return $this->modx->smarty->fetch($tplPath);   
-    }//
-    
+
     
     /**
      * Get a pre-prepared xPDOQuery object for gathering relevant resources

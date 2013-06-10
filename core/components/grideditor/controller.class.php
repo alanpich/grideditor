@@ -10,25 +10,27 @@
  * @abstract Manager Controller Global Setup
  */
 abstract class GrideditorManagerController extends modExtraManagerController {
-    /** @var grideditorHelper $helper */
-    public $helper;
+    /** @var GridEditor */
+    public $grideditor;
     
     public function initialize() {
         // Require the grideditor service
         $path = $this->modx->getOption('core_path').'components/grideditor/';
-        $this->modx->getService('grideditor','GridEditor',$path,array('modx' => &$modx));
+        $this->modx->getService('grideditor','GridEditor',$path,array('modx' => &$this->modx));
+
+        $this->grideditor =& $this->modx->grideditor;
         
-        $this->addCss($this->modx->grideditor->config['cssUrl'].'mgr.css');
-        $this->addJavascript($this->modx->grideditor->config['managerUrl'].'assets/modext/util/datetime.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'grideditor.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'grideditor.functions.js');
-        $this->addJavascript($this->modx->grideditor->config['jsUrl'].'grideditor.renderers.js');
+        $this->addCss($this->grideditor->config['cssUrl'].'mgr.css');
+        $this->addJavascript($this->grideditor->config['managerUrl'].'assets/modext/util/datetime.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'grideditor.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'grideditor.functions.js');
+        $this->addJavascript($this->grideditor->config['jsUrl'].'grideditor.renderers.js');
         $this->addHtml('<script type="text/javascript">
-        Ext.onReady(function() {
-            GridEditor.config = '.json_encode($this->modx->grideditor->config).';
-        });
-        </script>');
-        return parent::initialize();
+            Ext.onReady(function() {
+                GridEditor.config = '.json_encode($this->grideditor->config).';
+            });
+            </script>');
+        parent::initialize();
     }
     
     public function getLanguageTopics() {

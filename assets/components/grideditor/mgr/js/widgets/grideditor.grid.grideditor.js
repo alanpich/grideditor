@@ -21,6 +21,7 @@ GridEditor.grid.GridEditor = function(config) {
         ,anchor: '97%'
         ,autoExpandColumn: 'name'
         ,autosave: true
+        ,border: false
         ,save_action: 'resource/updateFromGrid'
         ,saveParams: {
             chunk: this.grideditor.chunk
@@ -37,8 +38,7 @@ GridEditor.grid.GridEditor = function(config) {
             ,css: { marginLeft: '30px' }
         }
 
-        ,header: true
-        ,headerAsText: true
+        ,header: false
         ,title: this.grideditor.title
         ,searchBox: false
         ,filterBox: false
@@ -411,7 +411,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
     }
     
 });
-Ext.reg('grideditor-grid-grideditor',GridEditor.grid.GridEditor);
+Ext.reg('grideditor-grid',GridEditor.grid.GridEditor);
 
 
 

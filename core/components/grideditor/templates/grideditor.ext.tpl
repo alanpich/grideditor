@@ -1,14 +1,13 @@
 {literal}
 <script type="text/javascript">
     Ext.onReady(function() {
-        (function(){
-            MODx.load({ {/literal}
-                    xtype: 'grideditor-grid-grideditor'
-                    ,renderTo: '{$grideditor->renderTo}'
-                    ,grideditor: {$grideditor->conf}
-                    {literal}
-                });
-        }).defer(500);
+        MODx.load({ {/literal}
+                xtype: 'grideditor-panel-cmp'
+                ,renderTo: '{$grideditor->renderTo}'
+                ,grideditor: {$grideditor->gridConfig->toJson()}
+                {literal}
+            });
     });
 </script>
 {/literal}
+<div id="{$grideditor->renderTo}"></div>

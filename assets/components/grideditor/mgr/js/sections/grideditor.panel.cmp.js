@@ -4,17 +4,22 @@
  * @package grideditor
  * @copyright Alan Pich 2012
  */
-GridEditor.panel.Home = function(config) {
+GridEditor.panel.CMP = function(config) {
     config = config || {};
     Ext.apply(config,{
         border: false
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-            html: '<div id="grideditor-cmp-grid-div"></div>'
+             html: '<h2>'+config.grideditor.title+'</h2>'
+            ,border: false
+            ,cls: 'modx-page-header'
+        },{
+            xtype: 'grideditor-grid',
+            grideditor: config.grideditor
         }]
     });
-    GridEditor.panel.Home.superclass.constructor.call(this,config);
+    GridEditor.panel.CMP.superclass.constructor.call(this,config);
 };
-Ext.extend(GridEditor.panel.Home,MODx.Panel);
-Ext.reg('grideditor-panel-cmp',GridEditor.panel.Home);
+Ext.extend(GridEditor.panel.CMP,MODx.Panel);
+Ext.reg('grideditor-panel-cmp',GridEditor.panel.CMP);

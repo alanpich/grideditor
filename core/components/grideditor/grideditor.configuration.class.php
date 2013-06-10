@@ -395,6 +395,16 @@ class GridEditorConfiguration{
             $this->javascripts[] = $js;            
         };
     }
+
+
+    /**
+     * Return json-encoded configuration
+     *
+     * @return string
+     */
+    public function toJSON(){
+        return json_encode($this);
+    }
     
     
 };// end class GridEditorConfiguration
