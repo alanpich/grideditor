@@ -98,8 +98,13 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
     }
 
 
-
-
+    /**
+     * Displays a resource's url
+     * @returns {string}
+     */
+    GridEditor.renderer.ResourceUrl = function(value, metadata, record, rowIndex, colIndex, store){
+        return record.json.uri;
+    }
 
 
 

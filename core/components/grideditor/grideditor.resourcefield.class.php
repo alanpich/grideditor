@@ -37,7 +37,8 @@ class GridEditorResourceField extends GridEditorField {
         );
     
     private static $defaultRenderers = array(
-            'template' => 'GridEditor.renderer.template'
+            'template' => 'GridEditor.renderer.template',
+            'alias' => 'GridEditor.renderer.ResourceUrl'
         );
 
     /**

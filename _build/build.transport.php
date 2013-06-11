@@ -69,7 +69,7 @@ $modx->log(modX::LOG_LEVEL_INFO,'Packaging in demo config chunk..');
 $chunks = array($modx->newObject('modChunk',array(
         'name' => 'grideditor.config.demo',
         'description' => 'Demo configuration file for GridEditor',
-        'snippet' => Tools::getPhpFileContent(PKG_CORE.'elements/chunks/grideditor.config.demo.php')
+        'snippet' => Tools::getPhpFileContent(PKG_CORE.'elements/chunks/grideditor.config.demo.html')
     )));
 $category->addMany($chunks);
 

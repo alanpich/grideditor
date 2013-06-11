@@ -58,6 +58,11 @@ class GridEditorConfiguration
      */
     public $controls = array('publish', 'edit', 'delete', 'new');
     /**
+     * Specify number of resources per page in grid
+     * @var int
+     */
+    public $perPage = 5;
+    /**
      * Fields to show in grid
      * @var array of GridEditorFieldObject $fields
      */
@@ -185,6 +190,12 @@ class GridEditorConfiguration
         };
 
 
+        // Add grid perPage count
+        if(isset($data->perPage) && is_numeric($data->perPage)){
+            $this->perPage = $data->perPage;
+        }
+
+
         // Prepare resource selection filters
         if(isset($data->resourceQuery))
             $this->resourceQuery = $data->resourceQuery;
@@ -200,17 +211,6 @@ class GridEditorConfiguration
         $id->hidden = true;
         $this->fields['id'] = new GridEditorResourceField($id, $this->modx);
         $this->fieldList[] = 'id';
-
-        // Add uri to this resource as a hidden field
-        if (isset($data->fields) && in_array('uri',$data->fields)) {
-            return $this->warning('No resource fields specified');
-        } else {
-            $url = new stdClass;
-            $url->field = 'uri';
-            $url->hidden = true;
-            $this->fields['uri'] = new GridEditorResourceField($url, $this->modx);
-            $this->fieldList[] = 'uri';
-        };
 
         // Add published status as a hidden resource field
         $published = new stdClass;

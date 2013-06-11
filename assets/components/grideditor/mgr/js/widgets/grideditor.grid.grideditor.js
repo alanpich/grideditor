@@ -15,7 +15,8 @@ GridEditor.grid.GridEditor = function(config) {
                action: 'resource/getList'
                ,chunk: this.grideditor.chunk
            }
-        ,paging: false
+        ,paging: true
+        ,pageSize: config.grideditor.perPage
         ,remoteSort: false
         ,collapsible: false
         ,anchor: '97%'
@@ -87,7 +88,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                header:'',
                editable: false,
                sortable: false,
-               width: 80,
+               width: 165,
+               fixed: true,
                renderer: GridEditor.renderer.actionCombo
            })
         };
@@ -98,7 +100,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 header:'',
                 editable: false,
                 sortable: true,
-                width: 20,
+                width: 35,
+                fixed: true,
                 renderer: GridEditor.renderer.publishToggle
             })
         }
