@@ -83,7 +83,13 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
 
         // If controls in use, add another field for them
         if(this.grideditor.controls){
-           items.push(this.getControlButtons())
+           items.push({
+               header:'',
+               editable: false,
+               sortable: false,
+               width: 80,
+               renderer: GridEditor.renderer.actionCombo
+           })
         };
         
         // If publish is a control, add it's own columns at the beginning
@@ -146,8 +152,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         }
         
         // Add control buttons
-        items = items.concat(this.getControlButtons());
-                
+        // items = items.concat(this.getControlButtons());
+        items = items.concat(this.getActionCombo());
+
         return items;
     }//
     
@@ -262,7 +269,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         
         return items;
     }//
-    
+
+
     /**
      * Get required resource controls
      */
@@ -315,7 +323,18 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                items: items
            };
     }//
-   
+
+
+    ,getActionCombo: function(){
+        return {
+             header: _('usergroup')
+            ,dataIndex: 'usergroup'
+            ,width: 140
+            ,order:3
+            ,renderer: GridEditor.renderer.actionCombo
+        }
+    }
+
     /**
      * Filter by search field
      */

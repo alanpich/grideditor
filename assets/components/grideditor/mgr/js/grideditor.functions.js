@@ -25,7 +25,7 @@ GridEditor.fn.deleteResource = function(resourceId, grid){
  * Publish a resource by id
  * @param int $resID Resource ID
  */
-GridEditor.fn.publishResource = function(resId){
+GridEditor.fn.publishResource = function(resId, resRecord){
    MODx.Ajax.request({
         url: MODx.config.connectors_url+'resource/index.php'
         ,params: { 
@@ -35,7 +35,8 @@ GridEditor.fn.publishResource = function(resId){
         ,listeners: {
             'success':{fn:function() {
                MODx.msg.status({
-                   title: 'Resource published'                               
+                   title: 'Resource published',
+                   message: resRecord.pagetitle
                })
             },scope:this}
             ,'error':{fn:function(){
@@ -50,7 +51,7 @@ GridEditor.fn.publishResource = function(resId){
  * Unpublish a resource by id
  * @param int $resID Resource ID
  */
-GridEditor.fn.unpublishResource = function(resId){
+GridEditor.fn.unpublishResource = function(resId, resRecord){
    MODx.Ajax.request({
         url: MODx.config.connectors_url+'resource/index.php'
         ,params: { 
@@ -60,7 +61,8 @@ GridEditor.fn.unpublishResource = function(resId){
         ,listeners: {
             'success':{fn:function() {
                MODx.msg.status({
-                   title: 'Resource unpublished'                               
+                   title: 'Resource unpublished'
+                   ,message: resRecord.pagetitle
                })
             },scope:this}
             ,'error':{fn:function(){

@@ -8,11 +8,15 @@ GridEditor.renderer.publishToggle = function(value, metadata, record, rowIndex, 
     return '<div id="'+elemID+'"></div>';
 }//
 GridEditor.renderer._publishToggleButton = function(elemid, record) {
-        var action = record.json.published? 'unpublish' : 'publish';
+        var action = record.json.published? 'drop-yes' : 'drop-no';
+        var lexAction = record.json.published? 'unpublish':'publish';
         new Ext.Button({
-           text: '<img src="'+GridEditor.config.imgUrl+'icons/'+action+'.png'+'" width="16" height="16" title="'+_('grideditor.click_to_'+action)+'" />',
-           onText: '<img src="'+GridEditor.config.imgUrl+'icons/unpublish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_unpublish')+'" />',
-           offText: '<img src="'+GridEditor.config.imgUrl+'icons/publish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_publish')+'" />',
+//           text: '<img src="'+GridEditor.config.imgUrl+'icons/'+action+'.png'+'" width="16" height="16" title="'+_('grideditor.click_to_'+action)+'" />',
+//           onText: '<img src="'+GridEditor.config.imgUrl+'icons/unpublish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_unpublish')+'" />',
+//           offText: '<img src="'+GridEditor.config.imgUrl+'icons/publish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_publish')+'" />',
+           text: '<img src="'+MODx.config.manager_url+'templates/default/images/modx-theme/dd/'+action+'.gif" width="16" height="16" title="'+_('grideditor.click_to_'+lexAction)+'" />',
+           onText: '<img src="'+MODx.config.manager_url+'templates/default/images/modx-theme/dd/drop-yes.gif'+'" width="16" height="16" title="'+_('grideditor.click_to_unpublish')+'" />',
+           offText: '<img src="'+MODx.config.manager_url+'templates/default/images/modx-theme/dd/drop-no.gif'+'" width="16" height="16" title="'+_('grideditor.click_to_publish')+'" />',
            enableToggle: true,
            scale: 'small',
            cls: 'grideditor-button-publish',
@@ -23,12 +27,12 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
                    // Publish resource
                    btn.setText(btn.onText);
                    var action = 'publish';
-                   GridEditor.fn.publishResource(record.json.id);
+                   GridEditor.fn.publishResource(record.json.id, record.json);
                } else {
                    // Unpublish resource
                    btn.setText(btn.offText);
                    var action = 'unpublish';
-                   GridEditor.fn.unpublishResource(record.json.id);
+                   GridEditor.fn.unpublishResource(record.json.id, record.json);
                };
            }
        }).render(document.body,elemid);
@@ -73,7 +77,46 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
     GridEditor.renderer.template = function(value, metadata, record, rowIndex, colIndex, store){
         return GridEditor.config['templateMap'][value];
     }
-    
+
+
+
+
+
+    /**
+     * Grid row inline action combo
+     */
+    GridEditor.renderer.actionCombo= function(value, metadata, record, rowIndex, colIndex, store){
+        var elemID = 'grideditor-resource-'+record.json.id+"-row-actions";
+        GridEditor.renderer._actionCombo.defer(1, this, [elemID, record]);
+        return '<div id="'+elemID+'"></div>';
+    }//
+    GridEditor.renderer._actionCombo = function(elemid, record) {
+        var action = record.json.published? 'unpublish' : 'publish';
+        var combo = MODx.load({
+            xtype: 'grideditor-combo-resourceactions',
+            renderTo: elemid,
+            width: 150
+        })
+     //   combo.render.defer(1000, this, [this.el,elemid]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
 String.prototype.capitalize = function() {

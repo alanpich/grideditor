@@ -1,8 +1,11 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: alan
- * Date: 11/06/13
- * Time: 00:57
- * To change this template use File | Settings | File Templates.
- */
+
+/** @var modResource $resource */
+
+
+// Hide 'project' resources by template
+if($resource->get('template') == 3){
+    $resource->set('show_in_tree',0);
+    $resource->show_in_tree = false;
+    $resource->save();
+}
