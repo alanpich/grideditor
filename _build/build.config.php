@@ -2,7 +2,7 @@
 define('PKG_NAME', 'GridEditor');
 define('PKG_NAMESPACE', 'grideditor');
 define('PKG_VERSION','1.0.3');
-define('PKG_RELEASE','beta');
+define('PKG_RELEASE','alpha');
 
 define('PKG_ROOT',dirname(dirname(__FILE__)).'/');
 define('PKG_CORE',PKG_ROOT.'core/components/'.PKG_NAMESPACE.'/');
