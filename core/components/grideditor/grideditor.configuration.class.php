@@ -201,6 +201,17 @@ class GridEditorConfiguration
         $this->fields['id'] = new GridEditorResourceField($id, $this->modx);
         $this->fieldList[] = 'id';
 
+        // Add uri to this resource as a hidden field
+        if (isset($data->fields) && in_array('uri',$data->fields)) {
+            return $this->warning('No resource fields specified');
+        } else {
+            $url = new stdClass;
+            $url->field = 'uri';
+            $url->hidden = true;
+            $this->fields['uri'] = new GridEditorResourceField($url, $this->modx);
+            $this->fieldList[] = 'uri';
+        };
+
         // Add published status as a hidden resource field
         $published = new stdClass;
         $published->field = 'published';

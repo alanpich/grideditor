@@ -18,7 +18,7 @@ class GridEditorResourceField extends GridEditorField {
             'link_attributes','pub_date', 
             'unpub_date','introtext',
             'menutitle','menuindex',
-            'template','id'
+            'template','id','uri'
         );
     
     private static $fieldEditors = array(
@@ -32,17 +32,18 @@ class GridEditorResourceField extends GridEditorField {
             'introtext' => 'textarea',
             'menutitle' => 'textfield',
             'menuindex' => 'textfield',
-            'template' => 'modx-combo-template'
+            'template' => 'modx-combo-template',
+            'uri' => 'textfield'
         );
     
     private static $defaultRenderers = array(
             'template' => 'GridEditor.renderer.template'
         );
-    
+
     /**
      * Is this field a valid resource field?
      * Checks for existance in $this->allowedFields array
-     * @param data $fieldName Name of field
+     * @param $data
      * @return boolean Is field name valid?
      */
     protected function is_valid_field($data){

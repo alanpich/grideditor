@@ -11,9 +11,6 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
         var action = record.json.published? 'drop-yes' : 'drop-no';
         var lexAction = record.json.published? 'unpublish':'publish';
         new Ext.Button({
-//           text: '<img src="'+GridEditor.config.imgUrl+'icons/'+action+'.png'+'" width="16" height="16" title="'+_('grideditor.click_to_'+action)+'" />',
-//           onText: '<img src="'+GridEditor.config.imgUrl+'icons/unpublish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_unpublish')+'" />',
-//           offText: '<img src="'+GridEditor.config.imgUrl+'icons/publish.png'+'" width="16" height="16" title="'+_('grideditor.click_to_publish')+'" />',
            text: '<img src="'+MODx.config.manager_url+'templates/default/images/modx-theme/dd/'+action+'.gif" width="16" height="16" title="'+_('grideditor.click_to_'+lexAction)+'" />',
            onText: '<img src="'+MODx.config.manager_url+'templates/default/images/modx-theme/dd/drop-yes.gif'+'" width="16" height="16" title="'+_('grideditor.click_to_unpublish')+'" />',
            offText: '<img src="'+MODx.config.manager_url+'templates/default/images/modx-theme/dd/drop-no.gif'+'" width="16" height="16" title="'+_('grideditor.click_to_publish')+'" />',
@@ -22,7 +19,6 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
            cls: 'grideditor-button-publish',
            pressed: record.json.published? true : false,
            toggleHandler: function(btn,turnOff){
-             //  console.log('Was '+state+', now change to '+(!state));
                if(turnOff){
                    // Publish resource
                    btn.setText(btn.onText);
@@ -96,7 +92,7 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
             xtype: 'grideditor-combo-resourceactions',
             renderTo: elemid,
             width: 150,
-            grideditor: this.grideditor
+            record: record
         })
      //   combo.render.defer(1000, this, [this.el,elemid]);
     }
