@@ -95,7 +95,8 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
         var combo = MODx.load({
             xtype: 'grideditor-combo-resourceactions',
             renderTo: elemid,
-            width: 150
+            width: 150,
+            grideditor: this.grideditor
         })
      //   combo.render.defer(1000, this, [this.el,elemid]);
     }

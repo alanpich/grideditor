@@ -18,6 +18,11 @@ class GridEditorConfiguration
      */
     public $title = '';
     /**
+     * Name to use for a single resource
+     * @var string
+     */
+    public $resourceName = 'Resource';
+    /**
      * Array of xPDO WHERE queries
      * @var array
      */
@@ -164,6 +169,11 @@ class GridEditorConfiguration
         } else {
             $this->title = $data->title;
         };
+
+        // Override Name for a single Resource
+        if(isset($data->resourceName)){
+            $this->resourceName = (string) $data->resourceName;
+        }
 
         // Add New Resource defaults
         if (isset($data->newResourceDefaults)) {

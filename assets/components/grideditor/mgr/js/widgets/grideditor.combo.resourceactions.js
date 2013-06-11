@@ -4,10 +4,8 @@ GridEditor.combo.ResourceActions = function(config) {
         store: new Ext.data.ArrayStore({
             fields: ['name','value']
             ,data: [
-                 ['Select Action','null']
-                ,['Edit Resource','edit']
-                ,['Delete Resource','delete']
-                ,['(Un)Publish Resource','toggle']
+                 ['Edit','edit']
+                ,['Delete','delete']
             ]
         })
         ,mode: 'local'

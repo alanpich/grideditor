@@ -205,7 +205,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             items.push('->');
             items.push({
                 xtype: 'button'
-                ,text: 'Create Resource'
+                ,text: 'New '+this.grideditor.resourceName
                 ,handler: function(){
                     this.createResource()
                 }
