@@ -60,9 +60,7 @@ Ext.extend(GridEditor.combo.ResourceActions,Ext.form.ComboBox,{
      */
     ,_editAction: function(){
         var action = MODx.action['resource/update'];
-        var url = MODx.config.manager_url+'?a='+action+'&id='+this.record.data.id;
-        console.log(url);
-        document.location.href = url;
+        document.location.href = MODx.config.manager_url+'?a='+action+'&id='+this.record.data.id;
     }
 
     /**
