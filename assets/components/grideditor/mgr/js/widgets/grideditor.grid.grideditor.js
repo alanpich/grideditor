@@ -472,7 +472,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         if(items.length >= 1){
             this._showNewResourceOptionWindow(data,items);
         } else {
-            this._goToCreateResource(data);
+            this._redirectCreateResource(data);
         }
     }
 
