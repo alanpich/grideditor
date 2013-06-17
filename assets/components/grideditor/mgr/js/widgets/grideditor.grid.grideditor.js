@@ -15,8 +15,8 @@ GridEditor.grid.GridEditor = function(config) {
                action: 'resource/getList'
                ,chunk: this.grideditor.chunk
            }
-        ,paging: true
-        ,pageSize: config.grideditor.perPage
+        ,paging: false
+        ,pageSize: 99999// config.grideditor.perPage || 10
         ,remoteSort: false
         ,collapsible: false
         ,anchor: '97%'
@@ -41,9 +41,14 @@ GridEditor.grid.GridEditor = function(config) {
 
         ,header: false
         ,title: this.grideditor.title
-        ,searchBox: false
+        ,searchBox: true
         ,filterBox: false
-        ,tools: this.getTools()
+
+        ,listeners: {
+            loadexception: {fn: function(){
+                console.error('LOAD EXCEPTION',arguments);
+            }}
+        }
     
         ,grouping: (this.grideditor.grouping!=null&&this.grideditor.grouping!='')
         ,groupBy: (this.grideditor.grouping!=null)? this.grideditor.grouping.field : null
@@ -61,6 +66,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     getColumnsArray: function(){
        var items = [];
+
+       console.log(this);
+
         // Add in the resource fields
         if(this.grideditor.fields){
             for(var k in this.grideditor.fields){
