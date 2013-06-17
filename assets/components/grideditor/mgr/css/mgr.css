@@ -14,7 +14,8 @@
    -moz-box-shadow: none;
    margin-left:-5px;
    position: absolute;
-   top: 30%;
+   top: 50%;
+   margin-top:-16px;
  }
 
  .grideditor-action-button {
