@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="GridEditor" default="help" basedir="." description="MODx Component for browsing and editing resources in a grid format">
 
-
+    <property file="${project.basedir}/_build/build.properties" />
     <property name="dir.build" value="${project.basedir}/_build" />
     <property name="dir.vagrant" value="${dir.build}/vagrant" />
 
@@ -19,6 +19,40 @@
         <exec command="php ${dir.build}/build.transport.php"
               passthru="true" />
     </target>
+
+
+
+    <!-- ================================================================== -->
+    <!--   TARGET: Copy source into a MODx installation                     -->
+    <!-- ================================================================== -->
+    <target name="copy-to-modx" description="Copy source to a specified MODx installation">
+        <echo msg="Copying source to MODx installation at ${dev.modx}" />
+
+        <scp host="localhost"
+             username="vagrant"
+             password="vagrant"
+             port="2222"
+             todir="${dev.modx}core/components/grideditor">
+
+            <fileset dir="${project.basedir}/core/components/grideditor">
+                <include name="**" />
+            </fileset>
+        </scp>
+
+        <scp host="localhost"
+             username="vagrant"
+             password="vagrant"
+             port="2222"
+             todir="${dev.modx}assets/components/grideditor">
+
+            <fileset dir="${project.basedir}/assets/components/grideditor">
+                <include name="**" />
+            </fileset>
+        </scp>
+
+    </target>
+
+
 
 
     <!-- ================================================================== -->
@@ -52,5 +86,9 @@
               dir="${dir.vagrant}"
               passthru="true" />
     </target>
+
+
+
+
 
 </project>
