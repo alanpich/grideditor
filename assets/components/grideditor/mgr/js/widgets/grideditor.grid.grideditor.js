@@ -262,6 +262,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             ,handler: function(){
                 alert('click');
             }
+            ,scope: this
         })
         
 
