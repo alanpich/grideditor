@@ -25,7 +25,6 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
 
     public function process()
     {
-
         // Grab the name of config chunk
         $params =& $this->modx->request->parameters['POST'];
         if (!isset($params['chunk']) || empty($params['chunk'])) {
@@ -51,11 +50,28 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
         // Don't show deleted resources
         $c->where(array('deleted' => 0));
 
-
         if (!empty($this->confData->resourceQuery)){
             foreach($this->confData->resourceQuery as $key => $val){
                 $c->where(array($key=>$val));
             }
+        }
+
+        // Check for a search query
+        $query = $this->getProperty('query');
+        if (strlen($query)) {
+            $where = array();
+            foreach($this->confData->search as $field){
+                $where[$field.':LIKE'] = '%'.$query.'%';
+            }
+            $c->where($where);
+        }
+
+        // Check for a filter
+        $filter = $this->getProperty('filter');
+        if(strlen($filter)){
+            $c->where(array(
+                $this->confData->filter->field => $filter
+            ));
         }
 
         return $c;

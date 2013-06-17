@@ -17,7 +17,7 @@ GridEditor.grid.GridEditor = function(config) {
            }
         ,paging: true
         ,pageSize: config.grideditor.perPage
-        ,remoteSort: false
+        ,remoteSort: true
         ,collapsible: false
         ,anchor: '97%'
         ,autoExpandColumn: 'name'
@@ -217,9 +217,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         };
 
         // If filter is set, show a filterbar
-        console.log('Test for filter',this.grideditor);
         if(this.grideditor.filter && this.grideditor.filter.field != ''){
-            console.log('SHOW FILTERS');
             items.push({
                 xtype: 'grideditor-combo-gridfilter'
                 ,emptyText: this.grideditor.filter.label
@@ -287,8 +285,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     ,search: function(tf,nv,ov) {
         var s = this.getStore();
-        this.searchBox = tf;
-        s.filterBy(this.recordMatchesFilter)
+        s.baseParams.query = tf.getValue();
+        this.getBottomToolbar().changePage(1);
+        this.refresh();
     }
     
 
@@ -297,51 +296,12 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     ,filter: function(tf,nv,ov){
         var s = this.getStore();
-        this.filterBox = tf;
-        s.filterBy(this.recordMatchesFilter);
+        s.baseParams.filter = tf.getValue();
+        this.getBottomToolbar().changePage(1);
+        this.refresh();
     }
     
-    /**
-     * The actual filtering function. Acts on each record 
-     * @return boolean Row matches filter
-     */
-    ,recordMatchesFilter: function(record){
-        var fields = record.data;
-        var grid = Ext.getCmp('grideditor-grid-grideditor');
-        
-        // Do string search
-        var str = grid.searchBox? grid.searchBox.getValue() : '';
-        if( str != ''){
-            // Count all hits
-            var points = 0;
-            // Generate RegExp pattern from search string
-            var pattern = new RegExp(str,'gim');
-            // Test all search fields 
-            for(var k=0; k< grid.grideditor.searchFields.length; k++){
-                var searchField = grid.grideditor.searchFields[k];
-                if( pattern.test( fields[searchField] ) ){
-                    points++;
-                };
-            };
-            // If no points, fail
-            if(points==0){ return false};
-        };
-        
-        // Can assume this field matches on search (or there is no search)...
-        
-        // Do filter search
-        var filterValue = grid.filterBox? grid.filterBox.getValue() : '';
-        if(grid.filterBox && filterValue != ''){
-            var filterField = grid.grideditor.filter.field;
-            var filterPattern = new RegExp(filterValue,'gim');
-            return filterPattern.test(fields[filterField]);
-        };
-        
-        // Default to false
-        return true;
-    }//
-    
-    
+
     /**
      * Show configuration warnings window
      */
