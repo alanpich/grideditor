@@ -103,31 +103,31 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
      * Grid row inline action combo
      */
     GridEditor.renderer.actionButtons= function(value, metadata, record, rowIndex, colIndex, store){
-        (function(btnId){
+        (function(btnId,record,grid){
 
             var editBtn = Ext.get(document.getElementById('grideditor-btn-edit-'+btnId));
             if(editBtn){
                 editBtn.on('click',function(record){return function(){
-                    this.editResource(record.json.id);
+                    GridEditor.fn.editResource(record,grid);
                 }}(record),this)
             }
 
             var viewBtn = Ext.get(document.getElementById('grideditor-btn-view-'+btnId));
             if(viewBtn){
                 viewBtn.on('click',function(record){return function(){
-                    this.viewResource(record);
+                    GridEditor.fn.viewResource(record,grid);
                 }}(record),this)
             };
 
             var deleteBtn = Ext.get(document.getElementById('grideditor-btn-delete-'+btnId));
             if(deleteBtn){
                 deleteBtn.on('click',function(record){return function(){
-                    this.deleteResource(record.json.id);
+                    GridEditor.fn.deleteResource(record,grid);
                 }}(record),this)
             }
 
 
-        }).defer(100, store.grid, [record.id])
+        }).defer(100, store.grid, [record.json.id,record,store.grid])
 
         var grideditor = store.grid.grideditor;
         var html = '';

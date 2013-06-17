@@ -48,7 +48,6 @@ class GrideditorCmpManagerController extends GrideditorManagerController {
         // Dont load anything if there's no config
         if( ! $this->validConfig ){ return; };
 
-        $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.combo.resourceactions.js');
         $this->addJavascript($this->grideditor->config['jsUrl'].'sections/grideditor.panel.cmp.js');
         $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.grid.grideditor.js');
         $this->addJavascript($this->grideditor->config['jsUrl'].'widgets/grideditor.combo.tv.js');
