@@ -98,6 +98,67 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
     }
 
 
+
+    /**
+     * Grid row inline action combo
+     */
+    GridEditor.renderer.actionButtons= function(value, metadata, record, rowIndex, colIndex, store){
+        (function(btnId){
+
+            var editBtn = Ext.get(document.getElementById('grideditor-btn-edit-'+btnId));
+            if(editBtn){
+                editBtn.on('click',function(record){return function(){
+                    this.editResource(record.json.id);
+                }}(record),this)
+            }
+
+            var viewBtn = Ext.get(document.getElementById('grideditor-btn-view-'+btnId));
+            if(viewBtn){
+                viewBtn.on('click',function(record){return function(){
+                    this.viewResource(record);
+                }}(record),this)
+            };
+
+            var deleteBtn = Ext.get(document.getElementById('grideditor-btn-delete-'+btnId));
+            if(deleteBtn){
+                deleteBtn.on('click',function(record){return function(){
+                    this.deleteResource(record.json.id);
+                }}(record),this)
+            }
+
+
+        }).defer(100, store.grid, [record.id])
+
+        var grideditor = store.grid.grideditor;
+        var html = '';
+
+        // View button
+        html+= '<a class="btn grid-action-btn" id="grideditor-btn-view-'+record.id+'">View</a>';
+
+        if(grideditor.controls.indexOf('edit')>-1){
+            html += '<a class="btn grid-action-btn" id="grideditor-btn-edit-'+record.id+'">Edit</a>';
+        }
+
+        if(grideditor.controls.indexOf('delete')>-1){
+            html += '<a class="btn grid-action-btn" id="grideditor-btn-delete-'+record.id+'">Delete</a>'
+        }
+
+        return html;
+    }//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Displays a resource's url
      * @returns {string}

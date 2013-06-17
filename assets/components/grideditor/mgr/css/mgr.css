@@ -33,37 +33,7 @@
  
  
  
- 
- .grideditor-warnings-intro {
-     padding:10px;
- }
- .grideditor-warnings-list {
-     margin-top:10px;
- }
- 
- .grideditor-warnings-list li {
-     list-style:inside;
-     vertical-align:top;
-     border-bottom:1px solid #ccc;
-     padding:.3em 10px;
- }
- 
- .grideditor-warnings-list li:first-child {
-     border-top:0px;
- }
- 
- .grideditor-warnings-list li:nth-child(even){
-     background-color:#f0f0ff;
- }
- 
- 
- 
- .x-tool-grideditor-warning {background-image: url(../../../../../manager/templates/default/images/modx-theme/shared/warning.gif) }
- .x-tool-grideditor-help {background-image: url(../../../../../manager/templates/default/images/style/info.png) }
- .x-tool-grideditor-refresh {background-image: url(../img/icons/refresh_small.png) }
- .x-tool-grideditor-config {background-image: url(../img/icons/cog.png) }
- 
- 
+
  .grideditor-renderer-checkbox {
      text-align:center;
      margin:0;
@@ -77,4 +47,59 @@
  
  .grideditor-grid .x-panel-body .x-grid3-body table td {
      vertical-align:middle;
+ }
+
+
+
+ .grid-action-btn {
+     -moz-border-radius:3px;
+     -webkit-border-radius:3px;
+     -o-border-radius:3px;
+     -ms-border-radius:3px;
+     -khtml-border-radius:3px;
+     border-radius:3px;
+     background:#dcdcdc;
+     background:-moz-linear-gradient(center bottom,#dcdcdc 0%,#fcfcfc 100%) repeat scroll 0 0 transparent;
+     background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#fcfcfc),color-stop(100%,#dcdcdc));
+     background:-webkit-linear-gradient(center bottom,#dcdcdc 0%,#fcfcfc 100%);
+     background:-o-linear-gradient(center bottom,#dcdcdc 0%,#fcfcfc 100%);
+     background:-ms-linear-gradient(center bottom,#dcdcdc 0%,#fcfcfc 100%);
+     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#fcfcfc,endColorstr=#dcdcdc,GradientType=0);
+     background:linear-gradient(center bottom,#dcdcdc 0%,#fcfcfc 100%);
+     text-shadow:0 1px 0 #ffffff;
+     border:1px solid #cccccc;
+     color:#888888;
+     display:inline-block;
+     font-size:11px;
+     font-weight:bold;
+     font-family:helvetica, arial, freesans, clean, sans-serif;
+     padding:3px 8px;
+     margin-left:2px;
+     text-decoration:none;
+     cursor:pointer;
+ }
+.grid-action-btn:first-child {
+    margin-left:0;
+}
+
+
+.grid-action-btn:hover {
+     background:#e0e0e0;
+     background:-moz-linear-gradient(center bottom,#e0e0e0 0%,#fcfcfc 100%) repeat scroll 0 0 transparent;
+     background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#fcfcfc),color-stop(100%,#e0e0e0));
+     background:-webkit-linear-gradient(center bottom,#e0e0e0 0%,#fcfcfc 100%);
+     background:-o-linear-gradient(center bottom,#e0e0e0 0%,#fcfcfc 100%);
+     background:-ms-linear-gradient(center bottom,#e0e0e0 0%,#fcfcfc 100%);
+     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#fcfcfc,endColorstr=#e0e0e0,GradientType=0);
+     background:linear-gradient(center bottom,#e0e0e0 0%,#fcfcfc 100%);
+     color:#5b7a98;
+ }
+
+ .grid-action-btn:active {
+     -moz-box-shadow:0 0 3px #aaaaaa inset;
+     -webkit-box-shadow:0 0 3px #aaaaaa inset;
+     -o-box-shadow:0 0 3px #aaaaaa inset;
+     box-shadow:0 0 3px #aaaaaa inset;
+     background-color:#ffffff;
+     background-image:none;
  }
