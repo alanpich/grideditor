@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ISI\com_isiblog" default="help" basedir="." description="Joomla 2.5 Blogging component for ISI Academy">
+<project name="GridEditor" default="help" basedir="." description="MODx Component for browsing and editing resources in a grid format">
 
 
     <property name="dir.build" value="${project.basedir}/_build" />
