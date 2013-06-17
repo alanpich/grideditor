@@ -235,15 +235,16 @@ class GridEditorConfiguration
         $this->prepareAdditionalJavascripts($data);
 
 
-        // Parse and prepare templates array
-        if (isset($data->templates) && (is_null($data->templates) || !is_array($data->templates))) {
-            // If templates param is specified, but not an array, throw a warning
-            $this->warning("Property `templates` specified but of wrong type.");
-        } else {
-            // Parse and sanitize templates array
-            if (!$this->prepareTemplates($data->templates)) { /* return false; */
-            };
-        };
+//        // Parse and prepare templates array
+//        if (isset($data->templates) && (is_null($data->templates) || !is_array($data->templates))) {
+//            // If templates param is specified, but not an array, throw a warning
+//            $this->warning("Property `templates` specified but of wrong type.");
+//        } else {
+//            // Parse and sanitize templates array
+//            if (!$this->prepareTemplates($data->templates)) {
+//                /* return false; */
+//            };
+//        };
 
         return true;
     }
