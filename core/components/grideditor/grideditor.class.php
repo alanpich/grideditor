@@ -67,12 +67,8 @@ class GridEditor {
      * @return xPDOQuery
      */
     public function get_xPDOQuery($conf){
-        $c = $this->modx->newQuery('modResource',array(
-                'deleted' => 0
-            ));
-        foreach($conf->templates as $tplID){
-            $c->where(array('template'=>$tplID));
-        };
+        $c = $this->modx->newQuery('modResource');
+        $c->where((array)$conf->resourceQuery);
         return $c;
     }//
     

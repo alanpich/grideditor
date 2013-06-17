@@ -217,7 +217,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         };
 
         // If filter is set, show a filterbar
+        console.log('Test for filter',this.grideditor);
         if(this.grideditor.filter && this.grideditor.filter.field != ''){
+            console.log('SHOW FILTERS');
             items.push({
                 xtype: 'grideditor-combo-gridfilter'
                 ,emptyText: this.grideditor.filter.label

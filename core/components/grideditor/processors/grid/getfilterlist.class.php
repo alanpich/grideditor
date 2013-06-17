@@ -25,7 +25,7 @@
         };
         
         // Grab all resources that match the template filters
-        $c = $this->modx->grideditor->get_xPDOQuery($conf); //$this->helper->getResourceQueryWhereArray($conf);
+        $c = $this->modx->grideditor->get_xPDOQuery($conf);
         $resources = $this->modx->getCollection('modResource',$c);
         
         // Grab the filter field
