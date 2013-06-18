@@ -18,8 +18,23 @@ GridEditor.panel.CMP = function(config) {
             xtype: 'grideditor-grid',
             grideditor: config.grideditor
         }]
+        ,listeners: {
+            render: {fn:  this._fixStupidExtraDiv,scope:this}
+        }
     });
     GridEditor.panel.CMP.superclass.constructor.call(this,config);
 };
-Ext.extend(GridEditor.panel.CMP,MODx.Panel);
+Ext.extend(GridEditor.panel.CMP,MODx.Panel,{
+
+    _fixStupidExtraDiv: function(){
+        var el = this.getEl().parent();
+        var stupidDiv = el.next('.x-panel-bwrap');
+        console.log(stupidDiv);
+        stupidDiv.setStyle({
+            height: '29px'
+        })
+    }
+
+
+});
 Ext.reg('grideditor-panel-cmp',GridEditor.panel.CMP);
