@@ -72,8 +72,6 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
     getColumnsArray: function(){
        var items = [];
 
-       console.log(this);
-
         // Add in the resource fields
         if(this.grideditor.fields){
             for(var k in this.grideditor.fields){
@@ -155,7 +153,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         items.push({
             text: 'View',
             handler: function(record){return function(menu){
-                this.viewResource(record);
+                GridEditor.fn.viewResource(record,this);
             }}(record),
             scope: this
         });
@@ -210,6 +208,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      * Get Grid Toolbar
      */
     ,getToolbar: function(){
+        var hasFilters = false;
         var items = [];
 
         // If 'new' is specified, show a 'Create Resource' button
@@ -235,43 +234,48 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                     'select': {fn:this.filter,scope:this}
                 }
             })
+            hasFilters = true;
         };
 
         // After this align right
         items.push('->');
 
         // Add search box
-        items.push({
-            xtype: 'textfield'
-            ,id: 'grideditor-search-filter'
-            ,margin: 10
-            ,emptyText: 'Search...'//_('grideditor.search...')
-            ,listeners: {
-                'change': {fn:this.search,scope:this}
-                ,'render': {fn: function(cmp) {
-                    new Ext.KeyMap(cmp.getEl(), {
-                        key: Ext.EventObject.ENTER
-                        ,fn: function() {
-                            this.fireEvent('change',this);
-                            this.blur();
-                            return true;
-                        }
-                        ,scope: cmp
-                    });
-                },scope:this}
-            }
-        });
+        if(this.grideditor.searchFields){
+            items.push({
+                xtype: 'textfield'
+                ,id: 'grideditor-search-filter'
+                ,margin: 10
+                ,emptyText: 'Search...'//_('grideditor.search...')
+                ,listeners: {
+                    'change': {fn:this.search,scope:this}
+                    ,'render': {fn: function(cmp) {
+                        this.searchBox = cmp
+                        new Ext.KeyMap(cmp.getEl(), {
+                            key: Ext.EventObject.ENTER
+                            ,fn: function() {
+                                this.fireEvent('change',this);
+                                this.blur();
+                                return true;
+                            }
+                            ,scope: cmp
+                        });
+                    },scope:this}
+                }
+            });
+            hasFilters = true;
+        }
 
 
-        // Add 'clear filters' button
-        items.push({
-            xtype: 'button'
-            ,text: 'Clear filters'
-            ,handler: function(){
-                alert('click');
-            }
-            ,scope: this
-        })
+        // Add 'clear filters' button if filters exist
+        if(hasFilters){
+            items.push({
+                xtype: 'button'
+                ,text: 'Clear filters'
+                ,handler: this.clearFilters
+                ,scope: this
+            })
+        };
         
 
 
@@ -294,7 +298,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     ,search: function(tf,nv,ov) {
         var s = this.getStore();
-        s.baseParams.query = tf.getValue();
+        s.baseParams.search = this.searchBox.getValue();
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
@@ -308,6 +312,21 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         s.baseParams.filter = tf.getValue();
         this.getBottomToolbar().changePage(1);
         this.refresh();
+    }
+
+
+    /**
+     * Clear all filters on grid
+     */
+    ,clearFilters: function(){
+        var s = this.getStore();
+
+        if(this.searchBox){
+            this.searchBox.setValue('');
+            this.searchBox.fireEvent('change');
+        }
+
+ //       this.refresh();
     }
     
 

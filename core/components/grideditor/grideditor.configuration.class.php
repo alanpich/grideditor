@@ -327,8 +327,8 @@ class GridEditorConfiguration
         foreach ($fields as $field) {
             if (!in_array($field, $this->fieldList)) {
                 $this->warning(array(
-                    'key' => 'invalid_search_field'
-                , 'data' => array(
+                    'key' => 'invalid_search_field',
+                    'data' => array(
                         'field' => $field
                     )
                 ));

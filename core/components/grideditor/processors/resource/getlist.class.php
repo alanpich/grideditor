@@ -57,13 +57,14 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
         }
 
         // Check for a search query
-        $query = $this->getProperty('query');
-        if (strlen($query)) {
+        $search = $this->getProperty('search');
+        if (strlen($search)>=1 && !is_null($this->confData->searchFields)) {
+//            die('SEARCHING - '.strlen($search).' - '.$search);
             $where = array();
-            foreach($this->confData->search as $field){
-                $where[$field.':LIKE'] = '%'.$query.'%';
+            foreach($this->confData->searchFields as $field){
+                $where[$field.':LIKE'] = '%'.$search.'%';
             }
-            $c->where($where);
+            $c->where(array($where),xPDOQuery::SQL_OR);
         }
 
         // Check for a filter
