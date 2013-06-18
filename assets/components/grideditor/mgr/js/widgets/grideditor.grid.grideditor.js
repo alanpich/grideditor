@@ -70,12 +70,16 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      * @return Array of Columns
      */
     getColumnsArray: function(){
-       var items = [];
-
+       var items = [],
+           fieldName;
         // Add in the resource fields
+
+        console.log(this.grideditor);
+
         if(this.grideditor.fields){
-            for(var k in this.grideditor.fields){
-                var field = this.grideditor.fields[k];
+            for(fieldName in this.grideditor.fields){
+                var field = this.grideditor.fields[fieldName];
+                console.log(fieldName,field);
                 if(field.hidden!==true && field.field!=''){
                     items.push({
                         header: field.label,
@@ -91,6 +95,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                     });
                 }
             }
+            console.log(items);
         }
 
         // If controls in use, add another field for them
@@ -127,11 +132,12 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      * @return Array Fields
      */
     ,getFieldsArray: function(){
-        var fields = new Array('published');
+        var fields = new Array('published'),
+            fieldName;
         // Add resource fields
-        if(this.grideditor.fieldList){
-            for(var k=0;k<this.grideditor.fieldList.length;k++){
-                fields.push(this.grideditor.fieldList[k]);
+        if(this.grideditor.fields){
+            for(fieldName in this.grideditor.fields){
+                fields.push(this.grideditor.fields[fieldName].field);
             }
         }
         return fields;
@@ -283,22 +289,12 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
     }//
 
 
-    ,getActionCombo: function(){
-        return {
-             header: _('usergroup')
-            ,dataIndex: 'usergroup'
-            ,width: 140
-            ,order:3
-            ,renderer: GridEditor.renderer.actionCombo
-        }
-    }
-
     /**
      * Filter by search field
      */
     ,search: function(tf,nv,ov) {
         var s = this.getStore();
-        s.baseParams.search = this.searchBox.getValue();
+        s.baseParams.query = this.searchBox.getValue();
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
@@ -325,8 +321,6 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             this.searchBox.setValue('');
             this.searchBox.fireEvent('change');
         }
-
- //       this.refresh();
     }
     
 

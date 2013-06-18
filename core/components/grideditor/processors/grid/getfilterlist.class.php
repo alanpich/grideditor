@@ -13,12 +13,11 @@
     public function process(){
         
         // Grab config chunk name
-        $params =& $this->modx->request->parameters['POST'];
-        if( !isset($params['chunk']) || empty($params['chunk'])){ 
+        $chunkName =& $this->getProperty('chunk','');
+        if(!strlen($chunkName)){
             return $this->failure('No config chunk specified');
         };
-        $chunkName = $params['chunk'];
-        
+
         // Load config
         if(!$conf = $this->modx->grideditor->loadConfigChunk($chunkName)){
             return $this->failure('Invalid config chunk');
@@ -27,16 +26,27 @@
         // Grab all resources that match the template filters
         $c = $this->modx->grideditor->get_xPDOQuery($conf);
         $resources = $this->modx->getCollection('modResource',$c);
-        
-        // Grab the filter field
         $filterField = $conf->filter->field;
-        $isTV = ($conf->fields[$filterField]->type == 'tv');
-        
+
+
+        // Grab the field info
+        if(!$field = $conf->fields[$filterField]){
+
+            // Try for tv thingy
+            $safeName = str_replace(array('-','.'),'_',$filterField);
+            if(!$field = $conf->fields[$safeName]){
+                return $this->failure("Invalid filter field");
+            }
+        }
+
+        // Grab the filter field
+        $isTV = ($field->type == 'tv');
+
         // Grab the field specified from each resource
         $values = array(array('name' => $conf->filter->label, 'value'=>''));
         foreach($resources as $res){
             if($isTV){
-                $val = $res->getTVValue($filterField);
+                $val = $res->getTVValue($field->field);
             } else {
                 $val = $res->get($filterField);
             };

@@ -198,7 +198,7 @@ class GridEditorConfiguration
 
         // Prepare resource selection filters
         if(isset($data->resourceQuery))
-            $this->resourceQuery = $data->resourceQuery;
+            $this->resourceQuery = (array) $data->resourceQuery;
 
         // Prepare Fields
         $this->prepareResourceFields($data);
@@ -233,18 +233,6 @@ class GridEditorConfiguration
 
         // Add extra JS files
         $this->prepareAdditionalJavascripts($data);
-
-
-//        // Parse and prepare templates array
-//        if (isset($data->templates) && (is_null($data->templates) || !is_array($data->templates))) {
-//            // If templates param is specified, but not an array, throw a warning
-//            $this->warning("Property `templates` specified but of wrong type.");
-//        } else {
-//            // Parse and sanitize templates array
-//            if (!$this->prepareTemplates($data->templates)) {
-//                /* return false; */
-//            };
-//        };
 
         return true;
     }
@@ -285,14 +273,17 @@ class GridEditorConfiguration
             $fieldObj = new GridEditorTvField($field, $this->modx);
             if (!$fieldObj->isValid) {
                 $this->warning(array(
-                    'key' => 'invalid_tv_field'
-                , 'data' => array(
+                    'key' => 'invalid_tv_field',
+                    'data' => array(
                         'field' => $field->field
                     )
                 ));
                 continue;
             };
-            $this->fields[$fieldObj->field] = $fieldObj;
+
+            $safeFieldName = str_replace(array('-','.'),'_',$fieldObj->field);
+
+            $this->fields[$safeFieldName] = $fieldObj;
             $this->fieldList[] = $fieldObj->field;
         }
     }

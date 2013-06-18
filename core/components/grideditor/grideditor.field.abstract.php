@@ -120,12 +120,15 @@ abstract class GridEditorField {
         $this->sortable = isset($data->sortable)? $data->sortable : $this->sortable;
         // Column width
         $this->width = isset($data->width)? (int) $data->width : $this->width;
+
+        $this->beforeFinish();
         
         // Kill off modx reference
         unset($this->modx);
     }//
     
-    
+
+    protected function beforeFinish(){}
     
     /**
      * Set the field label to an appropriate value

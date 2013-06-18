@@ -26,11 +26,10 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
     public function process()
     {
         // Grab the name of config chunk
-        $params =& $this->modx->request->parameters['POST'];
-        if (!isset($params['chunk']) || empty($params['chunk'])) {
+        $chunkName = $this->getProperty('chunk',false);
+        if ($chunkName===false || empty($chunkName)) {
             return $this->failure("No config chunk specified");
         };
-        $chunkName = $params['chunk'];
 
         // Attempt to load config chunk
         if (!$this->confData = $this->modx->grideditor->loadConfigChunk($chunkName)) {
@@ -40,45 +39,106 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
         return parent::process();
     }
 
-    //
+
+    /**
+     * Get the data of the query
+     * @return array
+     */
+/*    public function getData() {
+        $data = array();
+        $limit = intval($this->getProperty('limit'));
+        $start = intval($this->getProperty('start'));
+
+        $c = $this->modx->newQuery($this->classKey);
+        $c = $this->prepareQueryBeforeCount($c);
+        $data['total'] = $this->modx->getCount($this->classKey,$c);
+        $c = $this->prepareQueryAfterCount($c);
+
+        $sortClassKey = $this->getSortClassKey();
+        $sortKey = $this->modx->getSelectColumns($sortClassKey,$this->getProperty('sortAlias',$sortClassKey),'',array($this->getProperty('sort')));
+        if (empty($sortKey)) $sortKey = $this->getProperty('sort');
+        $c->sortby($sortKey,$this->getProperty('dir'));
+        if ($limit > 0) {
+            $c->limit($limit,$start);
+        }
+
+        // Manually execute query as we are not returning modResource objects
+        $c->prepare();
+        $c->stmt->execute();
+
+        $data['results'] = $c->stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $data;
+    }*/
+
+
 
     /**
      * Only select resources that are not deleted
      */
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
-        // Don't show deleted resources
-        $c->where(array('deleted' => 0));
+        // Apply resource filters
+        $c->select($this->modx->getSelectColumns('modResource','modResource',''));
+        $c->where($this->confData->resourceQuery,xPDOQuery::SQL_AND,null,0);
 
-        if (!empty($this->confData->resourceQuery)){
-            foreach($this->confData->resourceQuery as $key => $val){
-                $c->where(array($key=>$val));
+
+        $search = $this->getProperty('query','');
+        $doSearch = strlen($search) && count($this->confData->searchFields);
+
+        $filterValue = $this->getProperty('filter','');
+        $doFilter = isset($this->confData->filter) && $this->confData->filter !== false && $filterValue != '';
+        if($doFilter){
+            $filter = (object)(array)$this->confData->filter;
+            $filter->value = $filterValue;
+        }
+
+
+        // Add tv fields to select
+        foreach($this->confData->fields as $field){
+
+            // TV Fields
+            if($field->type == 'tv'){
+                $safeFieldName = str_replace(array('-','.'),'_',$field->field);
+                $joinName = $safeFieldName."TV";
+
+                $c->leftJoin('modTemplateVarResource', $joinName, "modResource.id = {$joinName}.contentid AND {$joinName}.tmplvarid = {$field->tvId}");
+                $c->select(array($safeFieldName => "{$joinName}.value"));
+
+
+                // Conditions for searching TVs
+                if($doSearch && in_array($field->field,$this->confData->searchFields)){
+                    $c->condition($c->query['having'], "`{$safeFieldName}` LIKE '%{$search}%'", xPDOQuery::SQL_OR, null, 1);
+                }
+
+                // Conditions for filtering on TVs
+                if($doFilter && $field->field == $filter->field){
+                    $c->condition($c->query['having'], "`{$safeFieldName}` = '{$filter->value}'", xPDOQuery::SQL_AND, null, 1);
+                }
+
+
+            } else {
+                // Conditions for searching Resource fields
+                if($doSearch && in_array($field->field,$this->confData->searchFields)){
+                    $c->having(array(
+                            $field->field.":LIKE" => "%{$search}%"
+                        ),xPDOQuery::SQL_OR);
+                }
+                // Conditions for filtering Resource fields
+                if($doFilter && $field->field == $filter->field){
+                    $c->having(array(
+                            $field->field.":=" => $filter->value
+                        ),xPDOQuery::SQL_AND);
+                }
             }
         }
 
-        // Check for a search query
-        $search = $this->getProperty('search');
-        if (strlen($search)>=1 && !is_null($this->confData->searchFields)) {
-//            die('SEARCHING - '.strlen($search).' - '.$search);
-            $where = array();
-            foreach($this->confData->searchFields as $field){
-                $where[$field.':LIKE'] = '%'.$search.'%';
-            }
-            $c->where(array($where),xPDOQuery::SQL_OR);
-        }
 
-        // Check for a filter
-        $filter = $this->getProperty('filter');
-        if(strlen($filter)){
-            $c->where(array(
-                $this->confData->filter->field => $filter
-            ));
-        }
-
+        $c->prepare();
+    //    die($c->toSQL());
         return $c;
     }
 
-    //
 
     /**
      * Override modObjectGetListProcessor::prepareRow to add TV values to data
@@ -86,28 +146,22 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
      * @internal param \xPDOObject $object
      * @return array The row data
      */
-    public function prepareRow(xPDOObject $resource)
+    public function prepareRow($resource)
     {
         $data = $resource->toArray();
+        // Return safetified tv names to their proper values
+        foreach($this->confData->fields as $safeName => $field){
 
-        // Add to data array
-        foreach ($this->confData->fields as $tv) {
-            if ($tv->type !== 'tv') {
-                continue;
-            };
+            if($field->type != 'tv') continue;
 
-            $tvName = $tv->field;
-            // Grab TV value (if it exists)
-            $data[$tvName] = $this->getTVValue($resource, $tvName);
-            // Null => empty string
-            if (is_null($data[$tvName])) {
-                $data[$tvName] = '';
-            };
+            if(array_key_exists($safeName,$data)){
+                $data[$field->field] = $data[$safeName];
+                unset($data[$safeName]);
+            }
         }
         return $data;
     }
 
-    //
 
     /**
      * Get TV Value by name, with typecasting
@@ -129,7 +183,6 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
         return $value;
     }
 
-    //
 
     /**
      * Get TV input type
@@ -141,7 +194,7 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
         $tv = $this->modx->getObject('modTemplateVar', array('name' => $tvName));
         return $tv->get('type');
     }
-    //
+
 
 }
 

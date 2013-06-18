@@ -7,6 +7,8 @@
 class GridEditorTvField extends GridEditorField {
     
     public $type = 'tv';
+
+    public $tvId;
     
     private static $defaultEditors = array(
             'listbox' => 'grideditor-combo-tv',
@@ -39,21 +41,31 @@ class GridEditorTvField extends GridEditorField {
        $tv = $this->modx->getObject('modTemplateVar',array('name'=>$tvName));
        return ($tv instanceof modTemplateVar);
     }//
-    
-    
-    
+
+
+
+    protected function beforeFinish(){
+        // Set tvId
+        $tv = $this->modx->getObject('modTemplateVar',array('name'=>$this->field));
+        $this->tvId = $tv->get('id');
+    }
+
+
+
     /**
      * Set this field's editor xtype. If none is specified in config, default is used
      * @param object $data Field data input
      * @return string
      */
     protected function get_editor_xtype($data){
+
         // If explicitely stated, use that
         if(isset($data->editor) && !empty($data->editor)){
             return $data->editor;
         };
         // Otherwise try and figure it out using TV's input type
         $tv = $this->modx->getObject('modTemplateVar',array('name'=>$data->field));
+
         // Check against defaults array
         $tvType = $tv->get('type');
         if(isset(self::$defaultEditors[$tvType])){
@@ -70,7 +82,8 @@ class GridEditorTvField extends GridEditorField {
         if($xtype=='grideditor-combo-tv'){
             $obj->tvName = $data->field;
         }
-        
+
+
         return $obj;
     }//
     
