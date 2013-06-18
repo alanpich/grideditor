@@ -74,12 +74,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
            fieldName;
         // Add in the resource fields
 
-        console.log(this.grideditor);
-
         if(this.grideditor.fields){
             for(fieldName in this.grideditor.fields){
                 var field = this.grideditor.fields[fieldName];
-                console.log(fieldName,field);
                 if(field.hidden!==true && field.field!=''){
                     items.push({
                         header: field.label,
@@ -95,7 +92,6 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                     });
                 }
             }
-            console.log(items);
         }
 
         // If controls in use, add another field for them
@@ -109,7 +105,7 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                renderer: GridEditor.renderer.actionButtons
            })
         }
-        
+
         // If publish is a control, add it's own columns at the beginning
         if(this.grideditor.controls.indexOf('publish')>-1){
             items.unshift({
@@ -237,7 +233,10 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 ,title: this.grideditor.filter.label
                 ,configChunk: this.grideditor.chunk
                 ,listeners: {
-                    'select': {fn:this.filter,scope:this}
+                    'select': {fn:this.filter,scope:this},
+                    'render': {fn: function(cmp){
+                        this.filterBox = cmp
+                    },scope:this}
                 }
             })
             hasFilters = true;
@@ -319,8 +318,20 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
 
         if(this.searchBox){
             this.searchBox.setValue('');
-            this.searchBox.fireEvent('change');
+            s.baseParams.query = '';
         }
+
+        console.log(this);
+
+
+        if(this.filterBox){
+            console.log(this.filterBox);
+            this.filterBox.setValue('');
+            s.baseParams.filter = '';
+        }
+
+        this.getBottomToolbar().changePage(1);
+        this.refresh();
     }
     
 
