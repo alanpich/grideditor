@@ -2,3 +2,4 @@ config.core.php
 /nbproject/
 .idea
 *.zip
+modx-cli.json

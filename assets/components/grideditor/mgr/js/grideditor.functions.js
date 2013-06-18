@@ -1,21 +1,27 @@
 /**
  * Delete a resource
- * @param int resourceId ID of the resource to delete
- * @param obj grid The grid to refresh after delete
+ *
+ * @param record
+ * @param grid
  */
-GridEditor.fn.deleteResource = function(resourceId, grid){
+GridEditor.fn.deleteResource = function(record, grid){
     MODx.msg.confirm({
-        title: 'Delete Resource',
-        text: 'Are you sure you want to delete this resource?',
+        title: 'Warning',
+        text: 'This is irreversible. Are you sure you wish to continue?',
         url: MODx.config.connectors_url+'resource/index.php',
         params: {
             action: 'delete',
-            id: resourceId
+            id: record.json.id
         },
         listeners: {
-            'success': {fn: function(){
+            'success':{fn: function(r) {
+                console.log('success');
+                MODx.msg.status({
+                    title: 'Resource deleted',
+                    message: record.json.pagetitle
+                })
                 this.refresh();
-            },scope: grid}
+            },scope:grid}
         }
     })
 };//
@@ -23,22 +29,25 @@ GridEditor.fn.deleteResource = function(resourceId, grid){
 
 /**
  * Publish a resource by id
- * @param int $resID Resource ID
+ *
+ * @param record
+ * @param grid
  */
-GridEditor.fn.publishResource = function(resId, resRecord){
+GridEditor.fn.publishResource = function(record,grid){
    MODx.Ajax.request({
         url: MODx.config.connectors_url+'resource/index.php'
         ,params: { 
             action: 'publish',
-            id: resId
+            id: record.json.id
         }
         ,listeners: {
             'success':{fn:function() {
                MODx.msg.status({
                    title: 'Resource published',
-                   message: resRecord.pagetitle
+                   message: record.json.pagetitle
                })
-            },scope:this}
+               this.refresh()
+            }, scope: grid }
             ,'error':{fn:function(){
                 alert('Error: failed to publish resource');
             },scope: this}
@@ -49,22 +58,25 @@ GridEditor.fn.publishResource = function(resId, resRecord){
 
 /**
  * Unpublish a resource by id
- * @param int $resID Resource ID
+ *
+ * @param record
+ * @param grid
  */
-GridEditor.fn.unpublishResource = function(resId, resRecord){
+GridEditor.fn.unpublishResource = function(record,grid){
    MODx.Ajax.request({
         url: MODx.config.connectors_url+'resource/index.php'
         ,params: { 
             action: 'unpublish',
-            id: resId
+            id: record.json.id
         }
         ,listeners: {
             'success':{fn:function() {
                MODx.msg.status({
                    title: 'Resource unpublished'
-                   ,message: resRecord.pagetitle
+                   ,message: record.json.pagetitle
                })
-            },scope:this}
+               this.refresh()
+            },scope:grid}
             ,'error':{fn:function(){
                 alert('Error: failed to unpublish resource');
             },scope: this}
@@ -72,4 +84,27 @@ GridEditor.fn.unpublishResource = function(resId, resRecord){
     }); 
 }//
 
+
+/**
+ * Redirect to resource edit screen
+ *
+ * @param record
+ * @param grid
+ */
+GridEditor.fn.editResource = function(record,grid){
+    var action = MODx.action['resource/update'];
+    document.location.href = MODx.config.manager_url+'?a='+action+'&id='+record.json.id;
+}
+
+
+/**
+ * Open a window to view a resource in the front end
+ *
+ * @param record
+ * @param grid
+ */
+GridEditor.fn.viewResource = function(record,grid){
+    var url = MODx.config.site_url + record.json.uri;
+    window.open(url);
+}
 

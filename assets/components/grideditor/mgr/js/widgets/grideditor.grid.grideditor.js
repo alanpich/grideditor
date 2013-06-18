@@ -15,9 +15,9 @@ GridEditor.grid.GridEditor = function(config) {
                action: 'resource/getList'
                ,chunk: this.grideditor.chunk
            }
-        ,paging: false
-        ,pageSize: 99999// config.grideditor.perPage || 10
-        ,remoteSort: false
+        ,paging: true
+        ,pageSize: config.grideditor.perPage
+        ,remoteSort: true
         ,collapsible: false
         ,anchor: '97%'
         ,autoExpandColumn: 'name'
@@ -49,11 +49,16 @@ GridEditor.grid.GridEditor = function(config) {
                 console.error('LOAD EXCEPTION',arguments);
             }}
         }
-    
         ,grouping: (this.grideditor.grouping!=null&&this.grideditor.grouping!='')
         ,groupBy: (this.grideditor.grouping!=null)? this.grideditor.grouping.field : null
         ,singleText: (this.grideditor.grouping!=null)? 'item':''
         ,pluralText: (this.grideditor.grouping!=null)? 'items':''
+
+        ,listeners: {
+            beforerender: {fn: function(){
+                this.store.grid = this;
+            },scope:this}
+        }
 
     });
     GridEditor.grid.GridEditor.superclass.constructor.call(this,config)
@@ -86,9 +91,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                         },
                         width: (field.width==false)? null : field.width
                     });
-                };
-            };
-        };
+                }
+            }
+        }
 
         // If controls in use, add another field for them
         if(this.grideditor.controls){
@@ -98,9 +103,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                sortable: false,
                width: 165,
                fixed: true,
-               renderer: GridEditor.renderer.actionCombo
+               renderer: GridEditor.renderer.actionButtons
            })
-        };
+        }
         
         // If publish is a control, add it's own columns at the beginning
         if(this.grideditor.controls.indexOf('publish')>-1){
@@ -129,8 +134,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         if(this.grideditor.fieldList){
             for(var k=0;k<this.grideditor.fieldList.length;k++){
                 fields.push(this.grideditor.fieldList[k]);
-            };
-        };
+            }
+        }
         return fields;
     }
     
@@ -139,32 +144,63 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      * Return array of items for context menu
      * @return Array items
      */
-    ,getMenu: function(){
+    ,getMenu: function(grid,index){
         var items = [];
         if(!this.grideditor.controls){ return items; };
-        
+
+        var record = grid.store.data.items[index];
+
+
+        // View action
+        items.push({
+            text: 'View',
+            handler: function(record){return function(menu){
+                this.viewResource(record);
+            }}(record),
+            scope: this
+        });
+
         // Publish state toggler
-        if(this.grideditor.controls.indexOf('publish')>-1){
-            var action = this.menu.record.published? 'Unpublish' : 'Publish';
+        if(grid.grideditor.controls.indexOf('publish')>-1){
+            var action = record.json.published? 'Unpublish' : 'Publish';
             items.push({
                 text: action,
-                resId: this.menu.record.id,
-                isPublished: this.menu.record.published,
+                resId: record.id,
+                isPublished: record.json.published,
                 handler: function(menu){
                     if(menu.options.isPublished){
                         // Unpublish resource
-                        GridEditor.fn.unpublishResource(menu.options.resId);
+                        GridEditor.fn.unpublishResource(record,grid);
                     } else {
                         // Publish resource
-                        GridEditor.fn.publishResource(menu.options.resId);
+                        GridEditor.fn.publishResource(record,grid);
                     }
                 }
             })
         }
-        
-        // Add control buttons
-        // items = items.concat(this.getControlButtons());
-        items = items.concat(this.getActionCombo());
+
+        // Edit action (if enabled)
+        if(this.grideditor.controls.indexOf('edit')>-1){
+            items.push({
+                text: 'Edit',
+                handler: function(record){return function(menu){
+                    GridEditor.fn.editResource(record,grid);
+                }}(record),
+                scope: this
+            });
+        }
+
+        // Delete action (if enabled)
+        if(this.grideditor.controls.indexOf('delete')>-1){
+            items.push({
+                text: 'Delete',
+                handler: function(record){return function(menu){
+                    GridEditor.fn.deleteResource(record,grid);
+                }}(record),
+                scope: this
+            });
+        }
+
 
         return items;
     }//
@@ -175,7 +211,35 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     ,getToolbar: function(){
         var items = [];
-        
+
+        // If 'new' is specified, show a 'Create Resource' button
+        if(this.grideditor.controls.indexOf('new')!== -1){
+            items.push({
+                xtype: 'button'
+                ,text: 'New '+this.grideditor.resourceName
+                ,handler: function(){
+                    this.createResource()
+                }
+                ,scope: this
+            })
+        };
+
+        // If filter is set, show a filterbar
+        if(this.grideditor.filter && this.grideditor.filter.field != ''){
+            items.push({
+                xtype: 'grideditor-combo-gridfilter'
+                ,emptyText: this.grideditor.filter.label
+                ,title: this.grideditor.filter.label
+                ,configChunk: this.grideditor.chunk
+                ,listeners: {
+                    'select': {fn:this.filter,scope:this}
+                }
+            })
+        };
+
+        // After this align right
+        items.push('->');
+
         // Add search box
         items.push({
             xtype: 'textfield'
@@ -197,142 +261,21 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 },scope:this}
             }
         });
-        
-        // If filter is set, show a filterbar
-        if(this.grideditor.filter && this.grideditor.filter.field != ''){
-            items.push({
-                xtype: 'grideditor-combo-gridfilter'
-                ,emptyText: this.grideditor.filter.label
-                ,title: this.grideditor.filter.label
-                ,configChunk: this.grideditor.chunk
-                ,listeners: {
-                    'select': {fn:this.filter,scope:this}
-                }
-            })
-        };
-        
-        // If 'new' is specified, show a 'Create Resource' button
-        if(this.grideditor.controls.indexOf('new')!== -1){
-            items.push('->');
-            items.push({
-                xtype: 'button'
-                ,text: 'New '+this.grideditor.resourceName
-                ,handler: function(){
-                    this.createResource()
-                }
-                ,scope: this
-            })
-        };
-        
-        return items;
-    }//
-    
-    
-    /**
-     * Get header tool buttons
-     */
-    ,getTools: function(){
-        var items = [];
-        
-        // Add warnings button (if there are warnings)
-        if(this.grideditor.warnings.length > 0){
-            items.push({
-                id: 'grideditor-warning'
-                ,qtip: _('grideditor.warnings.total',{total:this.grideditor.warnings.length})
-                ,handler: function(){
-                    if(!this.WarningsWindow){
-                        this.WarningsWindow = MODx.load({
-                            xtype: 'grideditor-window-warnings'
-                            ,warnings: this.grideditor.warnings
-                        });
-                    };
-                    this.WarningsWindow.show();
-                }
-                ,scope: this
-            });
-        };
-        
+
+
+        // Add 'clear filters' button
         items.push({
-            /** Link to documentation */
-            id: 'grideditor-help'
-            ,qtip: _('grideditor.documentation')
+            xtype: 'button'
+            ,text: 'Clear filters'
             ,handler: function(){
-                window.open(GridEditor.config.documentationUrl);
-            }
-            ,scope: this
-        },{
-            /** Refresh the view */
-            id:'grideditor-refresh'
-            ,qtip: _('grideditor.refresh')
-            ,handler: function(){
-                this.refresh();
-            }
-            ,scope: this        
-        },{
-            /** Link to config chunk editor */
-            id:'grideditor-config'
-            ,qtip: _('grideditor.edit_config')
-            ,handler: function(){
-                document.location.href = MODx.config.manager_url+'?a=10&id='+this.grideditor.chunkId
+                alert('click');
             }
             ,scope: this
         })
         
+
+
         return items;
-    }//
-
-
-    /**
-     * Get required resource controls
-     */
-    ,getControlButtons: function(){
-        var items = [];
-        var total = 0;
-        
-        // Edit Resource link
-        if(this.grideditor.controls.indexOf('edit')>-1){
-            items.push({
-                icon: GridEditor.config.imgUrl+'icons/edit.png',
-                tooltip: 'Edit this resource',
-                cls: 'grideditor-action-button',
-                handler: function(grid,row,col){
-                    var resId = grid.getStore().getAt(row).get('id');
-                    document.location.href = MODx.config.manager_url+'?a=30&id='+resId;
-                }
-            });
-            total++;
-        };
-        
-         // Edit Resource link
-        if(this.grideditor.controls.indexOf('delete')>-1){
-            items.push({
-                icon: GridEditor.config.imgUrl+'icons/delete.png',
-                tooltip: 'Delete this resource',
-                cls: 'grideditor-action-button',
-                handler: function(grid,row,col){
-                    var resId = grid.getStore().getAt(row).get('id');
-                    GridEditor.fn.deleteResource(resId,grid);
-                }
-            });
-            total++;
-        };
-        
-        items.push({
-            icon: GridEditor.config.imgUrl+'icons/publish.png',
-            tooltip: 'Unpublish this resource',
-            isPublishButton: true,
-            handler: function(){
-                console.log(this,arguments);
-            }
-        })
-        
-        return {
-               xtype: 'actioncolumn',
-               header: '',
-               editable: false,
-               width: (28*total)+20,
-               items: items
-           };
     }//
 
 
@@ -351,8 +294,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     ,search: function(tf,nv,ov) {
         var s = this.getStore();
-        this.searchBox = tf;
-        s.filterBy(this.recordMatchesFilter)
+        s.baseParams.query = tf.getValue();
+        this.getBottomToolbar().changePage(1);
+        this.refresh();
     }
     
 
@@ -361,51 +305,12 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
      */
     ,filter: function(tf,nv,ov){
         var s = this.getStore();
-        this.filterBox = tf;
-        s.filterBy(this.recordMatchesFilter);
+        s.baseParams.filter = tf.getValue();
+        this.getBottomToolbar().changePage(1);
+        this.refresh();
     }
     
-    /**
-     * The actual filtering function. Acts on each record 
-     * @return boolean Row matches filter
-     */
-    ,recordMatchesFilter: function(record){
-        var fields = record.data;
-        var grid = Ext.getCmp('grideditor-grid-grideditor');
-        
-        // Do string search
-        var str = grid.searchBox? grid.searchBox.getValue() : '';
-        if( str != ''){
-            // Count all hits
-            var points = 0;
-            // Generate RegExp pattern from search string
-            var pattern = new RegExp(str,'gim');
-            // Test all search fields 
-            for(var k=0; k< grid.grideditor.searchFields.length; k++){
-                var searchField = grid.grideditor.searchFields[k];
-                if( pattern.test( fields[searchField] ) ){
-                    points++;
-                };
-            };
-            // If no points, fail
-            if(points==0){ return false};
-        };
-        
-        // Can assume this field matches on search (or there is no search)...
-        
-        // Do filter search
-        var filterValue = grid.filterBox? grid.filterBox.getValue() : '';
-        if(grid.filterBox && filterValue != ''){
-            var filterField = grid.grideditor.filter.field;
-            var filterPattern = new RegExp(filterValue,'gim');
-            return filterPattern.test(fields[filterField]);
-        };
-        
-        // Default to false
-        return true;
-    }//
-    
-    
+
     /**
      * Show configuration warnings window
      */
@@ -548,7 +453,9 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
 
         this._redirectCreateResource(data);
     }
-    
+
+
+
 });
 Ext.reg('grideditor-grid',GridEditor.grid.GridEditor);
 
