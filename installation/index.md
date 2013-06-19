@@ -3,11 +3,9 @@ layout: master
 title: Installation
 ---
 
-## Using MODx package manager
+Install Grideditor via the MODx package manager.
 
-blah blah blah
+Installation will create a demo config and menu item so you can be up and running in no time.
 
-## Using a transport package
-
-how to download, upload and install
+Full instructions are available on the MODx RTFM site [here](http://rtfm.modx.com/display/revolution20/Installing+a+Package).
 
