@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="{{ site.author }}" />
+    <meta name="copyright" content="© {{ site.time | date: "%Y" }} {{ site.author }}" />
+    <meta http-equiv="last-modified" content="{{ site.time | date: "%Y-%m-%d@%H:%M:%S %Z" }}" />
+    <base href="{{ site.baseurl }}" />
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print"/>
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Grideditor :: MODx Resource Management</title>
+</head>
+
+<body>
+<header>
+    <div class="inner">
+        <h1>Grideditor</h1>
+
+        <h2>MODx CMP framework for easy resource management</h2>
+        <a href="https://github.com/alanpich/grideditor" target="_blank" class="button">
+            <small>Current version</small>
+            <strong>v1.0.11-alpha</strong></a>
+    </div>
+</header>
+
+<div id="content-wrapper">
+<div class="inner clearfix">
+<section id="main-content">
+    <h1>
+        <a name="grideditor-modx-component" class="anchor" href="#grideditor-modx-component">
+            <span class="octicon octicon-link"></span>
+        </a>
+        {{ page.title }}
+    </h1>
+<br/>
+
+    {{ content }}
+
+</section>
+
+
+
+<aside id="sidebar">
+
+    <a href="http://modx.com/extras/" target="_blank" class="modx button">
+        <small>MODx Extras Repository</small>
+        Download
+    </a>
+
+
+    {% include navbar.html %}
+
+    {% include repostatus.html %}
+
+    {% include credits.html %}
+
+</aside>
+
+{% include footer.html %}
+
+</div>
+</div>
+
+
+<script src="javascripts/jquery.js"></script>
+<script src="javascripts/github.js"></script>
+</body>
+</html>
