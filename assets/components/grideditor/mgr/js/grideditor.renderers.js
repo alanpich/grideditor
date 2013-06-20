@@ -4,10 +4,10 @@
  */
 GridEditor.renderer.publishToggle = function(value, metadata, record, rowIndex, colIndex, store){
     var elemID = 'grideditor-resource-'+record.json.id+"-toggle-published";
-    GridEditor.renderer._publishToggleButton.defer(1, this, [elemID, record]);
+    GridEditor.renderer._publishToggleButton.defer(1, this, [elemID, record, this]);
     return '<div id="'+elemID+'"></div>';
 }//
-GridEditor.renderer._publishToggleButton = function(elemid, record) {
+GridEditor.renderer._publishToggleButton = function(elemid, record, grid) {
         var action = record.json.published? 'drop-yes' : 'drop-no';
         var lexAction = record.json.published? 'unpublish':'publish';
         new Ext.Button({
@@ -23,12 +23,12 @@ GridEditor.renderer._publishToggleButton = function(elemid, record) {
                    // Publish resource
                    btn.setText(btn.onText);
                    var action = 'publish';
-                   GridEditor.fn.publishResource(record.json.id, record.json);
+                   GridEditor.fn.publishResource(record, record.json, grid);
                } else {
                    // Unpublish resource
                    btn.setText(btn.offText);
                    var action = 'unpublish';
-                   GridEditor.fn.unpublishResource(record.json.id, record.json);
+                   GridEditor.fn.unpublishResource(record, record.json, grid);
                };
            }
        }).render(document.body,elemid);

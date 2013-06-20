@@ -46,7 +46,9 @@ GridEditor.fn.publishResource = function(record,grid){
                    title: 'Resource published',
                    message: record.json.pagetitle
                })
-               this.refresh()
+               try{
+                this.refresh()
+               } catch( err ){}
             }, scope: grid }
             ,'error':{fn:function(){
                 alert('Error: failed to publish resource');
@@ -75,7 +77,9 @@ GridEditor.fn.unpublishResource = function(record,grid){
                    title: 'Resource unpublished'
                    ,message: record.json.pagetitle
                })
-               this.refresh()
+                try{
+                    this.refresh()
+                } catch( err ){}
             },scope:grid}
             ,'error':{fn:function(){
                 alert('Error: failed to unpublish resource');
