@@ -7,12 +7,6 @@ GitHubRepo = function(user,repoName){
     this._sig = user+'/'+repoName
 
 
-
-
-
-
-
-
     this.getOpenIssueCount = function(){
         var url = this._baseUrl + 'repos/'+this._sig+'/issues?callback=Repo._receiveOpenIssueCount';
         this.sendRequest(url);
@@ -22,7 +16,7 @@ GitHubRepo = function(user,repoName){
         var data = response.data
         this.openIssues = data.length;
         var elem = document.getElementById('repostatus_open-issues');
-            elem.innerHTML = '<a href="https://github.com/alanpich/grideditor/issues" title="Visit issue tracker" target="_blank">'+this.openIssues+' open issues</a>'
+            elem.innerHTML = '<a href="https://github.com/alanpich/grideditor/issues" title="Visit issue tracker" target="_blank"   >'+this.openIssues+' open issues</a>'
     }
 
 
