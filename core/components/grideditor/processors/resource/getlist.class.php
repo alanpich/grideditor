@@ -133,6 +133,9 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
             }
         }
 
+        // Sort by menu index please
+        $c->sortby('menuindex');
+
 
         $c->prepare();
     //    die($c->toSQL());

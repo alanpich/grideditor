@@ -23,6 +23,21 @@ GridEditor.grid.GridEditor = function(config) {
         ,autoExpandColumn: 'name'
         ,autosave: true
         ,border: false
+
+        ,enableDragDrop: true
+        ,ddGroup: 'grideditor'
+        ,ddText: 'Place object here'
+        ,sm: new Ext.grid.RowSelectionModel({
+            singleSelect:true,
+            listeners: {
+                beforerowselect: {fn: function(sm,i,ke,row){
+                    console.log(row);
+                    this.ddText = row.data.pagetitle
+                }, scope: this}
+            }
+        })
+
+
         ,save_action: 'resource/updateFromGrid'
         ,saveParams: {
             chunk: this.grideditor.chunk
@@ -58,18 +73,91 @@ GridEditor.grid.GridEditor = function(config) {
             beforerender: {fn: function(){
                 this.store.grid = this;
             },scope:this}
+
+            ,render: {fn: this._onRender, scope: this}
         }
 
     });
-    GridEditor.grid.GridEditor.superclass.constructor.call(this,config)
+    GridEditor.grid.GridEditor.superclass.constructor.call(this,config);
+
+
+
 };
 Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
-    
+
+
+    _onRender: function(){
+        // Set up dd target
+        var ddrow = new Ext.dd.DropTarget(this.getView().mainBody, {
+            ddGroup : 'grideditor'
+            ,copy: false
+            ,notifyDrop : function(grid){ return function(dd, e, data){
+                var sm = grid.getSelectionModel();
+                var rows = sm.getSelections();
+                var cindex = dd.getDragData(e).rowIndex;
+                var store = grid.getStore();
+                if (sm.hasSelection()) {
+                    for (i = 0; i < rows.length; i++) {
+                        store.remove(store.getById(rows[i].id));
+                        store.insert(cindex,rows[i]);
+                    }
+                    sm.selectRecords(rows);
+                    grid.updateMenuIndexes();
+                }
+            }}(this)
+        });
+
+    }
+
+    /**
+     * Update menu indexes of all resources in the grid
+     */
+    ,updateMenuIndexes: function(){
+        console.log('Update all menu indexes');
+        var store = this.getStore();
+
+        // Calculate initial menu index
+        var menuIndex = this.getBottomToolbar().cursor;
+        // Prepare data
+        var data = {};
+        for(var k=0;k<store.data.length;k++){
+            var res = store.data.items[k];
+            data[menuIndex] = res.id;
+            ++ menuIndex;
+        }
+
+        console.log(GridEditor.config.connectorUrl);
+
+        // Send data to MODx backend
+        MODx.Ajax.request({
+            url: GridEditor.config.connectorUrl
+            ,params: {
+                action: 'resource/sortMany',
+                data: Ext.util.JSON.encode(data)
+            }
+            ,listeners: {
+                'success':{fn:function() {
+
+                    console.log('successness');
+                },scope:this}
+                ,'error':{fn:function(){
+                    MODx.msg.alert({
+                        title: 'Server Error'
+                        ,message: "Failed to sort resources, sorry :("
+                    })
+                },scope: this}
+            }
+        });
+    }
+
+
+
+
     /**
      * Return array of columns for grid
      * @return Array of Columns
      */
-    getColumnsArray: function(){
+    ,getColumnsArray: function(){
        var items = [],
            fieldName;
         // Add in the resource fields
@@ -368,6 +456,8 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 return '<div id="'+elemID+'"></div>';
             }//
     }
+
+
 
 
     /**
