@@ -7,6 +7,11 @@
 GridEditor.grid.GridEditor = function(config) {
     config = config || {};
     this.grideditor = config.grideditor;
+
+
+    console.log(this.grideditor);
+
+
     Ext.applyIf(config,{
         id: 'grideditor-grid-grideditor'
         ,renderTo: config.renderTo
@@ -331,7 +336,14 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
         };
 
         // After this align right
-        items.push('->');
+ //       items.push('->');
+        items.push({
+            html: '<div style="width:20px;"></div>',
+            style: {
+                opacity: 0,
+                cursor: 'default'
+            }
+        })
 
         // Add search box
         if(this.grideditor.searchFields){

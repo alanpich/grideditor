@@ -365,6 +365,7 @@ class GridEditorConfiguration
             return true;
         };
         $info = $info->grouping;
+
         if (!isset($info->field) || empty($info->field)) {
             return $this->warning('No grouping field specified');
         };

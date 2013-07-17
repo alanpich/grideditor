@@ -17,11 +17,6 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
      * @access private
      */
     private $confData;
-    /**
-     * Helper class
-     * @access private
-     */
-    private $helper;
 
     public function process()
     {
@@ -38,38 +33,6 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
 
         return parent::process();
     }
-
-
-    /**
-     * Get the data of the query
-     * @return array
-     */
-/*    public function getData() {
-        $data = array();
-        $limit = intval($this->getProperty('limit'));
-        $start = intval($this->getProperty('start'));
-
-        $c = $this->modx->newQuery($this->classKey);
-        $c = $this->prepareQueryBeforeCount($c);
-        $data['total'] = $this->modx->getCount($this->classKey,$c);
-        $c = $this->prepareQueryAfterCount($c);
-
-        $sortClassKey = $this->getSortClassKey();
-        $sortKey = $this->modx->getSelectColumns($sortClassKey,$this->getProperty('sortAlias',$sortClassKey),'',array($this->getProperty('sort')));
-        if (empty($sortKey)) $sortKey = $this->getProperty('sort');
-        $c->sortby($sortKey,$this->getProperty('dir'));
-        if ($limit > 0) {
-            $c->limit($limit,$start);
-        }
-
-        // Manually execute query as we are not returning modResource objects
-        $c->prepare();
-        $c->stmt->execute();
-
-        $data['results'] = $c->stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $data;
-    }*/
 
 
 
