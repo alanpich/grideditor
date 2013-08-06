@@ -9,7 +9,7 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
 {
     public $classKey = 'modResource';
     public $languageTopics = array();
-    public $defaultSortField = 'pagetitle';
+    public $defaultSortField = 'menuindex';
     public $defaultSortDirection = 'ASC';
     public $objectType = 'modResource';
     /**
@@ -96,12 +96,12 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
             }
         }
 
+
         // Sort by menu index please
-        $c->sortby('menuindex');
+        $c->sortby(str_replace(array('-','.'),'_',$this->confData->sortBy), $this->confData->sortDir);
 
 
         $c->prepare();
-    //    die($c->toSQL());
         return $c;
     }
 

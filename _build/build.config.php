@@ -1,7 +1,7 @@
 <?php
 define('PKG_NAME', 'GridEditor');
 define('PKG_NAMESPACE', 'grideditor');
-define('PKG_VERSION','1.0.12');
+define('PKG_VERSION','1.0.14');
 define('PKG_RELEASE','alpha');
 
 define('PKG_ROOT',dirname(dirname(__FILE__)).'/');

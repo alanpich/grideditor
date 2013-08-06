@@ -9,7 +9,8 @@ GridEditor.grid.GridEditor = function(config) {
     this.grideditor = config.grideditor;
 
 
-    console.log(this.grideditor);
+    if(window.console && window.console.warn && this.grideditor.warnings.length)
+        console.warn(this.grideditor.warnings);
 
 
     Ext.applyIf(config,{
@@ -20,8 +21,8 @@ GridEditor.grid.GridEditor = function(config) {
                action: 'resource/getList'
                ,chunk: this.grideditor.chunk
            }
-        ,paging: true
-        ,pageSize: config.grideditor.perPage
+        ,paging: false
+        ,pageSize: false// config.grideditor.perPage
         ,remoteSort: true
         ,collapsible: false
         ,anchor: '97%'

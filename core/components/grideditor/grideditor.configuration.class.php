@@ -88,6 +88,14 @@ class GridEditorConfiguration
      * @var array
      */
     public $javascripts = array();
+
+    /**
+     * Field to sort grid resources by
+     * @var string
+     */
+    public $sortBy = 'menuindex';
+    public $sortDir = 'ASC';
+
     /**
      * Reference to a MODx instance
      * @private modX $modx
@@ -101,8 +109,6 @@ class GridEditorConfiguration
     {
         $this->modx = $modx;
     }
-
-    //
 
     /**
      * @static Create an instance populated from a config chunk
@@ -193,6 +199,14 @@ class GridEditorConfiguration
         // Add grid perPage count
         if(isset($data->perPage) && is_numeric($data->perPage)){
             $this->perPage = $data->perPage;
+        }
+
+        // Prepare sorting
+        if(isset($data->sortBy)){
+            $this->sortBy = $data->sortBy;
+        }
+        if(isset($data->sortDir)){
+            $this->sortDir = $data->sortDir;
         }
 
 
