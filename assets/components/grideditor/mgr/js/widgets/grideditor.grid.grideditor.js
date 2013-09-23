@@ -188,18 +188,6 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
             }
         }
 
-        // If controls in use, add another field for them
-        if(this.grideditor.controls){
-           items.push({
-               header:'',
-               editable: false,
-               sortable: false,
-               width: 165,
-               fixed: true,
-               renderer: GridEditor.renderer.actionButtons
-           })
-        }
-
         // If publish is a control, add it's own columns at the beginning
         if(this.grideditor.controls.indexOf('publish')>-1){
             items.unshift({
@@ -211,7 +199,21 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
                 renderer: GridEditor.renderer.publishToggle
             })
         }
-       
+
+        // If controls in use, add another field for them
+        if(this.grideditor.controls){
+            items.unshift({
+                header:'',
+                editable: false,
+                sortable: false,
+                width: 165,
+                fixed: true,
+                renderer: GridEditor.renderer.actionButtons
+            })
+        }
+
+
+
         // Create and return a column model
         return items;
     }//
