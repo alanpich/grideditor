@@ -21,8 +21,8 @@ GridEditor.grid.GridEditor = function(config) {
                action: 'resource/getList'
                ,chunk: this.grideditor.chunk
            }
-        ,paging: false
-        ,pageSize: false// config.grideditor.perPage
+        ,paging: true
+        ,pageSize: 9999999999999999 //false// config.grideditor.perPage
         ,remoteSort: true
         ,collapsible: false
         ,anchor: '97%'
@@ -408,6 +408,12 @@ Ext.extend(GridEditor.grid.GridEditor,MODx.grid.Grid,{
     ,filter: function(tf,nv,ov){
         var s = this.getStore();
         s.baseParams.filter = tf.getValue();
+        s.setBaseParam('filter',tf.getValue());
+        console.log(s);
+        console.log(this);
+        console.log(this.baseParams);
+        s.reload();
+        this.store.reload();
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }

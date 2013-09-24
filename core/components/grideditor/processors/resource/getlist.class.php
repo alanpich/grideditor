@@ -56,7 +56,6 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
             $filter->value = $filterValue;
         }
 
-
         // Add tv fields to select
         foreach($this->confData->fields as $field){
 
@@ -77,8 +76,9 @@ class grideditorGetListProcessor extends modObjectGetListProcessor
                 // Conditions for filtering on TVs
                 if($doFilter && $field->field == $filter->field){
                     $c->condition($c->query['having'], "`{$safeFieldName}` = '{$filter->value}'", xPDOQuery::SQL_AND, null, 1);
+//                    $c->prepare();
+//                    die($c->toSQL());
                 }
-
 
             } else {
                 // Conditions for searching Resource fields
